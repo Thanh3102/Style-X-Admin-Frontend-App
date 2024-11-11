@@ -3,25 +3,116 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    --header-height: 50px;
+    --sidebar-bg-color: #182537;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+@layer components {
+    .label {
+        @apply text-base font-medium !text-gray-500
+    }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+    .label-link {
+        @apply text-base text-blue-500 hover:cursor-pointer hover:underline
+    }
+
+    .container {
+        @apply bg-white p-4 rounded-md
+    }
+
+    .container-no-padding {
+        @apply bg-white rounded-sm
+    }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+    .col-1 {
+        @apply w-1/12
+    }
+
+    .col-2 {
+        @apply w-1/6
+    }
+
+    .col-3 {
+        @apply w-1/4
+    }
+
+    .col-4 {
+        @apply w-1/3
+    }
+
+    .col-5 {
+        @apply w-5/12
+    }
+
+    .col-6 {
+        @apply w-1/2
+    }
+
+    .col-7 {
+        @apply w-7/12
+    }
+
+    .col-8 {
+        @apply w-2/3
+    }
+
+    .col-9 {
+        @apply w-3/4
+    }
+
+    .col-10 {
+        @apply w-4/5
+    }
+
+    .col-11 {
+        @apply w-11/12
+    }
+
+    .col-12 {
+        @apply w-full
+    }
+
+    .flex-center {
+        @apply flex items-center justify-center
+    }
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #555;
+}
+
+
+.editor-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.ql-container {
+    width: 100%;
+    max-width: 100%;
+    min-height: 200px;
+    height: 200px;
+    border-radius: 0 0 5px 5px;
+    overflow-y: auto;
+}
+
+.ql-toolbar {
+    background: #f5f5f5;
+    border: none;
 }
