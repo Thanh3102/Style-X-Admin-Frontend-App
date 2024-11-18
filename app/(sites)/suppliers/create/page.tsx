@@ -1,4 +1,4 @@
-import FormCreateSupplier from "@/components/specific/FormCreateSupplier";
+import FormCreateSupplier from "@/components/specific/forms/FormCreateSupplier";
 import GoBackButton from "@/components/ui/GoBackButton";
 import LoadingCard from "@/components/ui/Loading";
 import PageTitle from "@/components/ui/PageTitle";

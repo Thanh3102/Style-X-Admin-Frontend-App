@@ -1,6 +1,7 @@
 "use client";
 import RenderIf from "@/components/ui/RenderIf";
 import { EMPLOYEE_GET_ROUTE } from "@/constants/api-routes";
+import { updateSearchParams } from "@/libs/helper";
 import { FilterParam } from "@/libs/types/backend";
 import { GetUsersResponse, ResponseUser } from "@/libs/types/backend/response";
 import { cn } from "@/libs/utils";
@@ -15,12 +16,28 @@ import {
   Spinner,
 } from "@nextui-org/react";
 import { getSession } from "next-auth/react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { IoMdSearch } from "react-icons/io";
 import { RxTriangleDown } from "react-icons/rx";
 
 const AssignedFilterButton = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const handleClick = (selectedValues: string[]) => {
+    const url = new URLSearchParams(Array.from(searchParams.entries()));
+    const assignedIdString = selectedValues.join(",");
+    setOpen(false);
+    const newURL = updateSearchParams(
+      url,
+      [{ name: FilterParam.ASSIGN_IDS, value: assignedIdString }],
+      pathname
+    );
+    router.push(newURL);
+  };
+
   return (
     <>
       <Popover
@@ -40,11 +57,7 @@ const AssignedFilterButton = () => {
           </Button>
         </PopoverTrigger>
         <PopoverContent>
-          <AssignedFilterDropdown
-            onFilterClick={() => {
-              setOpen(false);
-            }}
-          />
+          <AssignedFilterDropdown onFilterClick={handleClick} />
         </PopoverContent>
       </Popover>
     </>
@@ -69,6 +82,10 @@ const AssignedFilterDropdown = ({
   const [inputValue, setInputValue] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
   const limit = 5;
+
+  const searchParams = useSearchParams();
+  const defaultSelect = searchParams.get(FilterParam.ASSIGN_IDS)?.split(",");
+  console.log("dèault", defaultSelect);
 
   const checkboxScrollRef = useRef<HTMLDivElement>(null);
   const inputTimeoutRef = useRef<NodeJS.Timeout>();
@@ -199,6 +216,7 @@ const AssignedFilterDropdown = ({
         ref={checkboxScrollRef}
       >
         <CheckboxGroup
+          // defaultValue={defaultSelect}
           onChange={handleGroupChange}
           classNames={{ base: "p-2" }}
         >

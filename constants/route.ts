@@ -4,7 +4,15 @@ export const ProductRoute = "/products";
 export const CreateProductRoute = `${ProductRoute}/create`;
 
 export const OrdersRoute = "/orders";
+
 export const InventoriesRoute = "/inventories";
+export const InventoriesHistoryRoute = (variantId: number | string) =>
+  `/inventories/${variantId}/history`;
+
+export const PurchaseOrderRoute = "/purchase-orders";
+export const ReceiveInventoryRoute = "/receive-inventory";
+export const CreateReceiveInventoryRoute = `${ReceiveInventoryRoute}/create`;
+
 
 export const SuppliersRoute = "/suppliers";
 export const CreateSupplierRoute = `${SuppliersRoute}/create`;

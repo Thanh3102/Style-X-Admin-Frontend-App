@@ -18,9 +18,9 @@ export default async function Layout({ children }: Props) {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 min-w-0">
         <Header />
-        <div className="bg-stone-100 flex-1">{children}</div>
+        <div className="bg-stone-100 flex-1 min-w-0">{children}</div>
       </div>
     </div>
   );

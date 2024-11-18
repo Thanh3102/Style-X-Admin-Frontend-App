@@ -8,10 +8,11 @@ import { FilterParam, GetTagResponse, TagType } from "@/libs/types/backend";
 import { cn } from "@/libs/utils";
 import { FiPlusCircle } from "react-icons/fi";
 import RenderIf from "../ui/RenderIf";
+import SearchEmpty from "../ui/SearchEmpty";
 
 export type TagSearchProps = {
   type: TagType;
-  selectedTags: string[];
+  selectedTags?: string[];
   hideCheckbox?: boolean;
   onCheckBoxChange?: (isSelected: boolean, tag: string) => void;
   onAddTag?: (tagName: string) => void;
@@ -19,7 +20,7 @@ export type TagSearchProps = {
 
 const TagSearch = ({
   type,
-  selectedTags,
+  selectedTags = [],
   hideCheckbox,
   onAddTag,
   onCheckBoxChange,
@@ -32,9 +33,11 @@ const TagSearch = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
+  const [dropdownPosition, setDropdownPosition] = useState("bottom");
 
   const queryTimeoutRef = useRef<NodeJS.Timeout>();
   const checkboxGroupRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLDivElement>(null);
 
   const getTags = useCallback(
     async (page?: number, lim?: number, value?: string) => {
@@ -91,8 +94,31 @@ const TagSearch = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (isOpen && inputRef.current && checkboxGroupRef.current) {
+      const inputRect = inputRef.current.getBoundingClientRect();
+      const dropdownRect = checkboxGroupRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      // Kiểm tra khoảng trống dưới input còn đủ không
+      const spaceBelow = windowHeight - inputRect.bottom;
+      const spaceAbove = inputRect.top;
+
+      if (
+        spaceBelow < dropdownRect.height &&
+        spaceAbove > dropdownRect.height
+      ) {
+        // Không đủ sẽ hiển thị lên trên
+        setDropdownPosition("top");
+      } else {
+        // Ngược lại
+        setDropdownPosition("bottom");
+      }
+    }
+  }, [isOpen]);
+
   return (
-    <>
+    <div className="relative" ref={inputRef}>
       <FormInput
         placeholder="Tìm kiếm hoặc thêm mới tag"
         onChange={(e) => {
@@ -105,9 +131,13 @@ const TagSearch = ({
         ref={checkboxGroupRef}
         value={selectedTags.map((tag) => tag)}
         className={cn(
-          "hidden absolute w-full p-2 top-12 shadow-small [&>*]:py-1 z-20",
+          "hidden absolute w-full p-2 shadow-small [&>*]:py-1 z-50 max-h-[200px] overflow-y-auto",
           {
             block: isOpen,
+            "top-[calc(100% + 10px)]": dropdownPosition === "bottom",
+            "top-auto": dropdownPosition !== "bottom",
+            "bottom-[calc(100% + 10px)]": dropdownPosition === "top",
+            "bottom-auto": dropdownPosition !== "top",
           }
         )}
         classNames={{
@@ -145,12 +175,10 @@ const TagSearch = ({
         </RenderIf>
 
         <RenderIf condition={tags.length === 0 && !isLoading}>
-          <span className="text-sm text-gray-400 text-center py-1">
-            Không tìm thấy kết quả
-          </span>
+          <SearchEmpty />
         </RenderIf>
       </CheckboxGroup>
-    </>
+    </div>
   );
 };
 

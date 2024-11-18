@@ -1,9 +1,10 @@
 "use client";
 
 import { Tooltip } from "@nextui-org/react";
+import { ReactNode } from "react";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 
-const InfoTooltip = ({ content }: { content: string }) => {
+const InfoTooltip = ({ content }: { content: ReactNode }) => {
   return (
     <Tooltip
       showArrow={true}
@@ -15,7 +16,7 @@ const InfoTooltip = ({ content }: { content: string }) => {
           "text-[var(--sidebar-bg-color)] bg-[var(--sidebar-bg-color)] border-[var(--sidebar-bg-color)]",
       }}
     >
-      <div className="">
+      <div className="hover:cursor-help">
         <IoMdInformationCircleOutline />
       </div>
     </Tooltip>

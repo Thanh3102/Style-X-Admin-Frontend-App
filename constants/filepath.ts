@@ -1,0 +1,1 @@
+export const ImagePlaceholderPath = "/images/image_placeholder.png";

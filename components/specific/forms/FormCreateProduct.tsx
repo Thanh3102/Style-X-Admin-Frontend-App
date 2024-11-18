@@ -10,10 +10,9 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/react";
-import TextEditor from "../common/TextEditor";
-import RadioGroup from "../common/RadioGroup";
-import { FormInput, FormSelect } from "../common/Form";
-import { GroupBox } from "../ui/GroupBox";
+import RadioGroup from "../../common/RadioGroup";
+import { FormInput, FormSelect } from "../../common/Form";
+import { GroupBox } from "../../ui/GroupBox";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,17 +20,31 @@ import { cn } from "@/libs/utils";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CurrencyFormatter } from "@/libs/format-helper";
 import { FaDongSign, FaTrash } from "react-icons/fa6";
-import { InfoTooltip } from "../ui/InfoTooltip";
+import { InfoTooltip } from "../../ui/InfoTooltip";
 import { COMPARE_PRICE_INFO, COST_PRICE_INFO } from "@/constants/text";
-import { TagSeletor } from "../common/TagSelector";
+import { TagSeletor } from "../../common/TagSelector";
 import { TagType } from "@/libs/types/backend";
 import { useImmer } from "use-immer";
-import RenderIf from "../ui/RenderIf";
+import RenderIf from "../../ui/RenderIf";
 import toast from "react-hot-toast";
 import { FiPlusCircle } from "react-icons/fi";
-import ProductOptionValueInput from "./filters/ProductOptionValueInput";
-import ProductVariantEditModal from "./ProductVariantEditModal";
-import { ImageDrop } from "../common/ImageDrop";
+import ProductOptionValueInput from "../filters/ProductOptionValueInput";
+import ProductVariantEditModal from "../ProductVariantEditModal";
+import ImageDrop from "../../common/CreateProductImageDrop";
+import dynamic from "next/dynamic";
+import CategoriesSearch from "../../common/CategoriesSearch";
+import {
+  GET_WAREHOUSE_ROUTE,
+  POST_CREATE_PRODUCT_ROUTE,
+} from "@/constants/api-routes";
+import { getSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { ProductRoute } from "@/constants/route";
+import { getWarehouse } from "@/app/api/warehouses";
+
+const TextEditor = dynamic(() => import("../../common/TextEditor"), {
+  ssr: false,
+});
 
 const CreateProductSchema = z.object({
   name: z
@@ -40,8 +53,8 @@ const CreateProductSchema = z.object({
   skuCode: z.string().optional(),
   barCode: z.string().optional(),
   unit: z.string().optional(),
-  description: z.string().max(30000, "Nội dung mô tả quá dài").optional(),
-  shortDescription: z.string().max(1000, "Nội dung mô tả quá dài").optional(),
+  description: z.string().optional(),
+  shortDescription: z.string().optional(),
   sellPrice: z
     .number()
     .min(0, "Giá bán nhỏ nhất là 0")
@@ -97,13 +110,16 @@ const CreateProductSchema = z.object({
       { message: "Tên thuộc tính trùng nhau" }
     ),
   variants: z.any(),
-  // images: z.array(),
-  // categoryIds: z.array(z.number()),
+  images: z.array(z.instanceof(File)),
+  tags: z.array(z.string()),
+  categoryIds: z.array(z.number()),
 });
 
 type CreateProductField = z.infer<typeof CreateProductSchema>;
 
 type SelectedWarehouse = { id: number; name: string; onHand: number };
+
+type Warehouse = Pick<SelectedWarehouse, "id" | "name">;
 
 type ProductOption = {
   position: number;
@@ -127,15 +143,12 @@ export type ProductVariant = {
   | "unit"
 >;
 
-const mockWarehouse: Pick<SelectedWarehouse, "id" | "name">[] = [
-  { id: 1, name: "Cửa hàng chính" },
-  { id: 2, name: "Chi nhánh A" },
-  { id: 3, name: "Chi nhánh B" },
-];
-
 const FormCreateProduct = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
   const [openShortDesc, setOpenShortDesc] = useState(false);
-  const [selectedWarehouse, setSelectedWarehouse] = useImmer<
+  const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
+  const [selectedWarehouses, setSelectedWarehouses] = useImmer<
     SelectedWarehouse[]
   >([]);
 
@@ -145,6 +158,7 @@ const FormCreateProduct = () => {
   const [variantEditOpen, setVariantEditOpen] = useState(false);
 
   const inputTimeoutRef = useRef<NodeJS.Timeout>();
+  const router = useRouter();
 
   const {
     register,
@@ -164,9 +178,49 @@ const FormCreateProduct = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<CreateProductField> = async (data) => {
-    console.table(data);
+  const onSubmit: SubmitHandler<CreateProductField> = async ({
+    images,
+    ...productData
+  }) => {
+    const formData = new FormData();
+
+    if (images.length > 0) {
+      images.forEach((img) => {
+        formData.append("images", img);
+      });
+    }
+
+    formData.append("productData", JSON.stringify(productData));
+
+    setIsLoading(true);
+    const session = await getSession();
+    const res = await fetch(`${POST_CREATE_PRODUCT_ROUTE}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${session?.accessToken}`,
+      },
+      body: formData,
+    });
+    setIsLoading(false);
+    const data = await res.json();
+
+    if (res.ok) {
+      toast.success("Thêm sản phẩm thành công");
+      router.push(`${ProductRoute}/${data.id}`);
+      return;
+    }
+
+    toast.error(data.error ?? "Đã xảy ra lỗi");
   };
+
+  const getWarehouseData = useCallback(async () => {
+    try {
+      const data = await getWarehouse();
+      setWarehouses(data);
+    } catch (error: any) {
+      toast.error(error.message ?? "Đã xảy ra lỗi khi tải dữ liệu");
+    }
+  }, []);
 
   const totalVariantsOnHand = useMemo(() => {
     return variants.reduce((total: number, variant) => {
@@ -188,7 +242,7 @@ const FormCreateProduct = () => {
               const skuCode = variant.skuCode
                 ? `${variant.skuCode}-${index}`
                 : undefined;
-              let newVariant = {
+              const newVariant = {
                 ...variant,
                 title: [...variant.title.split("/"), value].join("/"),
                 skuCode: skuCode,
@@ -285,37 +339,43 @@ const FormCreateProduct = () => {
     []
   );
 
-  const handleWarehouseSelect = useCallback((key: string | undefined) => {
-    if (key === undefined) return;
+  const handleWarehouseSelect = useCallback(
+    (key: string[]) => {
+      setSelectedWarehouses((selecteds) => {
+        if (key.length === 0) return [];
 
-    setSelectedWarehouse((warehouses) => {
-      const index = warehouses.findIndex(
-        (warehouse) => warehouse.id.toString() === key
-      );
+        const keySet = new Set(key);
 
-      if (index !== -1) {
-        warehouses.splice(index, 1);
-        return warehouses;
-      }
-
-      const warehouseData = mockWarehouse.find((i) => i.id.toString() === key);
-
-      if (warehouseData) {
-        warehouses.push({
-          id: warehouseData.id,
-          name: warehouseData.name,
-          onHand: 0,
+        const keepedSelectedWarehouses = selecteds.filter((selected) => {
+          if (key.includes(selected.id.toString())) {
+            keySet.delete(selected.id.toString());
+            return true;
+          }
+          return false;
         });
-        return warehouses;
-      }
 
-      return warehouses;
-    });
-  }, []);
+        const newSelectedWarehouse: SelectedWarehouse[] = [];
+
+        keySet.forEach((key) => {
+          const index = warehouses.findIndex(
+            (warehouse) => warehouse.id.toString() === key
+          );
+          newSelectedWarehouse.push({
+            id: warehouses[index].id,
+            name: warehouses[index].name,
+            onHand: 0,
+          });
+        });
+
+        return [...keepedSelectedWarehouses, ...newSelectedWarehouse];
+      });
+    },
+    [selectedWarehouses, warehouses]
+  );
 
   const handleOnHandChange = useCallback(
     (value: string, warehouseId: number) => {
-      setSelectedWarehouse((whs) => {
+      setSelectedWarehouses((whs) => {
         const index = whs.findIndex((wh) => wh.id === warehouseId);
         if (index !== -1) {
           whs[index].onHand = !isNaN(parseInt(value)) ? parseInt(value) : 0;
@@ -425,6 +485,10 @@ const FormCreateProduct = () => {
   }, []);
 
   useEffect(() => {
+    getWarehouseData();
+  }, []);
+
+  useEffect(() => {
     if (isSubmitted && !isValid) {
       if (Object.keys(errors).length > 0) {
         const firstErrorField = Object.keys(errors)[0];
@@ -441,17 +505,12 @@ const FormCreateProduct = () => {
   }, [submitCount]);
 
   useEffect(() => {
-    console.log("Create Product Form Errors", errors);
-  }, [errors]);
-
-  useEffect(() => {
-    console.log("Variants Change", variants);
     setValue("variants", variants);
   }, [variants]);
 
   useEffect(() => {
-    setValue("warehouses", selectedWarehouse, { shouldValidate: true });
-  }, [selectedWarehouse]);
+    setValue("warehouses", selectedWarehouses, { shouldValidate: true });
+  }, [selectedWarehouses]);
 
   useEffect(() => {
     setValue("options", options, { shouldValidate: true });
@@ -476,7 +535,7 @@ const FormCreateProduct = () => {
         id="CreateProductForm"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="flex-[2] basis-[600px] max-w-[900px] flex flex-col gap-5">
+        <div className="flex-[2] basis-[600px] flex flex-col gap-5 w-[600px]">
           <GroupBox title="Thông tin sản phẩm">
             <div className="flex flex-wrap gap-y-2 -mx-2 [&>*]:px-2">
               <Controller
@@ -551,7 +610,17 @@ const FormCreateProduct = () => {
               />
 
               <div className="col-12">
-                <TextEditor label="Mô tả" placeholder="Nhập mô tả sản phẩm" />
+                <TextEditor
+                  label="Mô tả"
+                  placeholder="Nhập mô tả sản phẩm"
+                  onValueChange={(data) =>
+                    setValue("description", data, {
+                      shouldDirty: true,
+                      shouldTouch: true,
+                      shouldValidate: true,
+                    })
+                  }
+                />
               </div>
 
               <div className="col-12">
@@ -571,6 +640,13 @@ const FormCreateProduct = () => {
                 <TextEditor
                   label="Mô tả ngắn"
                   placeholder="Nhập mô tả sản phẩm"
+                  onValueChange={(data) =>
+                    setValue("shortDescription", data, {
+                      shouldDirty: true,
+                      shouldTouch: true,
+                      shouldValidate: true,
+                    })
+                  }
                 />
               </div>
             </div>
@@ -659,31 +735,31 @@ const FormCreateProduct = () => {
 
           <GroupBox title="Thông tin kho">
             <FormSelect
+              aria-label="Lưu trữ tại kho"
               label="Lưu trữ tại kho"
               placeholder="Chọn kho lưu trữ"
               selectionMode="multiple"
               disallowEmptySelection
-              items={mockWarehouse}
               isInvalid={errors.warehouses ? true : false}
               errorMessage={errors.warehouses?.message}
               onSelectionChange={(key) =>
-                handleWarehouseSelect(key.currentKey as string)
+                handleWarehouseSelect(Array.from(key) as string[])
               }
             >
-              {(warehouse: any) => (
+              {warehouses.map((warehouse) => (
                 <SelectItem key={warehouse.id}>{warehouse.name}</SelectItem>
-              )}
+              ))}
             </FormSelect>
 
-            <RenderIf condition={selectedWarehouse.length > 0}>
-              <Table removeWrapper className="mt-4">
+            <RenderIf condition={selectedWarehouses.length > 0}>
+              <Table removeWrapper className="mt-4" aria-label="Bảng tồn kho">
                 <TableHeader>
                   <TableColumn key={"kholuutru"} className="w-3/5">
                     Kho lưu trữ
                   </TableColumn>
                   <TableColumn>Tồn kho</TableColumn>
                 </TableHeader>
-                <TableBody items={selectedWarehouse}>
+                <TableBody items={selectedWarehouses}>
                   {(warehouse) => (
                     <TableRow key={warehouse.id}>
                       <TableCell>{warehouse.name}</TableCell>
@@ -800,6 +876,7 @@ const FormCreateProduct = () => {
               </div>
               {variants.map((variant) => (
                 <div
+                  key={variant.title}
                   className="py-4 px-2 flex justify-between border-b-1 border-gray-200 hover:bg-gray-100 hover:cursor-pointer items-center text-sm"
                   onClick={() => handleVariantClick(variant)}
                 >
@@ -832,10 +909,19 @@ const FormCreateProduct = () => {
           </RenderIf>
         </div>
 
-        <div className="basis-[300px] flex-1">
+        <div className="basis-[300px] flex-1 w-[300px]">
           <div className="flex flex-col gap-4">
             <GroupBox title="Ảnh sản phẩm">
-              <ImageDrop/>
+              <ImageDrop
+                maxSize={10}
+                onImageChange={(images) =>
+                  setValue("images", images, {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                    shouldTouch: true,
+                  })
+                }
+              />
             </GroupBox>
 
             <GroupBox className="flex flex-col gap-4">
@@ -851,15 +937,20 @@ const FormCreateProduct = () => {
                 <Radio value={"false"}>Ẩn</Radio>
               </RadioGroup>
 
-              <FormSelect
-                placeholder="Chọn danh mục"
+              <CategoriesSearch
                 label="Danh mục"
-                selectionMode="multiple"
-              >
-                <SelectItem key={"placeholder"} value={"Placeholder"}>
-                  Placeholder
-                </SelectItem>
-              </FormSelect>
+                onSelectChange={(category) =>
+                  setValue(
+                    "categoryIds",
+                    category.map((cat) => cat.id),
+                    {
+                      shouldDirty: true,
+                      shouldTouch: true,
+                      shouldValidate: true,
+                    }
+                  )
+                }
+              />
 
               <Controller
                 control={control}
@@ -890,16 +981,33 @@ const FormCreateProduct = () => {
               />
             </GroupBox>
 
-            <TagSeletor type={TagType.PRODUCT} />
+            <TagSeletor
+              type={TagType.PRODUCT}
+              onValueChange={(tags) =>
+                setValue("tags", tags, {
+                  shouldDirty: true,
+                  shouldValidate: true,
+                  shouldTouch: true,
+                })
+              }
+            />
           </div>
         </div>
       </form>
 
       <div className="flex justify-end gap-4 mt-4 py-4 border-t-1 border-gray-400">
-        <Button radius="sm" variant="bordered" color="danger">
+        <Button
+          radius="sm"
+          variant="bordered"
+          color="danger"
+          isLoading={isDeleteLoading}
+          isDisabled={isLoading || isDeleteLoading}
+        >
           Hủy
         </Button>
         <Button
+          isDisabled={isLoading || isDeleteLoading}
+          isLoading={isLoading}
           radius="sm"
           type="submit"
           form="CreateProductForm"

@@ -15,12 +15,12 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/react";
-import { ProductVariant } from "./FormCreateProduct";
+import { ProductVariant } from "./forms/FormCreateProduct";
 import { FormInput } from "../common/Form";
 import { CurrencyFormatter } from "@/libs/format-helper";
 import { FaDongSign } from "react-icons/fa6";
 import { useImmer } from "use-immer";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import RenderIf from "../ui/RenderIf";
 
 type Props = {
@@ -36,17 +36,16 @@ type Props = {
 
 const ProductVariantEditModal = (props: Props) => {
   const { variant, onSave, ...restProps } = props;
-
-  if (!variant) return <>No variant</>;
-
-  const [thisVariant, setThisVariant] = useImmer<ProductVariant>(variant);
+  const [thisVariant, setThisVariant] = useImmer<ProductVariant | undefined>(
+    variant
+  );
 
   const handlePriceChange = (
     value: string,
     field: "sellPrice" | "costPrice" | "comparePrice"
   ) => {
     setThisVariant((variant) => {
-      variant[field] = parseInt(value);
+      if (variant) variant[field] = parseInt(value);
       return variant;
     });
   };
@@ -54,6 +53,7 @@ const ProductVariantEditModal = (props: Props) => {
   const handleOnHandChange = useCallback(
     (value: string, warehouseId: number) => {
       setThisVariant((variant) => {
+        if (!variant) return variant;
         const index = variant.warehouses.findIndex(
           (wh) => wh.id === warehouseId
         );
@@ -74,7 +74,7 @@ const ProductVariantEditModal = (props: Props) => {
       <ModalContent className="min-w-[50vw]">
         {(onclose) => (
           <>
-            <ModalHeader>Chỉnh sửa {variant.title}</ModalHeader>
+            <ModalHeader>Chỉnh sửa {variant?.title}</ModalHeader>
             <ModalBody>
               <form className="flex flex-wrap gap-y-2 -mx-2 [&>*]:px-2 max-h-[50vh] overflow-y-auto">
                 <div className="col-6">
@@ -82,13 +82,15 @@ const ProductVariantEditModal = (props: Props) => {
                     aria-label="Mã SKU"
                     label="Mã SKU"
                     placeholder="Nhập mã SKU"
-                    value={thisVariant.skuCode}
-                    onValueChange={(value) =>
+                    value={thisVariant?.skuCode}
+                    onValueChange={(value) => {
                       setThisVariant((variant) => {
-                        variant.skuCode = value;
-                        return variant;
-                      })
-                    }
+                        if (variant) {
+                          variant.skuCode = value;
+                          return variant;
+                        }
+                      });
+                    }}
                   />
                 </div>
                 <div className="col-6">
@@ -96,10 +98,10 @@ const ProductVariantEditModal = (props: Props) => {
                     aria-label="Mã vạch/ Barcode"
                     label="Mã vạch/ Barcode"
                     placeholder="Nhập mã vạch"
-                    value={thisVariant.barCode}
+                    value={thisVariant?.barCode}
                     onValueChange={(value) =>
                       setThisVariant((variant) => {
-                        variant.barCode = value;
+                        if (variant) variant.barCode = value;
                         return variant;
                       })
                     }
@@ -115,7 +117,7 @@ const ProductVariantEditModal = (props: Props) => {
                     value={thisVariant?.sellPrice.toString()}
                     endContent={<FaDongSign className="text-gray-500" />}
                     description={`Giá bán: ${CurrencyFormatter().format(
-                      thisVariant?.sellPrice
+                      thisVariant?.sellPrice ?? 0
                     )}`}
                     onValueChange={(value) =>
                       handlePriceChange(value, "sellPrice")
@@ -132,7 +134,7 @@ const ProductVariantEditModal = (props: Props) => {
                     value={thisVariant?.comparePrice.toString()}
                     endContent={<FaDongSign className="text-gray-500" />}
                     description={`Giá so sánh: ${CurrencyFormatter().format(
-                      thisVariant?.comparePrice
+                      thisVariant?.comparePrice ?? 0
                     )}`}
                     onValueChange={(value) =>
                       handlePriceChange(value, "comparePrice")
@@ -149,7 +151,7 @@ const ProductVariantEditModal = (props: Props) => {
                     value={thisVariant?.costPrice.toString()}
                     endContent={<FaDongSign className="text-gray-500" />}
                     description={`Giá vốn: ${CurrencyFormatter().format(
-                      thisVariant?.costPrice
+                      thisVariant?.costPrice ?? 0
                     )}`}
                     onValueChange={(value) =>
                       handlePriceChange(value, "costPrice")
@@ -161,16 +163,18 @@ const ProductVariantEditModal = (props: Props) => {
                     aria-label="Đơn vị tính"
                     label="Đơn vị tính"
                     placeholder="Nhập đơn vị tính"
-                    value={thisVariant.unit}
+                    value={thisVariant?.unit}
                     onValueChange={(value) =>
                       setThisVariant((variant) => {
-                        variant.unit = value;
+                        if (variant) variant.unit = value;
                         return variant;
                       })
                     }
                   />
                 </div>
-                <RenderIf condition={thisVariant.warehouses.length > 0}>
+                <RenderIf
+                  condition={thisVariant && thisVariant.warehouses.length > 0}
+                >
                   <div className="col-12">
                     <Table aria-label="Variant Warehouse" removeWrapper>
                       <TableHeader>
@@ -178,22 +182,26 @@ const ProductVariantEditModal = (props: Props) => {
                         <TableColumn key={"tonkho"}>Tồn kho</TableColumn>
                       </TableHeader>
                       <TableBody>
-                        {thisVariant.warehouses.map((warehouse) => (
-                          <TableRow key={warehouse.id}>
-                            <TableCell>{warehouse.name}</TableCell>
-                            <TableCell>
-                              <Input
-                                aria-label="Variant Warehouse Onhand"
-                                variant="bordered"
-                                radius="sm"
-                                value={warehouse.onHand.toString()}
-                                onValueChange={(value) =>
-                                  handleOnHandChange(value, warehouse.id)
-                                }
-                              />
-                            </TableCell>
-                          </TableRow>
-                        ))}
+                        {thisVariant ? (
+                          thisVariant.warehouses.map((warehouse) => (
+                            <TableRow key={warehouse.id}>
+                              <TableCell>{warehouse.name}</TableCell>
+                              <TableCell>
+                                <Input
+                                  aria-label="Variant Warehouse Onhand"
+                                  variant="bordered"
+                                  radius="sm"
+                                  value={warehouse.onHand.toString()}
+                                  onValueChange={(value) =>
+                                    handleOnHandChange(value, warehouse.id)
+                                  }
+                                />
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        ) : (
+                          <></>
+                        )}
                       </TableBody>
                     </Table>
                   </div>
@@ -214,7 +222,7 @@ const ProductVariantEditModal = (props: Props) => {
                 radius="sm"
                 color="primary"
                 onClick={() => {
-                  onSave && onSave(thisVariant);
+                  if (thisVariant) onSave && onSave(thisVariant);
                   onclose();
                 }}
               >

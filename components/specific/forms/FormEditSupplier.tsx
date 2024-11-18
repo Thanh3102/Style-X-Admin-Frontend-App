@@ -2,24 +2,24 @@
 
 import { Controller, useFormContext } from "react-hook-form";
 // import { EditSupplierField } from "./SupplierInfo";
-import { FormInput, FormSelect } from "../common/Form";
+import { FormInput, FormSelect } from "../../common/Form";
 import { cn } from "@/libs/utils";
 import {
   CountriesSelector,
   DistrictSelector,
   ProvinceSelector,
   WardSelector,
-} from "../ui/CountriesSelector";
+} from "../../ui/CountriesSelector";
 import { SelectItem } from "@nextui-org/react";
 import { z } from "zod";
 import { DetailSuppler } from "@/libs/types/backend";
-import { createEditSupplierSchema } from "./SupplierInfo";
+import { createEditSupplierSchema } from "../SupplierInfo";
 
 type FormEditSupplierProps = {
   supplier: DetailSuppler;
 };
 
-const FormEditSupplier = ({supplier}: FormEditSupplierProps) => {
+const FormEditSupplier = ({ supplier }: FormEditSupplierProps) => {
   const schema = createEditSupplierSchema(supplier);
   type EditSupplierField = z.infer<typeof schema>;
 
@@ -235,5 +235,3 @@ const FormEditSupplier = ({supplier}: FormEditSupplierProps) => {
 };
 
 export { FormEditSupplier };
-
-

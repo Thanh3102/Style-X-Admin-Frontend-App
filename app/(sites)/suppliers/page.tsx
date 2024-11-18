@@ -1,14 +1,13 @@
 import { SupplierTable } from "@/components/specific/SupplierTable";
+import LinkButton from "@/components/ui/LinkButton";
 import PageTitle from "@/components/ui/PageTitle";
 import { GET_SUPPLIER_ROUTE } from "@/constants/api-routes";
 import { CreateSupplierRoute } from "@/constants/route";
 import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
 import { FilterParam } from "@/libs/types/backend";
 import { GetSupplierResponse } from "@/libs/types/backend/response";
-import { Button } from "@nextui-org/react";
 import { getServerSession } from "next-auth";
-import Link from "next/link";
-import { FiPlusCircle } from "react-icons/fi";
+import { FaPlus } from "react-icons/fa6";
 
 type GetSupplierParams = Partial<Record<FilterParam, any>>;
 
@@ -24,27 +23,26 @@ const getSupplier = async (params: GetSupplierParams) => {
   } = params;
   try {
     const session = await getServerSession(nextAuthOptions);
-
-    const res = await fetch(
+    const url =
       `${GET_SUPPLIER_ROUTE}?` +
-        `${query ? `${FilterParam.QUERY}=${query}` : ""}` +
-        `&${FilterParam.PAGE}=${page}` +
-        `&${FilterParam.LIMIT}=${limit}` +
-        `${createdOn ? `&${FilterParam.CREATED_ON}=${createdOn}` : ""}` +
-        `${
-          createdOnMin ? `&${FilterParam.CREATED_ON_MIN}=${createdOnMin}` : ""
-        }` +
-        `${
-          createdOnMax ? `&${FilterParam.CREATED_ON_MAX}=${createdOnMax}` : ""
-        }` +
-        `${assignIds ? `&${FilterParam.ASSIGN_IDS}=${assignIds}` : ""}`,
-      {
-        headers: {
-          authorization: `Bearer ${session?.accessToken}`,
-        },
-        cache: "no-store",
-      }
-    );
+      `&${FilterParam.PAGE}=${page}` +
+      `&${FilterParam.LIMIT}=${limit}` +
+      `${query ? `&${FilterParam.QUERY}=${query}` : ""}` +
+      `${createdOn ? `&${FilterParam.CREATED_ON}=${createdOn}` : ""}` +
+      `${
+        createdOnMin ? `&${FilterParam.CREATED_ON_MIN}=${createdOnMin}` : ""
+      }` +
+      `${
+        createdOnMax ? `&${FilterParam.CREATED_ON_MAX}=${createdOnMax}` : ""
+      }` +
+      `${assignIds ? `&${FilterParam.ASSIGN_IDS}=${assignIds}` : ""}`;
+
+    const res = await fetch(url, {
+      headers: {
+        authorization: `Bearer ${session?.accessToken}`,
+      },
+      cache: "no-store",
+    });
 
     if (res.ok) {
       const data = (await res.json()) as GetSupplierResponse;
@@ -87,16 +85,12 @@ const Page = async ({
     <div className="px-10">
       <div className="flex justify-between items-center">
         <PageTitle>Danh sách nhà cung cấp</PageTitle>
-        <Link href={CreateSupplierRoute}>
-          <Button
-            radius="sm"
-            color="primary"
-            startContent={<FiPlusCircle size={20} />}
-            className="font-semibold"
-          >
-            Thêm nhà cung cấp
-          </Button>
-        </Link>
+        <LinkButton
+          href={`${CreateSupplierRoute}`}
+          buttonProps={{ startContent: <FaPlus size={18} /> }}
+        >
+          Tạo đơn nhập hàng
+        </LinkButton>
       </div>
 
       <SupplierTable

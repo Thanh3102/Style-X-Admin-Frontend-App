@@ -1,23 +1,23 @@
 "use client";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { FormInput } from "../common/Form";
-import { GroupBox } from "../ui/GroupBox";
+import { FormInput } from "../../common/Form";
+import { GroupBox } from "../../ui/GroupBox";
 import { z } from "zod";
 import {
   CountriesSelector,
   DistrictSelector,
   ProvinceSelector,
   WardSelector,
-} from "../ui/CountriesSelector";
+} from "../../ui/CountriesSelector";
 import { Button, Divider } from "@nextui-org/react";
-import ConfirmModal from "./ConfirmModal";
+import ConfirmModal from "../ConfirmModal";
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { EmployeeSelector } from "../common/EmployeeSelector";
+import { EmployeeSelector } from "../../common/EmployeeSelector";
 import { cn } from "@/libs/utils";
 import { useRouter } from "next/navigation";
 import { SuppliersRoute } from "@/constants/route";
-import { TagSeletor } from "../common/TagSelector";
+import { TagSeletor } from "../../common/TagSelector";
 import { TagType } from "@/libs/types/backend";
 import { getSession } from "next-auth/react";
 import { CREATE_SUPPLIER_ROUTE } from "@/constants/api-routes";
@@ -318,6 +318,7 @@ const FormCreateSupplier = () => {
             radius="sm"
             color="primary"
             onClick={() => setExitConfirm(true)}
+            isDisabled={isLoading}
           >
             Hủy
           </Button>

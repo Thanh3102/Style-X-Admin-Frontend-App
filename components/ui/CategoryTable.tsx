@@ -1,5 +1,5 @@
 "use client";
-import { GET_ALL_CATEGORIES_ROUTE } from "@/constants/api-routes";
+import { GET_CATEGORIES_ROUTE } from "@/constants/api-routes";
 import { Compare } from "@/libs/helper";
 import { Category } from "@/libs/types";
 import {
@@ -57,7 +57,7 @@ const CategoryTable = () => {
   const getCategories = async () => {
     setIsLoading(true);
     const session = await getSession();
-    const response = await fetch(`${GET_ALL_CATEGORIES_ROUTE}`, {
+    const response = await fetch(`${GET_CATEGORIES_ROUTE}`, {
       headers: {
         authorization: `Bearer ${session?.accessToken}`,
       },

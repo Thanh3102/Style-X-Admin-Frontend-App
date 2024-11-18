@@ -14,11 +14,13 @@ import {
 } from "@nextui-org/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { EmptyTableContent } from "./EmptyTableContent";
-import { SuppliersRoute } from "@/constants/route";
+import { CreateSupplierRoute, SuppliersRoute } from "@/constants/route";
 import { useCallback } from "react";
 import { Status } from "../ui/Status";
 import { cn } from "@/libs/utils";
 import { SupplierFilter } from "./SupplierFilter";
+import LinkButton from "../ui/LinkButton";
+import { FaPlus } from "react-icons/fa6";
 
 type SupplierTableProps = {
   page: number;
@@ -124,7 +126,18 @@ const SupplierTable = ({
     return (
       <>
         <SupplierFilter />
-        <EmptyTableContent />
+        <EmptyTableContent
+          title="Cửa hàng chưa có nhà cung cấp nào"
+          subTitle="Tạo nhà cung cấp để lưu thông tin các nhà cung cấp"
+          addButton={
+            <LinkButton
+              href={`${CreateSupplierRoute}`}
+              buttonProps={{ startContent: <FaPlus size={18} /> }}
+            >
+              Tạo đơn nhập hàng
+            </LinkButton>
+          }
+        />
       </>
     );
   }
@@ -149,7 +162,6 @@ const SupplierTable = ({
             "group-data-[last=true]:last:before:rounded-none",
           ],
         }}
-        className=""
       >
         <TableHeader className="rounded-none" columns={columns}>
           {(column) => (

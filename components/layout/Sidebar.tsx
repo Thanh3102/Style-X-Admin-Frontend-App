@@ -21,6 +21,8 @@ import {
   InventoriesRoute,
   OrdersRoute,
   ProductRoute,
+  PurchaseOrderRoute,
+  ReceiveInventoryRoute,
   ReportsRoute,
   SuppliersRoute,
 } from "@/constants/route";
@@ -43,20 +45,20 @@ const items = [
     icon: <GoChecklist size={18} />,
     url: OrdersRoute,
   },
-  {
-    title: "Tồn kho",
-    icon: <FaWarehouse size={18} />,
-    url: InventoriesRoute,
-  },
+  // {
+  //   title: "Tồn kho",
+  //   icon: <FaWarehouse size={18} />,
+  //   url: InventoriesRoute,
+  // },
   {
     title: "Đặt hàng nhập",
     icon: <LuClipboardList size={18} />,
-    url: InventoriesRoute,
+    url: PurchaseOrderRoute,
   },
   {
     title: "Nhập hàng",
     icon: <TbPackageImport size={18} />,
-    url: InventoriesRoute,
+    url: ReceiveInventoryRoute,
   },
   {
     title: "Nhà cung cấp",

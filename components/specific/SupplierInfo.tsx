@@ -21,7 +21,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import ConfirmModal from "./ConfirmModal";
-import { FormEditSupplier } from "./FormEditSupplier";
+import { FormEditSupplier } from "./forms/FormEditSupplier";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { getSession } from "next-auth/react";
@@ -160,7 +160,7 @@ const SupplierInfo = ({ supplier }: SupplierInfoProps) => {
     });
 
     setIsDeleteLoading(false);
-    
+
     if (request.ok) {
       toast.success("Đã xóa nhà cung cấp");
       router.push(`${SuppliersRoute}`);
@@ -423,6 +423,8 @@ const SupplierInfo = ({ supplier }: SupplierInfoProps) => {
                   color="primary"
                   onClick={() => setOpenEditModal(false)}
                   className="font-medium"
+                  isLoading={isDeleteLoading}
+                  isDisabled={isLoading || isDeleteLoading}
                 >
                   Hủy
                 </Button>
@@ -433,6 +435,8 @@ const SupplierInfo = ({ supplier }: SupplierInfoProps) => {
                   className="font-medium"
                   type="submit"
                   form="updateSupplierForm"
+                  isLoading={isLoading}
+                  isDisabled={isLoading || isDeleteLoading}
                 >
                   Lưu
                 </Button>

@@ -1,3 +1,7 @@
+type ConvertDateToStringOption = {
+  getTime?: boolean;
+};
+
 export const Compare = (
   first: string | number | null | undefined,
   second: string | number | null | undefined
@@ -48,4 +52,24 @@ export const updateSearchParams = (
   const search = urlSearchParams.toString();
   const query = search ? `?${search}` : "";
   return `${pathname}${query}`;
+};
+
+export const convertDateToString = (
+  inputDate: Date,
+  options: ConvertDateToStringOption = { getTime: true }
+) => {
+  const { getTime } = options;
+  const [date, time] = inputDate.toString().split("T");
+  const [yyyy, mm, dd] = date.split("-");
+  const [h, m, s] = time.split(".")[0].split(":");
+
+  if (getTime) return `${dd}/${mm}/${yyyy} ${h}:${m}:${s}`;
+
+  return `${dd}/${mm}/${yyyy}`;
+};
+
+export const isInteger = (str: string | undefined) => {
+  if (!str) return false;
+  const num = parseInt(str, 10);
+  return !isNaN(num) && Number.isInteger(num) && String(num) === str;
 };

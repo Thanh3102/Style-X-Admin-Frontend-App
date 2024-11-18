@@ -1,6 +1,7 @@
 export enum TagType {
   SUPPLIER = "supplier",
-  PRODUCT = "product"
+  PRODUCT = "product",
+  RECEIVE_INVENTORY = "receive-inventory"
 }
 
 export type ResponseTag = string;
@@ -19,6 +20,8 @@ export enum FilterParam {
   TAG_TYPE = "tagType",
   ASSIGN_IDS = "assignIds",
 }
+
+export type QueryParams = Partial<Record<FilterParam, string>>;
 
 export type DateFilterOption = {
   label: string;

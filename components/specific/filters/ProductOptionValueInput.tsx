@@ -9,6 +9,7 @@ type Props = {
   position: number;
   values: Array<string>;
   isInvalid?: boolean;
+  isReadonly?: boolean
   errorMessage?: string;
   onInputEnter?: (value: string, position: number) => void;
   onValueDelete?: (value: string, position: number) => void;
@@ -17,6 +18,7 @@ const ProductOptionValueInput = (props: Props) => {
   const {
     values,
     position,
+    isReadonly,
     onInputEnter,
     onValueDelete,
     isInvalid,
@@ -37,6 +39,7 @@ const ProductOptionValueInput = (props: Props) => {
       <FormInput
         aria-label="OptionValue"
         placeholder="Nhập giá trị"
+        isReadOnly={isReadonly}
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         isInvalid={isInvalid}

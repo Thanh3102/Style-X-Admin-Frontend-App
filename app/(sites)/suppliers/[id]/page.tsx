@@ -52,13 +52,10 @@ const Page = async ({ params: { id } }: Props) => {
 
   if (error) {
     console.log("[Supplier/:id - Error]", error);
-
     redirect(`${SuppliersRoute}`);
   }
 
   if (!supplier) return <></>;
-
-  // Tạo một component return null, chỉ dùng để toast tin nhắn và redirect
 
   return (
     <div className="px-16">
