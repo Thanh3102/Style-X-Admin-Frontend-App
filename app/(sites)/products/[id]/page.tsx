@@ -1,3 +1,4 @@
+import { getProductDetail } from "@/app/api/products";
 import FormEditProduct from "@/components/specific/forms/FormEditProduct";
 import ErrorPage from "@/components/ui/ErrorPage";
 import GoBackButton from "@/components/ui/GoBackButton";
@@ -7,7 +8,6 @@ import { GET_PRODUCT_DETAIL_ROUTE } from "@/constants/api-routes";
 import { ProductRoute } from "@/constants/route";
 import { isInteger } from "@/libs/helper";
 import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
-import { GetProductDetailResponse } from "@/libs/types/backend/response";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
@@ -15,25 +15,16 @@ import toast from "react-hot-toast";
 
 type Props = { params: { id: string } };
 
-const getProductDetail = async (id: number) => {
-  const session = await getServerSession(nextAuthOptions);
-  const res = await fetch(`${GET_PRODUCT_DETAIL_ROUTE}/${id}`, {
-    headers: {
-      authorization: `Bearer ${session?.accessToken}`,
-    },
-    cache: "no-cache",
-  });
-  if (res.ok) {
-    const data = (await res.json()) as GetProductDetailResponse;
+const getProductDetailData = async (id: number) => {
+  try {
+    const session = await getServerSession(nextAuthOptions);
+    const data = await getProductDetail(id, session?.accessToken);
     return {
       product: data,
     };
+  } catch (error: any) {
+    return { error: error.message ?? "Đã xảy ra lỗi" };
   }
-  const data = await res.json();
-  return {
-    product: null,
-    error: data.error ?? "Đã xảy ra lỗi",
-  };
 };
 
 async function Page({ params: { id } }: Props) {
@@ -42,7 +33,7 @@ async function Page({ params: { id } }: Props) {
     redirect(ProductRoute);
   }
 
-  const { product, error } = await getProductDetail(parseInt(id));
+  const { product, error } = await getProductDetailData(parseInt(id));
 
   if (error || !product) return <ErrorPage />;
 

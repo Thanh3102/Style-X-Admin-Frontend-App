@@ -1,17 +1,18 @@
+import { getSupplier } from "@/app/api/suppliers";
 import { SupplierTable } from "@/components/specific/SupplierTable";
+import ErrorPage from "@/components/ui/ErrorPage";
 import LinkButton from "@/components/ui/LinkButton";
 import PageTitle from "@/components/ui/PageTitle";
 import { GET_SUPPLIER_ROUTE } from "@/constants/api-routes";
 import { CreateSupplierRoute } from "@/constants/route";
 import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
 import { FilterParam } from "@/libs/types/backend";
-import { GetSupplierResponse } from "@/libs/types/backend/response";
 import { getServerSession } from "next-auth";
 import { FaPlus } from "react-icons/fa6";
 
 type GetSupplierParams = Partial<Record<FilterParam, any>>;
 
-const getSupplier = async (params: GetSupplierParams) => {
+const getSupplierData = async (params: GetSupplierParams) => {
   const {
     page = 1,
     limit = 20,
@@ -23,38 +24,13 @@ const getSupplier = async (params: GetSupplierParams) => {
   } = params;
   try {
     const session = await getServerSession(nextAuthOptions);
-    const url =
-      `${GET_SUPPLIER_ROUTE}?` +
-      `&${FilterParam.PAGE}=${page}` +
-      `&${FilterParam.LIMIT}=${limit}` +
-      `${query ? `&${FilterParam.QUERY}=${query}` : ""}` +
-      `${createdOn ? `&${FilterParam.CREATED_ON}=${createdOn}` : ""}` +
-      `${
-        createdOnMin ? `&${FilterParam.CREATED_ON_MIN}=${createdOnMin}` : ""
-      }` +
-      `${
-        createdOnMax ? `&${FilterParam.CREATED_ON_MAX}=${createdOnMax}` : ""
-      }` +
-      `${assignIds ? `&${FilterParam.ASSIGN_IDS}=${assignIds}` : ""}`;
 
-    const res = await fetch(url, {
-      headers: {
-        authorization: `Bearer ${session?.accessToken}`,
-      },
-      cache: "no-store",
-    });
+    const data = await getSupplier(session?.accessToken, params);
 
-    if (res.ok) {
-      const data = (await res.json()) as GetSupplierResponse;
-      return data;
-    }
-
-    const data = await res.json();
-
-    return null;
+    return { data };
   } catch (error) {
     console.log(`[Fetch Error]`, error);
-    return null;
+    return { error };
   }
 };
 
@@ -73,13 +49,13 @@ const Page = async ({
 
   if (!isNaN(Number(limit)) && Number(limit) > 0) limitNumber = Number(limit);
 
-  const data = await getSupplier({
+  const { data, error } = await getSupplierData({
     page: pageNumber,
     limit: limitNumber,
     ...otherParams,
   });
 
-  if (!data) return <>Error</>;
+  if (error || !data) return <ErrorPage />;
 
   return (
     <div className="px-10">

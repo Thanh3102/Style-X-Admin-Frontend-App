@@ -50,11 +50,11 @@ const items = [
   //   icon: <FaWarehouse size={18} />,
   //   url: InventoriesRoute,
   // },
-  {
-    title: "Đặt hàng nhập",
-    icon: <LuClipboardList size={18} />,
-    url: PurchaseOrderRoute,
-  },
+  // {
+  //   title: "Đặt hàng nhập",
+  //   icon: <LuClipboardList size={18} />,
+  //   url: PurchaseOrderRoute,
+  // },
   {
     title: "Nhập hàng",
     icon: <TbPackageImport size={18} />,

@@ -23,12 +23,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/libs/utils";
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CurrencyFormatter } from "@/libs/format-helper";
 import { TagSeletor } from "../../common/TagSelector";
 import { TagType } from "@/libs/types/backend";
@@ -40,18 +35,15 @@ import ProductOptionValueInput from "../filters/ProductOptionValueInput";
 
 import dynamic from "next/dynamic";
 import CategoriesSearch, { Category } from "../../common/CategoriesSearch";
-import {
-
-  PUT_UPDATE_PRODUCT_ROUTE,
-} from "@/constants/api-routes";
+import { PUT_UPDATE_PRODUCT_ROUTE } from "@/constants/api-routes";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { ProductRoute } from "@/constants/route";
-import { GetProductDetailResponse } from "@/libs/types/backend/response";
+import { EditVariantRoute, ProductRoute } from "@/constants/route";
 import ProductImages from "../../ui/ProductImages";
 import UploadImageModal from "../UploadImageModal";
 import { isInteger } from "@/libs/helper";
 import { FaTrash } from "react-icons/fa6";
+import { GetProductDetailResponse } from "@/app/api/products/products.type";
 
 const TextEditor = dynamic(() => import("../../common/TextEditor"), {
   ssr: false,
@@ -471,9 +463,7 @@ const FormEditProduct = ({ product }: Props) => {
                 <div
                   key={variant.title}
                   onClick={() =>
-                    router.push(
-                      `${ProductRoute}/${product.id}/variants/${variant.id}`
-                    )
+                    router.push(EditVariantRoute(product.id, variant.id))
                   }
                   className="py-4 px-2 flex justify-between border-b-1 border-gray-200 hover:bg-gray-100 hover:cursor-pointer items-center text-sm"
                 >

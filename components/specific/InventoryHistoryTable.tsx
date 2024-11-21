@@ -1,6 +1,5 @@
 "use client";
 import { convertDateToString, updateSearchParams } from "@/libs/helper";
-import { ProductResponse } from "@/libs/types/backend/response";
 import {
   Pagination,
   Select,
@@ -19,7 +18,6 @@ import { useCallback } from "react";
 import { cn } from "@/libs/utils";
 import { SupplierFilter } from "./SupplierFilter";
 import Image from "next/image";
-import AddProductButton from "../ui/AddProductButton";
 import { ProductTableFilter } from "./ProductTableFilter";
 import { ImagePlaceholderPath } from "@/constants/filepath";
 import { GetInventoriesHistoryResponse } from "@/app/api/inventories/inventories.type";

@@ -1,5 +1,4 @@
 "use client";
-import { GetProductDetailResponse } from "@/libs/types/backend/response";
 import { GroupBox } from "../../ui/GroupBox";
 import {
   Button,
@@ -28,7 +27,7 @@ import Link from "next/link";
 import { FaDongSign, FaPen } from "react-icons/fa6";
 import { ChangeEvent, useCallback, useState } from "react";
 import { isInteger } from "@/libs/helper";
-import { FormInput, FormSelect } from "../../common/Form";
+import { FormInput } from "../../common/Form";
 import { cn } from "@/libs/utils";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -43,6 +42,7 @@ import {
   PUT_UPDATE_PRODUCT_VARIANT_ROUTE,
 } from "@/constants/api-routes";
 import AddInventoryModal from "../AddInventoryModal";
+import { GetProductDetailResponse } from "@/app/api/products/products.type";
 
 export type Variant = GetProductDetailResponse["variants"][number];
 export type Inventory = Variant["inventories"][number];
@@ -418,8 +418,8 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
                         </PopoverContent>
                       </Popover>
                     </TableCell>
-                    <TableCell>{0}</TableCell>
-                    <TableCell>{0}</TableCell>
+                    <TableCell>{inventory.onReceive}</TableCell>
+                    <TableCell>{inventory.onTransaction}</TableCell>
                     <TableCell>{inventory.avaiable}</TableCell>
                   </TableRow>
                 )}

@@ -1,7 +1,7 @@
 export enum TagType {
   SUPPLIER = "supplier",
   PRODUCT = "product",
-  RECEIVE_INVENTORY = "receive-inventory"
+  RECEIVE_INVENTORY = "receive_inventory",
 }
 
 export type ResponseTag = string;
@@ -19,6 +19,7 @@ export enum FilterParam {
   QUERY = "query",
   TAG_TYPE = "tagType",
   ASSIGN_IDS = "assignIds",
+  ACTIVE = "active",
 }
 
 export type QueryParams = Partial<Record<FilterParam, string>>;
@@ -73,3 +74,21 @@ export type BasicUser = {
   dateOfBirth: Date;
   lastLoginAt: Date;
 };
+
+export enum ReceiveInventoryTransaction {
+  UN_PAID = "Chưa thanh toán",
+  PARTIALLY_PAID = "Thanh toán một phần",
+  PAID = "Đã thanh toán",
+}
+
+export enum ReceiveInventoryStatus {
+  NOT_RECEIVED = "Chưa nhập hàng",
+  PARTIALLY_RECEIVED = "Nhập một phần",
+  RECEIVED = "Đã nhập hàng",
+  CANCEL = "Hủy",
+}
+
+export enum PaymentMethod {
+  CASH = "Tiền mặt",
+  BANKING = "Chuyển khoản",
+}

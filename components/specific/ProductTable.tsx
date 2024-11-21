@@ -1,6 +1,5 @@
 "use client";
 import { convertDateToString, updateSearchParams } from "@/libs/helper";
-import { ProductResponse } from "@/libs/types/backend/response";
 import {
   Pagination,
   Select,
@@ -17,12 +16,12 @@ import { EmptyTableContent } from "./EmptyTableContent";
 import { CreateProductRoute, ProductRoute } from "@/constants/route";
 import { useCallback } from "react";
 import { cn } from "@/libs/utils";
-import { SupplierFilter } from "./SupplierFilter";
 import Image from "next/image";
 import { ProductTableFilter } from "./ProductTableFilter";
 import { ImagePlaceholderPath } from "@/constants/filepath";
 import LinkButton from "../ui/LinkButton";
 import { FaPlus } from "react-icons/fa6";
+import { ProductResponse } from "@/app/api/products/products.type";
 
 type Props = {
   products: ProductResponse[];
@@ -34,7 +33,7 @@ type Props = {
 
 type ColumnKey = keyof Pick<
   ProductResponse,
-  "name" | "inventory_avaiable" | "type" | "vendor" | "createdAt"
+  "name" | "avaiable" | "type" | "vendor" | "createdAt"
 >;
 
 type Column = {
@@ -52,7 +51,7 @@ const columns: Column[] = [
     className: "w-2/5",
   },
   {
-    key: "inventory_avaiable",
+    key: "avaiable",
     label: "Có thể bán",
     isSortable: false,
   },
@@ -126,11 +125,11 @@ const ProductTable = (props: Props) => {
             </div>
           </TableCell>
         );
-      case "inventory_avaiable":
+      case "avaiable":
         return (
           <TableCell>
             <div className="flex flex-col gap-1">
-              <span className="font-medium">{product.inventory_avaiable}</span>
+              <span className="font-medium">{product.avaiable}</span>
               <span className="text-gray-500">
                 {product.variants.length > 0 &&
                   `(${product.variants.length} phiên bản)`}

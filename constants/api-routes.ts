@@ -9,7 +9,8 @@ export const EMPLOYEE_GET_ROUTE = `${SERVER_BASE_URL}/api/employee`;
 
 // Product
 export const GET_PRODUCT_ROUTE = `${SERVER_BASE_URL}/api/product`;
-export const GET_PRODUCT_DETAIL_ROUTE = `${SERVER_BASE_URL}/api/product`;
+export const GET_PRODUCT_DETAIL_ROUTE = (productId: string | number) =>
+  `${SERVER_BASE_URL}/api/product/${productId}`;
 export const GET_VARIANT_DETAIL_ROUTE = (variantId: string | number) =>
   `${SERVER_BASE_URL}/api/product/variant/${variantId}`;
 export const POST_CREATE_PRODUCT_ROUTE = `${SERVER_BASE_URL}/api/product`;
@@ -43,3 +44,6 @@ export const GET_INVENTORIES_HISTORY_ROUTE = (variantId: string | number) =>
 
 export const POST_CREATE_INVENTORIES_ROUTE = `${SERVER_BASE_URL}/api/inventories`;
 export const PUT_CHANGE_ON_HAND_INVENTORIES_ROUTE = `${SERVER_BASE_URL}/api/inventories/changeOnHand`;
+
+// Receive Inventory
+export const POST_CREATE_RECEIVE_INVENTORY = `${SERVER_BASE_URL}/api/receive-inventory`;

@@ -1,8 +1,13 @@
 import {
+  GET_PRODUCT_DETAIL_ROUTE,
   GET_PRODUCT_ROUTE,
   GET_VARIANT_DETAIL_ROUTE,
 } from "@/constants/api-routes";
-import { GetProductResponse, GetVariantDetailResponse } from "./products.type";
+import {
+  GetProductDetailResponse,
+  GetProductResponse,
+  GetVariantDetailResponse,
+} from "./products.type";
 import { FilterParam, QueryParams } from "@/libs/types/backend";
 import { isInteger } from "@/libs/helper";
 
@@ -51,6 +56,30 @@ export const getProduct = async (
     }
 
     throw new Error(data.error || data.message || "Đã xảy ra lỗi");
+  } catch (error: any) {
+    throw new Error(error.message ?? "Đã xảy ra lỗi");
+  }
+};
+
+export const getProductDetail = async (
+  productId: number,
+  accessToken: string | null | undefined
+) => {
+  try {
+    const res = await fetch(`${GET_PRODUCT_DETAIL_ROUTE(productId)}`, {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+      cache: "no-cache",
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      return data as GetProductDetailResponse;
+    }
+
+    throw new Error(data.error ?? "Đã xảy ra lỗi");
   } catch (error: any) {
     throw new Error(error.message ?? "Đã xảy ra lỗi");
   }

@@ -85,8 +85,6 @@ const AssignedFilterDropdown = ({
 
   const searchParams = useSearchParams();
   const defaultSelect = searchParams.get(FilterParam.ASSIGN_IDS)?.split(",");
-  console.log("dèault", defaultSelect);
-
   const checkboxScrollRef = useRef<HTMLDivElement>(null);
   const inputTimeoutRef = useRef<NodeJS.Timeout>();
 
