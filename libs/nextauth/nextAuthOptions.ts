@@ -55,7 +55,7 @@ export const nextAuthOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       // console.log("[NextAuth] JWT Callback");
-      console.log("[NextAuth] JWT Token Access", token.accessToken);
+      // console.log("[NextAuth] JWT Token Access", token.accessToken);
 
       if (user) {
         // console.log("[NextAuth] JWT User", user);
@@ -63,7 +63,7 @@ export const nextAuthOptions: NextAuthOptions = {
       }
 
       if (new Date().getTime() > token.expiredIn) {
-        console.log("[NextAuth] Token expired");
+        // console.log("[NextAuth] Token expired");
         const newToken = await refreshToken(token);
         return newToken;
       }
@@ -98,8 +98,8 @@ async function refreshToken(token: JWT) {
   if (response.ok) {
     const data = await response.json();
 
-    console.log("[NextAuth-Refresh] New access token", data.accessToken);
-    console.log("[NextAuth-Refresh] New expire time", data.expiredIn);
+    // console.log("[NextAuth-Refresh] New access token", data.accessToken);
+    // console.log("[NextAuth-Refresh] New expire time", data.expiredIn);
 
     return {
       ...token,

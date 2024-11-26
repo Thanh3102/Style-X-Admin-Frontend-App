@@ -55,15 +55,26 @@ export const updateSearchParams = (
 };
 
 export const convertDateToString = (
-  inputDate: Date,
+  inputDate: Date | string,
   options: ConvertDateToStringOption = { getTime: true }
 ) => {
   const { getTime } = options;
-  const [date, time] = inputDate.toString().split("T");
-  const [yyyy, mm, dd] = date.split("-");
-  const [h, m, s] = time.split(".")[0].split(":");
+  const DATE =
+    typeof inputDate === "string" ? inputDate : inputDate.toISOString();
 
-  if (getTime) return `${dd}/${mm}/${yyyy} ${h}:${m}:${s}`;
+  const newDate = new Date(DATE);
+
+  const vietnamTime = newDate.toLocaleString("en-US", {
+    timeZone: "Asia/Ho_Chi_Minh",
+    hour12: false,
+  });
+
+
+  const [date, time] = vietnamTime.split(", ");
+  const [mm, dd, yyyy] = date.split("/");
+  const [h, m] = time.split(".")[0].split(":");
+
+  if (getTime) return `${dd}/${mm}/${yyyy} ${h}:${m}`;
 
   return `${dd}/${mm}/${yyyy}`;
 };

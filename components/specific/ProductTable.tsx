@@ -93,7 +93,13 @@ const ProductTable = (props: Props) => {
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     const newUrl = updateSearchParams(
       current,
-      [{ name: "limit", value: limit }],
+      [
+        { name: "limit", value: limit },
+        {
+          name: "page",
+          value: "1",
+        },
+      ],
       pathname
     );
     router.push(newUrl);

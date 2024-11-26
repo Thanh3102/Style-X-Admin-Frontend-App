@@ -39,11 +39,28 @@ export const GET_VARIANT_INVENTORIES_WAREHOUSES_ROUTE = (
   variantId: string | number
 ) => `${SERVER_BASE_URL}/api/inventories/${variantId}/history`;
 
-export const GET_INVENTORIES_HISTORY_ROUTE = (variantId: string | number) =>
-  `${SERVER_BASE_URL}/api/inventories/${variantId}/history`;
+export const GET_INVENTORIES_HISTORY_ROUTE = `${SERVER_BASE_URL}/api/inventories/history`;
 
 export const POST_CREATE_INVENTORIES_ROUTE = `${SERVER_BASE_URL}/api/inventories`;
 export const PUT_CHANGE_ON_HAND_INVENTORIES_ROUTE = `${SERVER_BASE_URL}/api/inventories/changeOnHand`;
 
 // Receive Inventory
+export const GET_RECEIVE_INVENTORY = `${SERVER_BASE_URL}/api/receive-inventory/`;
+export const GET_RECEIVE_INVENTORY_DETAIL = (receiveId: number | string) =>
+  `${SERVER_BASE_URL}/api/receive-inventory/${receiveId}`;
 export const POST_CREATE_RECEIVE_INVENTORY = `${SERVER_BASE_URL}/api/receive-inventory`;
+export const POST_PROCESS_PAYMENT_RECEIVE_INVENTORY = `${SERVER_BASE_URL}/api/receive-inventory/processPayment`;
+export const PUT_UPDATE_RECEIVE_INVENTORY = `${SERVER_BASE_URL}/api/receive-inventory`;
+export const PUT_CANCEL_RECEIVE_INVENTORY = `${SERVER_BASE_URL}/api/receive-inventory/cancel`;
+export const PUT_IMPORT_ITEMS = `${SERVER_BASE_URL}/api/receive-inventory/import`;
+export const DELETE_RECEIVE_INVENTORY = (receiveId: number | string) =>
+  `${SERVER_BASE_URL}/api/receive-inventory/${receiveId}`;
+
+// Discount
+export const GET_DISCOUNTS = `${SERVER_BASE_URL}/api/discount`
+export const GET_DISCOUNT_DETAIL = (id: number) =>
+  `${SERVER_BASE_URL}/api/discount/${id}`;
+export const POST_CREATE_DISCOUNT = `${SERVER_BASE_URL}/api/discount`;
+export const PUT_UPDATE_DISCOUNT = `${SERVER_BASE_URL}/api/discount`;
+export const PUT_UPDATE_DISCOUNT_ACTIVE = `${SERVER_BASE_URL}/api/discount/active`;
+export const DELETE_DISCOUNT = `${SERVER_BASE_URL}/api/discount`;

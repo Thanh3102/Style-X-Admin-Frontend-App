@@ -1,5 +1,4 @@
 "use client";
-import { GetProductDetailResponse } from "@/libs/types/backend/response";
 import { cn } from "@/libs/utils";
 import { FaStar, FaTrash } from "react-icons/fa6";
 import Image from "next/image";
@@ -14,6 +13,7 @@ import toast from "react-hot-toast";
 import { Tooltip } from "@nextui-org/react";
 import ConfirmModal from "../specific/ConfirmModal";
 import { usePathname, useRouter } from "next/navigation";
+import { GetProductDetailResponse } from "@/app/api/products/products.type";
 
 type Props = {
   product: GetProductDetailResponse;

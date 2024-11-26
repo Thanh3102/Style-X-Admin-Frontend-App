@@ -68,7 +68,7 @@ const items = [
   {
     title: "Khách hàng",
     icon: <FaUsers size={18} />,
-    url: DiscountsRoute,
+    url: "customers",
   },
   {
     title: "Khuyến mại",

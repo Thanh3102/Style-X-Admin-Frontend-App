@@ -171,6 +171,7 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
             {product.variants.map((variant) => (
               <Link
                 href={`${ProductRoute}/${product.id}/variants/${variant.id}`}
+                key={variant.id}
               >
                 <div
                   className={cn(
@@ -382,7 +383,7 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
             title="Thông tin kho"
             titleEndContent={
               <div className="flex gap-4">
-                <Link href={InventoriesHistoryRoute(propVariant.id)}>
+                <Link href={InventoriesHistoryRoute(propVariant.id)} target="_blank">
                   <span className="label-link">Lịch sử kho</span>
                 </Link>
                 <span className="label-link" onClick={onOpen}>

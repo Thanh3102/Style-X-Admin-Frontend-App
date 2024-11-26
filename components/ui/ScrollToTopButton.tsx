@@ -37,15 +37,11 @@ const ScrollToTopButton = () => {
   });
 
   return (
-    <motion.div initial={{ x: 20 }} animate={{ x: 0 }} exit={{ x: 20 }}>
-      <Button
-        isIconOnly
-        className={`fixed bottom-4 right-4 ${isShow ? "" : "hidden"}`}
-        onClick={() => scrollToTop()}
-      >
-        <BiArrowToTop size={24} />
+    <div className={`fixed bottom-4 right-4 ${isShow ? "" : "hidden"}`}>
+      <Button size="sm" radius="sm" isIconOnly onClick={() => scrollToTop()}>
+        <BiArrowToTop size={20} />
       </Button>
-    </motion.div>
+    </div>
   );
 };
 

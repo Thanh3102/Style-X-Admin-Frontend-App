@@ -44,6 +44,7 @@ export type ProductResponse = {
   createdAt: Date;
   variants: {
     id: number;
+    productId: number;
     skuCode: string;
     barCode: string | null;
     unit: string | null;

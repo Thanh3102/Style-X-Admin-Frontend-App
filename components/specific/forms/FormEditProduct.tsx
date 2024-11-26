@@ -141,7 +141,7 @@ const FormEditProduct = ({ product }: Props) => {
     (
       inventories: {
         onHand: number;
-        avaiable: Number;
+        avaiable: number;
         warehouse: { id: number; name: string };
       }[]
     ) => {

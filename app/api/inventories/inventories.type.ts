@@ -20,6 +20,7 @@ export type GetInventoriesHistoryResponse = {
     changeOn: Date;
     changeUserId: number;
     inventoryId: number;
+    receiveId: number;
     changeUser: {
       name: string;
     };
@@ -27,6 +28,18 @@ export type GetInventoriesHistoryResponse = {
       warehouse: {
         name: string;
       };
+      productVariant: {
+        id: number;
+        title: string;
+        product: {
+          id: number;
+          name: string;
+        };
+      };
+    };
+    receiveInventory: {
+      id: number;
+      code: string;
     };
   }[];
   paginition: {

@@ -20,6 +20,8 @@ export enum FilterParam {
   TAG_TYPE = "tagType",
   ASSIGN_IDS = "assignIds",
   ACTIVE = "active",
+  RECEIVE_IDS = "receiveIds",
+  VARIANT_IDS = "variantIds",
 }
 
 export type QueryParams = Partial<Record<FilterParam, string>>;
@@ -85,7 +87,7 @@ export enum ReceiveInventoryStatus {
   NOT_RECEIVED = "Chưa nhập hàng",
   PARTIALLY_RECEIVED = "Nhập một phần",
   RECEIVED = "Đã nhập hàng",
-  CANCEL = "Hủy",
+  CANCEL = "Hủy đơn",
 }
 
 export enum PaymentMethod {

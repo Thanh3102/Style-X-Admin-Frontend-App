@@ -13,14 +13,11 @@ import {
 } from "@nextui-org/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { EmptyTableContent } from "./EmptyTableContent";
-import { ProductRoute } from "@/constants/route";
+
 import { useCallback } from "react";
-import { cn } from "@/libs/utils";
-import { SupplierFilter } from "./SupplierFilter";
-import Image from "next/image";
-import { ProductTableFilter } from "./ProductTableFilter";
-import { ImagePlaceholderPath } from "@/constants/filepath";
 import { GetInventoriesHistoryResponse } from "@/app/api/inventories/inventories.type";
+import { ReceiveInventoryDetailRoute } from "@/constants/route";
+import Link from "next/link";
 type InventoryHistory =
   GetInventoriesHistoryResponse["inventoryHistory"][number];
 
@@ -37,6 +34,7 @@ type Column = {
   label: string;
   isSortable: boolean;
   className?: string;
+  align?: "start" | "center" | "end";
 };
 
 const columns: Column[] = [
@@ -44,7 +42,7 @@ const columns: Column[] = [
     key: "changeOn",
     label: "Thời gian",
     isSortable: false,
-    className: "min-w-[200px] sticky left-0 bg-white",
+    className: "min-w-[200px] sticky left-0 bg-white !z-[9999]",
   },
   {
     key: "transactionType",
@@ -65,38 +63,45 @@ const columns: Column[] = [
     className: "min-w-[200px]",
   },
   {
+    key: "variant",
+    label: "Sản phẩm",
+    isSortable: false,
+    className: "min-w-[200px]",
+  },
+  {
     key: "changeUser",
     label: "Thay đổi bởi",
     isSortable: false,
     className: "min-w-[200px]",
+    align: "center",
   },
   {
     key: "onHand",
     label: "Tồn kho",
     isSortable: false,
+    align: "center",
     className: "min-w-[100px]",
-    
   },
   {
     key: "avaiable",
     label: "Có thể bán",
     isSortable: false,
+    align: "center",
     className: "min-w-[100px]",
-    
   },
   {
     key: "onTransaction",
     label: "Đang giao dịch",
     isSortable: false,
+    align: "center",
     className: "min-w-[100px]",
-    
   },
   {
     key: "onReceive",
     label: "Đang về kho",
     isSortable: false,
+    align: "center",
     className: "min-w-[100px]",
-    
   },
 ];
 
@@ -121,7 +126,13 @@ const InventoryHistoryTable = (props: Props) => {
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     const newUrl = updateSearchParams(
       current,
-      [{ name: "limit", value: limit }],
+      [
+        { name: "limit", value: limit },
+        {
+          name: "page",
+          value: "1",
+        },
+      ],
       pathname
     );
     router.push(newUrl);
@@ -131,14 +142,29 @@ const InventoryHistoryTable = (props: Props) => {
     switch (key) {
       case "changeOn":
         return (
-          <TableCell className="sticky left-0 z-50">
+          <TableCell className="sticky left-0 z-20">
             <span>{convertDateToString(item.changeOn)}</span>
           </TableCell>
         );
       case "transactionType":
         return (
           <TableCell className="text-gray-500">
-            Loại: <span className="text-black">{item.transactionType}</span>
+            <div className="flex flex-col">
+              {item.receiveInventory && (
+                <Link
+                  href={`${ReceiveInventoryDetailRoute(
+                    item.receiveInventory.id
+                  )}`}
+                >
+                  <span className="label-link text-sm">
+                    {item.receiveInventory.code}
+                  </span>
+                </Link>
+              )}
+              <span>
+                Loại: <span className="text-black">{item.transactionType}</span>
+              </span>
+            </div>
           </TableCell>
         );
       case "transactionAction":
@@ -151,6 +177,12 @@ const InventoryHistoryTable = (props: Props) => {
         return (
           <TableCell>
             <span>{item.inventory.warehouse.name}</span>
+          </TableCell>
+        );
+      case "variant":
+        return (
+          <TableCell>
+            <span>{`${item.inventory.productVariant.product.name}-${item.inventory.productVariant.title}`}</span>
           </TableCell>
         );
       case "changeUser":
@@ -238,7 +270,7 @@ const InventoryHistoryTable = (props: Props) => {
   return (
     <>
       {/* <ProductTableFilter /> */}
-      <div className="max-w-full overflow-x-auto">
+      <div className="max-w-full overflow-x-auto max-h-[80vh] overflow-y-auto">
         <Table
           removeWrapper
           isHeaderSticky
@@ -263,7 +295,7 @@ const InventoryHistoryTable = (props: Props) => {
               <TableColumn
                 key={column.key}
                 className={column.className}
-                align="center"
+                align={column.align}
               >
                 {column.label}
               </TableColumn>

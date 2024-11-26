@@ -1,6 +1,5 @@
 "use client";
 import { updateSearchParams } from "@/libs/helper";
-import { SupplierResponse } from "@/libs/types/backend/response";
 import {
   Pagination,
   Select,
@@ -21,6 +20,7 @@ import { cn } from "@/libs/utils";
 import { SupplierFilter } from "./SupplierFilter";
 import LinkButton from "../ui/LinkButton";
 import { FaPlus } from "react-icons/fa6";
+import { SupplierResponse } from "@/app/api/suppliers/suppliers.type";
 
 type SupplierTableProps = {
   page: number;
@@ -94,7 +94,13 @@ const SupplierTable = ({
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     const newUrl = updateSearchParams(
       current,
-      [{ name: "limit", value: limit }],
+      [
+        { name: "limit", value: limit },
+        {
+          name: "page",
+          value: "1",
+        },
+      ],
       pathname
     );
     router.push(newUrl);

@@ -59,7 +59,7 @@ type Props = {
   onSelectionChange?: (SelectedVariants: SelectedVariant[]) => void;
 };
 
-const ProductSelector = (props: Props) => {
+const ReceiveProductSelector = (props: Props) => {
   const { onSelectionChange } = props;
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenList, setIsOpenList] = useState(false);
@@ -195,10 +195,10 @@ const ProductSelector = (props: Props) => {
         discountAmount: 0,
         discountValue: 0,
         totalDiscount: 0,
-        price: variant.sellPrice,
-        total: variant.sellPrice,
-        finalPrice: variant.sellPrice,
-        finalTotal: variant.sellPrice,
+        price: variant.costPrice,
+        total: variant.costPrice,
+        finalPrice: variant.costPrice,
+        finalTotal: variant.costPrice,
         quantity: 1,
       };
 
@@ -496,7 +496,7 @@ const ChangePriceModal = (props: ChangePriceModalProps) => {
             ? selectedVariant.discountValue
             : Math.floor(selectedVariant.discountValue * newPrice * 0.01);
 
-        selectedVariant.discountAmount = newDiscountAmount
+        selectedVariant.discountAmount = newDiscountAmount;
         selectedVariant.price = newPrice;
         selectedVariant.total = newPrice * selectedVariant.quantity;
         selectedVariant.finalPrice = newPrice - newDiscountAmount;
@@ -652,4 +652,4 @@ const ChangePriceModal = (props: ChangePriceModalProps) => {
   );
 };
 
-export default ProductSelector;
+export default ReceiveProductSelector;

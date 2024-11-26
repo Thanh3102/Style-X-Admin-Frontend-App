@@ -57,14 +57,14 @@ const TagSeletor = ({
     <>
       <GroupBox
         title="Tags"
-        titleEndContent={
-          <span
-            className="label-link text-sm font-medium"
-            onClick={() => setOpenModal(true)}
-          >
-            Danh sách tag
-          </span>
-        }
+        // titleEndContent={
+        //   <span
+        //     className="label-link text-sm font-medium"
+        //     onClick={() => setOpenModal(true)}
+        //   >
+        //     Danh sách tag
+        //   </span>
+        // }
       >
         <div className="col-12">
           <div className="relative">

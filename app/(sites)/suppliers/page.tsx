@@ -13,15 +13,6 @@ import { FaPlus } from "react-icons/fa6";
 type GetSupplierParams = Partial<Record<FilterParam, any>>;
 
 const getSupplierData = async (params: GetSupplierParams) => {
-  const {
-    page = 1,
-    limit = 20,
-    query = "",
-    createdOn = "",
-    createdOnMin = "",
-    createdOnMax = "",
-    assignIds = "",
-  } = params;
   try {
     const session = await getServerSession(nextAuthOptions);
 
@@ -29,7 +20,6 @@ const getSupplierData = async (params: GetSupplierParams) => {
 
     return { data };
   } catch (error) {
-    console.log(`[Fetch Error]`, error);
     return { error };
   }
 };

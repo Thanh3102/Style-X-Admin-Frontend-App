@@ -6,7 +6,9 @@ import {
   ReceiveInventoryTransaction,
   TagType,
 } from "@/libs/types/backend";
-import ProductSelector, { SelectedVariant } from "../ProductSelector";
+import ReceiveProductSelector, {
+  SelectedVariant,
+} from "../ReceiveProductSelector";
 import { useImmer } from "use-immer";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
@@ -32,7 +34,7 @@ import {
 } from "@nextui-org/react";
 import toast from "react-hot-toast";
 import { CurrencyFormatter } from "@/libs/format-helper";
-import { FaDongSign } from "react-icons/fa6";
+import { FaDongSign, FaX } from "react-icons/fa6";
 import { getSession } from "next-auth/react";
 import { getWarehouse } from "@/app/api/warehouses";
 import { GetWarehousesResponse } from "@/libs/types/backend/response";
@@ -46,7 +48,10 @@ import { SupplierResponse } from "@/app/api/suppliers/suppliers.type";
 import SupplierCard from "@/components/ui/SupplierCard";
 import RenderIf from "@/components/ui/RenderIf";
 import ConfirmModal from "../ConfirmModal";
-import { ReceiveInventoryRoute } from "@/constants/route";
+import {
+  ReceiveInventoryDetailRoute,
+  ReceiveInventoryRoute,
+} from "@/constants/route";
 import { useRouter } from "next/navigation";
 import { POST_CREATE_RECEIVE_INVENTORY } from "@/constants/api-routes";
 
@@ -69,6 +74,7 @@ const CreateReceiveInventorySchema = z.object({
   totalItems: z.number(),
   totalItemsDiscount: z.number(),
   totalItemsPrice: z.number(),
+  totalItemsPriceBeforeDiscount: z.number(),
   landedCosts: z.array(
     z.object({
       name: z.string(),
@@ -106,14 +112,13 @@ const CreateReceiveInventorySchema = z.object({
 
 type CreateReceiveInventoryField = z.infer<typeof CreateReceiveInventorySchema>;
 
-type Props = {};
 
 type LandedCost = {
   name: string;
   price: number;
 };
 
-const FormCreateReceiveInventory = (props: Props) => {
+const FormCreateReceiveInventory = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [exitConfirm, setExitConfirm] = useState(false);
   const [warehouses, setWarehouses] = useState<GetWarehousesResponse>([]);
@@ -179,14 +184,13 @@ const FormCreateReceiveInventory = (props: Props) => {
 
       const response = await res.json();
 
-      console.log("Response", response);
-
       if (res.ok) {
         toast.success("Tạo đơn nhập thành công");
+        router.push(ReceiveInventoryDetailRoute(response.id));
         return;
       }
 
-      toast.error("Đã xảy ra lỗi");
+      toast.error(response.message ?? "Đã xảy ra lỗi");
     } catch (error) {
       toast.error("Đã xảy ra lỗi");
     }
@@ -197,6 +201,13 @@ const FormCreateReceiveInventory = (props: Props) => {
       const data = await getWarehouse();
       setWarehouses(data);
     } catch (error) {}
+  }, []);
+
+  const handleRemoveLandedCost = useCallback((index: number) => {
+    setLandedCosts((landedCosts) => {
+      landedCosts.splice(index, 1);
+      return landedCosts;
+    });
   }, []);
 
   useEffect(() => {
@@ -245,7 +256,9 @@ const FormCreateReceiveInventory = (props: Props) => {
     setValue("totalItemsDiscount", newTotalItemsDiscount);
     setValue("totalItemsPrice", newTotalItemsPrice);
     setValue("totalReceipt", newTotalReceipt);
+    setValue("totalItemsPriceBeforeDiscount", cost.totalBeforeDiscount);
     setValue("items", items);
+    setValue("transactionAmount", newTotalReceipt);
   }, [selectedVariants]);
 
   useEffect(() => {
@@ -265,6 +278,7 @@ const FormCreateReceiveInventory = (props: Props) => {
     setValue("landedCosts", landedCosts);
     setValue("totalLandedCost", newTotalLandedCost);
     setValue("totalReceipt", newTotalReceipt);
+    setValue("transactionAmount", newTotalReceipt);
   }, [landedCosts]);
 
   useEffect(() => {
@@ -299,12 +313,10 @@ const FormCreateReceiveInventory = (props: Props) => {
       >
         <div className="flex flex-col flex-[4] gap-4 basis-[600px]">
           <GroupBox title="Sản phẩm">
-            <ProductSelector
+            <ReceiveProductSelector
               onSelectionChange={(variants) => setSelectedVariants(variants)}
             />
 
-
-            
             <Checkbox {...register("importAfterCreate")}>
               Nhập kho sau khi tạo đơn
             </Checkbox>
@@ -344,13 +356,21 @@ const FormCreateReceiveInventory = (props: Props) => {
                   Chi phí nhập hàng
                 </span>
                 <div className="flex-[3] flex justify-between">
-                  <div className="flex flex-col gap-2">
-                    {landedCosts.map((item) => (
-                      <span>
-                        {item.name}: {CurrencyFormatter().format(item.price)}
-                      </span>
+                  <ul className="flex flex-col text-sm list-disc">
+                    {landedCosts.map((item, index) => (
+                      <li className="flex gap-2 items-center" key={item.name}>
+                        <div
+                          className="p-2 rounded-full hover:bg-gray-300 hover:cursor-pointer"
+                          onClick={() => handleRemoveLandedCost(index)}
+                        >
+                          <FaX size={10} />
+                        </div>
+                        <span>
+                          {item.name}: {CurrencyFormatter().format(item.price)}
+                        </span>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                   <span>
                     {CurrencyFormatter().format(cost.totalLandedCost)}
                   </span>
@@ -414,7 +434,6 @@ const FormCreateReceiveInventory = (props: Props) => {
                     variant="bordered"
                     radius="sm"
                     className="col-6"
-                    defaultValue="0"
                     min={0}
                     max={1e12}
                     isInvalid={errors.transactionAmount ? true : false}
