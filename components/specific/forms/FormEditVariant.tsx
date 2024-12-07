@@ -168,53 +168,55 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
           </GroupBox>
 
           <GroupBox title="Phiên bản">
-            {product.variants.map((variant) => (
-              <Link
-                href={`${ProductRoute}/${product.id}/variants/${variant.id}`}
-                key={variant.id}
-              >
-                <div
-                  className={cn(
-                    "p-3 flex items-center gap-4 border-b-1 border-gray-200",
-                    "hover:cursor-pointer hover:bg-blue-100",
-                    {
-                      "bg-blue-100": variant.id === propVariant.id,
-                    }
-                  )}
+            <div className="h-[500px] overflow-y-auto">
+              {product.variants.map((variant) => (
+                <Link
+                  href={`${ProductRoute}/${product.id}/variants/${variant.id}`}
+                  key={variant.id}
                 >
-                  <Image
-                    as={NextImage}
-                    src={variant.image ?? ImagePlaceholderPath}
-                    height={40}
-                    width={40}
-                    radius="sm"
-                    className="border-1 border-gray-500"
-                  />
-                  <div className="flex flex-col gap-1 text-xs flex-1">
-                    <span className="label-link">{variant.title}</span>
-                    <div className="flex gap-2 justify-between flex-1">
-                      <span className="line-clamp-1">
-                        Tồn kho:{" "}
-                        {variant.inventories.reduce(
-                          (total, i) => total + i.onHand,
-                          0
-                        )}
-                      </span>
-                      <span className="line-clamp-1">
-                        Có thể bán:{" "}
-                        {variant.inventories.reduce(
-                          (total, i) => total + i.avaiable,
-                          0
-                        )}
-                      </span>
+                  <div
+                    className={cn(
+                      "p-3 flex items-center gap-4 border-b-1 border-gray-200",
+                      "hover:cursor-pointer hover:bg-blue-100",
+                      {
+                        "bg-blue-100": variant.id === propVariant.id,
+                      }
+                    )}
+                  >
+                    <Image
+                      as={NextImage}
+                      src={variant.image ?? ImagePlaceholderPath}
+                      height={40}
+                      width={40}
+                      radius="sm"
+                      className="border-1 border-gray-500"
+                    />
+                    <div className="flex flex-col gap-1 text-xs flex-1">
+                      <span className="label-link">{variant.title}</span>
+                      <div className="flex gap-2 justify-between flex-1">
+                        <span className="line-clamp-1">
+                          Tồn kho:{" "}
+                          {variant.inventories.reduce(
+                            (total, i) => total + i.onHand,
+                            0
+                          )}
+                        </span>
+                        <span className="line-clamp-1">
+                          Có thể bán:{" "}
+                          {variant.inventories.reduce(
+                            (total, i) => total + i.avaiable,
+                            0
+                          )}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))}
+            </div>
           </GroupBox>
         </div>
-        <div className="flex-[2] basis-[600px] min-w-0 flex flex-wrap gap-4">
+        <div className="flex-[2] basis-[600px] min-w-0 flex flex-wrap gap-4 h-fit">
           <GroupBox title="Thuộc tính">
             <div className="flex gap-4 flex-wrap">
               <div className="flex flex-col gap-2 flex-1">
@@ -383,7 +385,10 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
             title="Thông tin kho"
             titleEndContent={
               <div className="flex gap-4">
-                <Link href={InventoriesHistoryRoute(propVariant.id)} target="_blank">
+                <Link
+                  href={InventoriesHistoryRoute(propVariant.id)}
+                  target="_blank"
+                >
                   <span className="label-link">Lịch sử kho</span>
                 </Link>
                 <span className="label-link" onClick={onOpen}>

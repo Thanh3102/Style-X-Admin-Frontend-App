@@ -3,7 +3,7 @@ import { getVariantDetail } from "@/app/api/products";
 import { InventoryHistoryTable } from "@/components/specific/InventoryHistoryTable";
 import ErrorPage from "@/components/ui/ErrorPage";
 import GoBackButton from "@/components/ui/GoBackButton";
-import LoadingCard from "@/components/ui/Loading";
+import LoadingCard from "@/components/ui/LoadingCard";
 import PageTitle from "@/components/ui/PageTitle";
 import { ProductRoute } from "@/constants/route";
 import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
@@ -49,7 +49,6 @@ const Page = async (props: Props) => {
   } = await getInventoriesHistoryData(props.searchParams);
 
   console.log(">>> Error", getInventoriesHistoryDataError);
-  
 
   if (getInventoriesHistoryDataError || !inventoryHistory || !paginition)
     return <ErrorPage />;

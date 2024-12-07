@@ -11,6 +11,8 @@ export const EditVariantRoute = (
   variantId: number | string
 ) => `${ProductRoute}/${productId}/variants/${variantId}`;
 
+export const CollectionRoute = "/collections"
+
 export const OrdersRoute = "/orders";
 
 export const InventoriesRoute = "/inventories";

@@ -5,6 +5,7 @@ export type DetailDiscount = {
   type: string;
   mode: string;
   title: string;
+  description: string;
   value: number;
   valueLimitAmount: null | number;
   valueType: string;
@@ -43,6 +44,12 @@ export type DetailDiscount = {
   categories: Array<{
     id: number;
     title: string;
+    collection: {
+      id: number;
+      title: string;
+      slug: string | null;
+      position: number;
+    };
   }>;
 };
 

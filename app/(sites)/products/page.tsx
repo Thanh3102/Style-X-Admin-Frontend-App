@@ -2,7 +2,7 @@ import { getProduct } from "@/app/api/products";
 import { ProductTable } from "@/components/specific/ProductTable";
 import ErrorPage from "@/components/ui/ErrorPage";
 import LinkButton from "@/components/ui/LinkButton";
-import LoadingCard from "@/components/ui/Loading";
+import LoadingCard from "@/components/ui/LoadingCard";
 import PageTitle from "@/components/ui/PageTitle";
 import { CreateProductRoute } from "@/constants/route";
 import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
@@ -31,7 +31,7 @@ const getProductData = async (searchParams: QueryParams) => {
 const Page = async (props: Props) => {
   const { searchParams } = props;
   const { data, error } = await getProductData(searchParams);
-  
+
   if (error || !data) return <ErrorPage />;
 
   return (
@@ -42,7 +42,7 @@ const Page = async (props: Props) => {
           href={`${CreateProductRoute}`}
           buttonProps={{ startContent: <FaPlus size={18} /> }}
         >
-          Tạo đơn nhập hàng
+          Thêm sản phẩm mới
         </LinkButton>
       </div>
       <Suspense fallback={<LoadingCard />}>

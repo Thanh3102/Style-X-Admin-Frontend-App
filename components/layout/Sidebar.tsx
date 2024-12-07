@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { FaTruckLoading } from "react-icons/fa";
 import { FaAngleLeft, FaAngleRight, FaUsers, FaWarehouse } from "react-icons/fa6";
 import { IoBagHandleSharp } from "react-icons/io5";
@@ -13,8 +13,10 @@ import SidebarItem from "./SidebarItem";
 import { TbPackageImport, TbRosetteDiscount } from "react-icons/tb";
 import { BsPersonFillGear } from "react-icons/bs";
 import { HiOutlineDocumentReport } from "react-icons/hi";
+import { CiBoxList } from "react-icons/ci";
 import {
   AccountsRoute,
+  CollectionRoute,
   CustomizeRoute,
   DashboardRoute,
   DiscountsRoute,
@@ -39,6 +41,11 @@ const items = [
     title: "Sản phẩm",
     icon: <IoBagHandleSharp size={18} />,
     url: ProductRoute,
+  },
+  {
+    title: "Danh mục",
+    icon: <CiBoxList size={18} />,
+    url: CollectionRoute,
   },
   {
     title: "Đơn hàng",
@@ -149,4 +156,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default memo(Sidebar);

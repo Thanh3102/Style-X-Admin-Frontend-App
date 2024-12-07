@@ -13,6 +13,12 @@ import { SelectedTag } from "../ui/SelectedTag";
 export type Category = {
   id: number;
   title: string;
+  collection: {
+    title: string;
+    id: number;
+    slug: string | null;
+    position: number;
+  };
 };
 
 type Props = {
@@ -201,7 +207,7 @@ const CategoriesSearch = (props: Props) => {
               value={cat.id.toString()}
               classNames={{ wrapper: "hover:bg-gray-100" }}
             >
-              {cat.title}
+              {`${cat.title}-${cat.collection.title}`}
             </Checkbox>
           ))}
         </RenderIf>
@@ -215,7 +221,7 @@ const CategoriesSearch = (props: Props) => {
               value={cat.id.toString()}
               classNames={{ wrapper: "hover:bg-gray-100" }}
             >
-              {cat.title}
+              {`${cat.title}-${cat.collection.title}`}
             </Checkbox>
           ))}
         </RenderIf>

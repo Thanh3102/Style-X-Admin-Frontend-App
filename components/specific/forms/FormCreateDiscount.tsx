@@ -19,6 +19,7 @@ import {
   Image,
   Accordion,
   AccordionItem,
+  Textarea,
 } from "@nextui-org/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -58,8 +59,8 @@ const Schema = z
     title: z
       .string({ required_error: "Chưa nhập mã khuyến mại" })
       .min(6, { message: "Mã khuyến mại tối thiểu 6 kí tự" })
-      .max(50, { message: "Mã giảm giá dài tối đa 50 kí tự" }),
-
+      .max(100, { message: "Mã giảm giá dài tối đa 100 kí tự" }),
+    description: z.string().max(500, { message: "Mô tả dài tối đa 500 kí tự" }),
     value: z
       .number({
         required_error: "Chưa nhập giá trị",
@@ -201,6 +202,7 @@ type SummaryData = {
   endOn: Date | null;
   entitledCategories: number;
   entitledVariants: number;
+  entitle: string;
 };
 
 type Summary = {
@@ -282,6 +284,7 @@ const FormCreateDiscount = ({ type, mode }: Props) => {
       usageLimit: getValues("usageLimit"),
       entitledCategories: getValues("entitledCategoriesIds").length,
       entitledVariants: getValues("entitledVariantIds").length,
+      entitle: getValues("entitle"),
     });
   }, [
     watch("value"),
@@ -298,6 +301,7 @@ const FormCreateDiscount = ({ type, mode }: Props) => {
     watch("usageLimit"),
     watch("entitledCategoriesIds"),
     watch("entitledVariantIds"),
+    watch("entitle"),
   ]);
 
   useEffect(() => {
@@ -466,6 +470,7 @@ const FormCreateDiscount = ({ type, mode }: Props) => {
       valueType,
       entitledCategories,
       entitledVariants,
+      entitle,
     } = data;
     const newSummary: Summary = {};
 
@@ -480,17 +485,13 @@ const FormCreateDiscount = ({ type, mode }: Props) => {
 
     switch (valueType) {
       case "percent":
-        newSummary.value = `Giảm ${value}% cho toàn bộ đơn hàng`;
+        newSummary.value = `Giảm ${value}%`;
         break;
       case "value":
-        newSummary.value = `Giảm ${CurrencyFormatter().format(
-          value
-        )} cho toàn bộ đơn hàng`;
+        newSummary.value = `Giảm ${CurrencyFormatter().format(value)}`;
         break;
       case "flat":
-        newSummary.value = `Đồng giá ${CurrencyFormatter().format(
-          value
-        )} cho toàn bộ đơn hàng`;
+        newSummary.value = `Đồng giá ${CurrencyFormatter().format(value)}`;
         break;
     }
 
@@ -498,12 +499,16 @@ const FormCreateDiscount = ({ type, mode }: Props) => {
       newSummary.value += `, tối đa ${CurrencyFormatter().format(valueLimit)}`;
     }
 
-    if (entitledCategories > 0) {
+    if (entitle === "all") {
+      newSummary.value += ` cho toàn bộ đơn hàng`;
+    }
+
+    if (entitledCategories > 0 && entitle === "entitledCategory") {
       newSummary.value += ` áp dụng cho ${entitledCategories} danh mục`;
     }
 
-    if (entitledVariants > 0) {
-      newSummary.value += ` áp dụng cho ${entitledVariants} phiên bản`;
+    if (entitledVariants > 0 && entitle === "entitledProduct") {
+      newSummary.value += ` áp dụng cho ${entitledVariants} phiên bản sản phẩm`;
     }
 
     if (prerequisiteMinItem) {
@@ -535,7 +540,7 @@ const FormCreateDiscount = ({ type, mode }: Props) => {
 
     const combines = [];
     if (combinesWithOrderDiscount) combines.push("giảm giá đơn hàng");
-    if (combinesWithProductDiscount) combines.push("giảm giá đơn hàng");
+    if (combinesWithProductDiscount) combines.push("giảm giá sản phẩm");
     if (combines.length > 0) {
       newSummary.combine = `Có thể kết hợp với ${combines.join(", ")}`;
     } else {
@@ -607,6 +612,7 @@ const FormCreateDiscount = ({ type, mode }: Props) => {
                   Tạo mã ngẫu nhiên
                 </span>
               }
+              className="flex gap-2"
             >
               <Input
                 isRequired
@@ -614,12 +620,26 @@ const FormCreateDiscount = ({ type, mode }: Props) => {
                 variant="bordered"
                 label={"Mã khuyến mại"}
                 labelPlacement="outside"
-                maxLength={50}
+                maxLength={100}
                 placeholder="VD: COUPON10"
                 isInvalid={!!errors.title}
                 errorMessage={errors.title?.message}
                 value={getValues("title")}
                 {...register("title")}
+              />
+
+              <Textarea
+                variant="bordered"
+                label={"Mô tả"}
+                radius="sm"
+                labelPlacement="outside"
+                placeholder="Nhập mô tả khuyến mại"
+                isInvalid={!!errors.description}
+                errorMessage={errors.description?.message}
+                minRows={5}
+                maxRows={5}
+                className="mt-2"
+                {...register("description")}
               />
             </GroupBox>
           </RenderIf>
@@ -632,12 +652,25 @@ const FormCreateDiscount = ({ type, mode }: Props) => {
                 variant="bordered"
                 label={"Tên chương trình khuyến mại"}
                 labelPlacement="outside"
-                maxLength={50}
+                maxLength={100}
                 placeholder="VD: Chương trình khuyến mại T6"
                 isInvalid={!!errors.title}
                 errorMessage={errors.title?.message}
                 value={getValues("title")}
                 {...register("title")}
+              />
+              <Textarea
+                variant="bordered"
+                label={"Mô tả"}
+                radius="sm"
+                labelPlacement="outside"
+                placeholder="Nhập mô tả khuyến mại"
+                isInvalid={!!errors.description}
+                errorMessage={errors.description?.message}
+                minRows={5}
+                maxRows={5}
+                className="mt-2"
+                {...register("description")}
               />
             </GroupBox>
           </RenderIf>
@@ -931,38 +964,40 @@ const FormCreateDiscount = ({ type, mode }: Props) => {
             </RadioGroup>
           </GroupBox>
 
-          <GroupBox title="Giới hạn sử dụng">
-            <CheckboxGroup>
-              <Checkbox
-                key={"usageLimit"}
-                value={"usageLimit"}
-                isSelected={openUsageLimit}
-                onValueChange={handleUsageLimitChange}
-              >
-                Giới hạn sử dụng
-              </Checkbox>
-              <RenderIf condition={openUsageLimit}>
-                <Input
-                  className="min-w-[150px] w-1/3"
-                  radius="sm"
-                  variant="bordered"
-                  type="number"
-                  isInvalid={!!errors.usageLimit}
-                  errorMessage={errors.usageLimit?.message}
-                  {...register("usageLimit", { valueAsNumber: true })}
-                />
-              </RenderIf>
-              <Checkbox
-                key={"onePerCustomer"}
-                value={"onePerCustomer"}
-                onValueChange={(isSelected) =>
-                  setValue("onePerCustomer", isSelected)
-                }
-              >
-                Giới hạn mỗi khách hàng chỉ sử dụng mã giảm giá này 1 lần
-              </Checkbox>
-            </CheckboxGroup>
-          </GroupBox>
+          <RenderIf condition={mode === "coupon"}>
+            <GroupBox title="Giới hạn sử dụng">
+              <CheckboxGroup>
+                <Checkbox
+                  key={"usageLimit"}
+                  value={"usageLimit"}
+                  isSelected={openUsageLimit}
+                  onValueChange={handleUsageLimitChange}
+                >
+                  Giới hạn sử dụng
+                </Checkbox>
+                <RenderIf condition={openUsageLimit}>
+                  <Input
+                    className="min-w-[150px] w-1/3"
+                    radius="sm"
+                    variant="bordered"
+                    type="number"
+                    isInvalid={!!errors.usageLimit}
+                    errorMessage={errors.usageLimit?.message}
+                    {...register("usageLimit", { valueAsNumber: true })}
+                  />
+                </RenderIf>
+                <Checkbox
+                  key={"onePerCustomer"}
+                  value={"onePerCustomer"}
+                  onValueChange={(isSelected) =>
+                    setValue("onePerCustomer", isSelected)
+                  }
+                >
+                  Giới hạn mỗi khách hàng chỉ sử dụng mã giảm giá này 1 lần
+                </Checkbox>
+              </CheckboxGroup>
+            </GroupBox>
+          </RenderIf>
 
           <GroupBox title="Kết hợp khuyến mại">
             <Alert variant={"warning"}>
@@ -1132,4 +1167,5 @@ const FormCreateDiscount = ({ type, mode }: Props) => {
     </>
   );
 };
+
 export default FormCreateDiscount;

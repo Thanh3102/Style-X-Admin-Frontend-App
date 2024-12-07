@@ -10,7 +10,7 @@ import { DetailSuppler } from "@/libs/types/backend";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import LoadingCard from "@/components/ui/Loading";
+import LoadingCard from "@/components/ui/LoadingCard";
 
 type Props = {
   params: {
@@ -20,7 +20,7 @@ type Props = {
 
 const getSupplier = async (id: string) => {
   try {
-    const session = await getServerSession(nextAuthOptions);    
+    const session = await getServerSession(nextAuthOptions);
     const res = await fetch(`${GET_SUPPLIER_DETAIL_ROUTE}/${id}`, {
       headers: {
         authorization: `Bearer ${session?.accessToken}`,
@@ -67,7 +67,7 @@ const Page = async ({ params: { id } }: Props) => {
           color={`${supplier.active ? "success" : "default"}`}
         />
       </div>
-      <Suspense fallback={<LoadingCard/>}>
+      <Suspense fallback={<LoadingCard />}>
         <div className="flex gap-5">
           <div className="flex-[2] min-w-[500px]">
             <SupplierOrdersPanel supplier={supplier} />

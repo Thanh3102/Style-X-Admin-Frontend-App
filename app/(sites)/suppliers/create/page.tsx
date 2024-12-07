@@ -1,6 +1,6 @@
 import FormCreateSupplier from "@/components/specific/forms/FormCreateSupplier";
 import GoBackButton from "@/components/ui/GoBackButton";
-import LoadingCard from "@/components/ui/Loading";
+import LoadingCard from "@/components/ui/LoadingCard";
 import PageTitle from "@/components/ui/PageTitle";
 import { SuppliersRoute } from "@/constants/route";
 import { Suspense } from "react";

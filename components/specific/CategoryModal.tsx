@@ -5,7 +5,7 @@ import {
   ModalContent,
   ModalHeader,
 } from "@nextui-org/react";
-import CategoryList from "../ui/CategoryTable";
+// import CategoryList from "../ui/CategoryTable";
 
 type Props = {
   isOpen: boolean;
@@ -24,7 +24,7 @@ const CategoryModal = ({ isOpen, onOpenChange }: Props) => {
           <>
             <ModalHeader>Danh mục sản phẩm</ModalHeader>
             <ModalBody>
-              <CategoryList />
+              {/* <CategoryList /> */}
             </ModalBody>
           </>
         )}

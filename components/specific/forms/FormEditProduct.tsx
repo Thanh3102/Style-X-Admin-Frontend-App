@@ -1,11 +1,6 @@
 "use client";
 import {
   Button,
-  Input,
-  Link,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
   Radio,
   Select,
   SelectItem,
@@ -42,8 +37,10 @@ import { EditVariantRoute, ProductRoute } from "@/constants/route";
 import ProductImages from "../../ui/ProductImages";
 import UploadImageModal from "../UploadImageModal";
 import { isInteger } from "@/libs/helper";
-import { FaTrash } from "react-icons/fa6";
+import { FaDongSign, FaTrash } from "react-icons/fa6";
 import { GetProductDetailResponse } from "@/app/api/products/products.type";
+import { InfoTooltip } from "@/components/ui/InfoTooltip";
+import { COMPARE_PRICE_INFO, COST_PRICE_INFO } from "@/constants/text";
 
 const TextEditor = dynamic(() => import("../../common/TextEditor"), {
   ssr: false,
@@ -62,6 +59,18 @@ const EditProductSchema = z.object({
   deleteTags: z.array(z.string()),
   deleteCategoryIds: z.array(z.number()).optional(),
   addCategoryIds: z.array(z.number()).optional(),
+  sellPrice: z
+    .number()
+    .min(0, "Giá bán nhỏ nhất là 0")
+    .max(1e12, "Giá bán quá lớn"),
+  costPrice: z
+    .number()
+    .min(0, "Giá vốn nhỏ nhất là 0")
+    .max(1e12, "Giá vốn quá lớn"),
+  comparePrice: z
+    .number()
+    .min(0, "Giá so sánh nhỏ nhất là 0")
+    .max(1e12, "Giá so sánh quá lớn"),
 });
 
 type EditProductField = z.infer<typeof EditProductSchema>;
@@ -85,7 +94,7 @@ type Props = {
 const FormEditProduct = ({ product }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
-  const [openShortDesc, setOpenShortDesc] = useState(false);
+  const [openShortDesc, setOpenShortDesc] = useState(!!product.shortDescription);
   const [openAddImage, setOpenAddImage] = useState(false);
   const [options, setOptions] = useImmer<ProductOption[]>(product.options);
   const [variants, setVariants] = useImmer<Variant[]>(product.variants);
@@ -106,6 +115,9 @@ const FormEditProduct = ({ product }: Props) => {
       name: product.name,
       description: product.description ?? undefined,
       shortDescription: product.shortDescription ?? undefined,
+      sellPrice: product.sellPrice,
+      costPrice: product.costPrice,
+      comparePrice: product.comparePrice,
       // options: product.options,
     },
   });
@@ -273,6 +285,17 @@ const FormEditProduct = ({ product }: Props) => {
     });
   }, []);
 
+  const handlePriceChange = useCallback(
+    (value: string, field: "sellPrice" | "costPrice" | "comparePrice") => {
+      if (value === "") setValue(field, 0);
+      else
+        setValue(field, parseInt(value), {
+          shouldValidate: true,
+        });
+    },
+    []
+  );
+
   useEffect(() => {
     if (isSubmitted && !isValid) {
       if (Object.keys(errors).length > 0) {
@@ -364,6 +387,87 @@ const FormEditProduct = ({ product }: Props) => {
                   }
                 />
               </div>
+            </div>
+          </GroupBox>
+
+          <GroupBox title="Thông tin giá">
+            <div className="flex flex-wrap gap-y-2 -mx-2 [&>*]:px-2">
+              <Controller
+                control={control}
+                name="sellPrice"
+                render={({ field }) => (
+                  <FormInput
+                    aria-label="Giá bán"
+                    type="number"
+                    label="Giá bán"
+                    placeholder="Nhập giá bán"
+                    className="col-6"
+                    step={1000}
+                    isInvalid={errors.sellPrice ? true : false}
+                    errorMessage={errors.sellPrice?.message}
+                    value={field.value.toString()}
+                    endContent={<FaDongSign className="text-gray-500" />}
+                    description={`Giá bán: ${CurrencyFormatter({
+                      style: "currency",
+                    }).format(getValues("sellPrice"))}`}
+                    onValueChange={(value) =>
+                      handlePriceChange(value, "sellPrice")
+                    }
+                  />
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="comparePrice"
+                render={({ field }) => (
+                  <FormInput
+                    aria-label="Giá so sanh"
+                    type="number"
+                    label="Giá so sánh"
+                    placeholder="Nhập giá so sánh"
+                    className="col-6"
+                    step={1000}
+                    isInvalid={errors.comparePrice ? true : false}
+                    errorMessage={errors.comparePrice?.message}
+                    value={field.value.toString()}
+                    startContent={<InfoTooltip content={COMPARE_PRICE_INFO} />}
+                    endContent={<FaDongSign className="text-gray-500" />}
+                    description={`Giá so sánh: ${CurrencyFormatter({
+                      style: "currency",
+                    }).format(getValues("comparePrice"))}`}
+                    onValueChange={(value) =>
+                      handlePriceChange(value, "comparePrice")
+                    }
+                  />
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="costPrice"
+                render={({ field }) => (
+                  <FormInput
+                    aria-label="Giá vốn"
+                    type="number"
+                    label="Giá vốn"
+                    placeholder="Nhập giá vốn"
+                    className="col-6"
+                    step={1000}
+                    isInvalid={errors.costPrice ? true : false}
+                    errorMessage={errors.costPrice?.message}
+                    value={field.value.toString()}
+                    startContent={<InfoTooltip content={COST_PRICE_INFO} />}
+                    endContent={<FaDongSign className="text-gray-500" />}
+                    description={`Giá vốn: ${CurrencyFormatter({
+                      style: "currency",
+                    }).format(getValues("costPrice"))}`}
+                    onValueChange={(value) =>
+                      handlePriceChange(value, "costPrice")
+                    }
+                  />
+                )}
+              />
             </div>
           </GroupBox>
 
@@ -581,7 +685,7 @@ const FormEditProduct = ({ product }: Props) => {
           Xóa
         </Button>
         <Button
-          isDisabled={isLoading || isDeleteLoading || !isDirty}
+          isDisabled={isLoading || isDeleteLoading}
           isLoading={isLoading}
           radius="sm"
           type="submit"

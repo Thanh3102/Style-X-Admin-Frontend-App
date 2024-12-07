@@ -15,7 +15,7 @@ const GroupBox = ({
 }: GroupBoxProps) => {
   return (
     <>
-      <div className={cn("container shadow-md", className)}>
+      <div className={cn("container shadow-md h-fit", className)}>
         <div
           className={cn("hidden pb-4 gap-4 items-center", {
             "flex justify-between": title && titleEndContent,

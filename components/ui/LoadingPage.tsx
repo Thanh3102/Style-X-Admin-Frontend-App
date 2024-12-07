@@ -1,4 +1,4 @@
-import LoadingCard from "./Loading";
+import LoadingCard from "./LoadingCard";
 
 const LoadingPage = () => {
   return (

@@ -20,6 +20,14 @@ export const PUT_UPDATE_PRODUCT_ROUTE = `${SERVER_BASE_URL}/api/product`;
 export const PUT_UPDATE_PRODUCT_VARIANT_ROUTE = `${SERVER_BASE_URL}/api/product/variant`;
 export const PUT_UPDATE_MAIN_IMAGE_ROUTE = `${SERVER_BASE_URL}/api/product/images/updateMainImage`;
 export const DELETE_PRODUCT_IMAGE_ROUTE = `${SERVER_BASE_URL}/api/product/images`;
+export const GET_CATEGORY = `${SERVER_BASE_URL}/api/product/category`;
+export const POST_CREATE_CATEGORY = `${SERVER_BASE_URL}/api/product/category`;
+export const POST_UPDATE_CATEGORY = `${SERVER_BASE_URL}/api/product/category/update`;
+export const DELETE_CATEGORY = `${SERVER_BASE_URL}/api/product/category`;
+export const GET_COLLECTIONS = `${SERVER_BASE_URL}/api/product/collection`;
+export const POST_CREATE_COLLECTION = `${SERVER_BASE_URL}/api/product/collection`;
+export const PUT_UPDATE_COLLECTION = `${SERVER_BASE_URL}/api/product/collection`;
+export const DELETE_COLLECTION = `${SERVER_BASE_URL}/api/product/collection`;
 
 // Supplier
 export const CREATE_SUPPLIER_ROUTE = `${SERVER_BASE_URL}/api/suppliers/create`;
@@ -57,7 +65,7 @@ export const DELETE_RECEIVE_INVENTORY = (receiveId: number | string) =>
   `${SERVER_BASE_URL}/api/receive-inventory/${receiveId}`;
 
 // Discount
-export const GET_DISCOUNTS = `${SERVER_BASE_URL}/api/discount`
+export const GET_DISCOUNTS = `${SERVER_BASE_URL}/api/discount`;
 export const GET_DISCOUNT_DETAIL = (id: number) =>
   `${SERVER_BASE_URL}/api/discount/${id}`;
 export const POST_CREATE_DISCOUNT = `${SERVER_BASE_URL}/api/discount`;

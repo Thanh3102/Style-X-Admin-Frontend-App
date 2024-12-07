@@ -141,7 +141,7 @@ const ProductSelector = (props: Props) => {
     };
   }, []);
 
-  useEffect(() => {
+  useEffect(() => {   
     if (listBoxRef.current)
       listBoxRef.current.addEventListener("scroll", handleScroll);
 

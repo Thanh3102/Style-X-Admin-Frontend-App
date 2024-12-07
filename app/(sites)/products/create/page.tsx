@@ -1,7 +1,7 @@
 import FormCreateProduct from "@/components/specific/forms/FormCreateProduct";
 import Breadcrumbs, { BreadcrumbItem } from "@/components/ui/Breadcrumbs";
 import GoBackButton from "@/components/ui/GoBackButton";
-import LoadingCard from "@/components/ui/Loading";
+import LoadingCard from "@/components/ui/LoadingCard";
 import PageTitle from "@/components/ui/PageTitle";
 import { ProductRoute } from "@/constants/route";
 import { Suspense } from "react";

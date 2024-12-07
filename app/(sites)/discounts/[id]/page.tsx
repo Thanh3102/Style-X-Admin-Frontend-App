@@ -39,7 +39,7 @@ const Page = async ({ params }: Props) => {
       <div className="flex justify-between items-center">
         <div className="flex gap-4 items-center">
           <GoBackButton href={`${DiscountsRoute}`} />
-          <PageTitle>{data.title}</PageTitle>
+          <PageTitle className="text-base line-clamp-1">{data.title}</PageTitle>
           {data.active ? (
             <Status color="success" content="Đang áp dụng" />
           ) : (

@@ -69,7 +69,6 @@ export const convertDateToString = (
     hour12: false,
   });
 
-
   const [date, time] = vietnamTime.split(", ");
   const [mm, dd, yyyy] = date.split("/");
   const [h, m] = time.split(".")[0].split(":");
@@ -84,3 +83,4 @@ export const isInteger = (str: string | undefined) => {
   const num = parseInt(str, 10);
   return !isNaN(num) && Number.isInteger(num) && String(num) === str;
 };
+

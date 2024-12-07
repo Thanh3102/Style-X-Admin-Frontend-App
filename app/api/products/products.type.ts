@@ -110,6 +110,10 @@ export type GetProductDetailResponse = {
     }[];
   }[];
   options: { id: number; name: string; position: number; values: string[] }[];
-  categories: { id: number; title: string }[];
+  categories: {
+    id: number;
+    title: string;
+    collection: { id: number, title: string; slug: string; position: number };
+  }[];
   tags: string[];
 };

@@ -2,7 +2,7 @@ import { getProductDetail } from "@/app/api/products";
 import FormEditVariant from "@/components/specific/forms/FormEditVariant";
 import ErrorPage from "@/components/ui/ErrorPage";
 import GoBackButton from "@/components/ui/GoBackButton";
-import LoadingCard from "@/components/ui/Loading";
+import LoadingCard from "@/components/ui/LoadingCard";
 import PageTitle from "@/components/ui/PageTitle";
 import { GET_PRODUCT_DETAIL_ROUTE } from "@/constants/api-routes";
 import { ProductRoute } from "@/constants/route";

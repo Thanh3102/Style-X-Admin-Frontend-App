@@ -3,7 +3,7 @@ import { ReceiveInventoryTable } from "@/components/specific/tables/ReceiveInven
 import ErrorPage from "@/components/ui/ErrorPage";
 import GoBackButton from "@/components/ui/GoBackButton";
 import LinkButton from "@/components/ui/LinkButton";
-import LoadingCard from "@/components/ui/Loading";
+import LoadingCard from "@/components/ui/LoadingCard";
 import PageTitle from "@/components/ui/PageTitle";
 import {
   CreateReceiveInventoryRoute,
