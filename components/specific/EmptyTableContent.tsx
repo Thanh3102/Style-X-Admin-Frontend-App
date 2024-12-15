@@ -17,7 +17,7 @@ const EmptyTableContent = ({ addButton, title, subTitle }: Props) => {
 
   if (searchParams.size === 0)
     return (
-      <div className="rounded-b-md bg-white shadow-md h-[450px] flex flex-col items-center justify-center gap-3">
+      <div className="rounded-b-md bg-white shadow-md h-[70vh] flex flex-col items-center justify-center gap-3">
         <Image alt="" src={"/images/not_found.webp"} height={100} width={100} />
         <div className="flex-center flex-col">
           <span className="font-semibold text-lg">

@@ -140,7 +140,7 @@ const SupplierTable = ({
               href={`${CreateSupplierRoute}`}
               buttonProps={{ startContent: <FaPlus size={18} /> }}
             >
-              Tạo đơn nhập hàng
+              Thêm nhà cung cấp mới
             </LinkButton>
           }
         />

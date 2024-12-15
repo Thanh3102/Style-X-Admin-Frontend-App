@@ -23,7 +23,7 @@ export type GetInventoriesHistoryResponse = {
     receiveId: number;
     changeUser: {
       name: string;
-    };
+    } | null;
     inventory: {
       warehouse: {
         name: string;

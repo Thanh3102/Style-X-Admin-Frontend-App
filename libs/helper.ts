@@ -29,9 +29,11 @@ export const Compare = (
  * @returns URL sau khi cập nhật
  */
 
+export type UpdateParams = { name: string; value: string | null | undefined }[]
+
 export const updateSearchParams = (
   urlSearchParams: URLSearchParams,
-  params: { name: string; value: string | null | undefined }[],
+  params: UpdateParams,
   pathname: string
 ) => {
   // Nếu giá trị rỗng thì sẽ xóa nếu đang có giá trị

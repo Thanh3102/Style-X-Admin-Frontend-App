@@ -12,26 +12,18 @@ import {
   TableRow,
 } from "@nextui-org/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import {
-  CreateReceiveInventoryRoute,
-  CreateSupplierRoute,
-  ReceiveInventoryDetailRoute,
-  SuppliersRoute,
-} from "@/constants/route";
 import { useCallback } from "react";
-import { cn } from "@/libs/utils";
-import { FaPlus } from "react-icons/fa6";
-import { ReceiveInventoryResponse } from "@/app/api/receive-inventory/receive-inventory.type";
 import { EmptyTableContent } from "../EmptyTableContent";
-import LinkButton from "@/components/ui/LinkButton";
-import ReceiveInventoryStatusCard from "@/components/ui/ReceiveInventoryStatusCard";
-import ReceiveTransactionStatusCard from "@/components/ui/ReceiveTransactionStatusCard";
-import { CurrencyFormatter } from "@/libs/format-helper";
+import { Order, OrderStatus } from "@/app/api/order/order.type";
+import OrderStatusCard from "@/components/ui/OrderStatusCard";
+import OrderTransactionStatusCard from "@/components/ui/OrderTransactionStatusCard";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
-type ReceiveTableProps = {
+type Props = {
   page: number;
   limit: number;
-  receives: ReceiveInventoryResponse["receiveInventory"];
+  orders: Order[];
   total: number;
   count: number;
 };
@@ -47,29 +39,36 @@ type Column = {
 const columns: Column[] = [
   {
     key: "code",
-    label: "Mã đơn nhập",
+    label: "Mã đơn hàng",
     isSortable: false,
-    className: "min-w-[200px] sticky left-0 bg-white",
+    // className: "min-w-[200px]",
   },
   {
     key: "createdAt",
     label: "Ngày tạo",
     isSortable: false,
-    className: "min-w-[200px]",
+    // className: "min-w-[200px]",
     align: "center",
   },
   {
-    key: "warehouse",
-    label: "Chi nhánh nhập",
+    key: "customer",
+    label: "Khách hàng",
     isSortable: false,
-    className: "min-w-[200px]",
+    // className: "min-w-[200px]",
   },
   {
-    key: "status",
-    label: "Trạng thái",
+    key: "phoneNumber",
+    label: "Số điện thoại",
     isSortable: false,
-    className: "min-w-[170px]",
     align: "center",
+    // className: "min-w-[200px]",
+  },
+  {
+    key: "total",
+    label: "Thành tiền",
+    isSortable: false,
+    // className: "min-w-[170px]",
+    align: "end",
   },
   {
     key: "transactionStatus",
@@ -78,46 +77,24 @@ const columns: Column[] = [
     className: "min-w-[170px]",
     align: "center",
   },
+
   {
-    key: "supplier",
-    label: "Nhà cung cấp",
+    key: "status",
+    label: "Trạng thái xử lý",
     isSortable: false,
-    className: "min-w-[200px]",
+    className: "min-w-[170px]",
     align: "center",
-  },
-  {
-    key: "createdUser",
-    label: "Nhân viên tạo",
-    isSortable: false,
-    className: "min-w-[200px]",
-    align: "center",
-  },
-  {
-    key: "totalItems",
-    label: "Số lượng nhập",
-    isSortable: false,
-    className: "min-w-[200px]",
-    align: "center",
-  },
-  {
-    key: "totalReceipt",
-    label: "Giá trị đơn",
-    isSortable: false,
-    className: "min-w-[200px]",
-    align: "end",
   },
 ];
 
-const ReceiveInventoryTable = ({
-  receives,
-  total,
-  count,
-  page,
-  limit,
-}: ReceiveTableProps) => {
+const OrderTable = ({ orders, total, count, page, limit }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const CurrencyFormatter = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
 
   const handlePageChange = (page: number) => {
     const current = new URLSearchParams(Array.from(searchParams.entries()));
@@ -145,90 +122,108 @@ const ReceiveInventoryTable = ({
     router.push(newUrl);
   };
 
-  const renderCell = useCallback(
-    (
-      receive: ReceiveInventoryResponse["receiveInventory"][number],
-      key: any
-    ) => {
-      switch (key) {
-        case "code":
-          return (
-            <TableCell className="sticky left-0 z-50">
-              <span className="label-link">{receive.code}</span>
-            </TableCell>
-          );
-        case "createdAt":
-          return (
-            <TableCell>
-              <span>{convertDateToString(receive.createdAt)}</span>
-            </TableCell>
-          );
-        case "warehouse":
-          return (
-            <TableCell>
-              <span>{receive.warehouse.name}</span>
-            </TableCell>
-          );
-        case "status":
-          return (
-            <TableCell>
-              <ReceiveInventoryStatusCard status={receive.status} />
-            </TableCell>
-          );
-        case "transactionStatus":
-          return (
-            <TableCell>
-              <ReceiveTransactionStatusCard
-                status={receive.transactionStatus}
-              />
-            </TableCell>
-          );
-        case "supplier":
-          return (
-            <TableCell>
-              <span>{receive.supplier.name}</span>
-            </TableCell>
-          );
-        case "createdUser":
-          return (
-            <TableCell>
-              <span>{receive.createUser.name}</span>
-            </TableCell>
-          );
-        case "totalItems":
-          return (
-            <TableCell>
-              <span>{receive.totalItems}</span>
-            </TableCell>
-          );
-        case "totalReceipt":
-          return (
-            <TableCell>
-              <span>{CurrencyFormatter().format(receive.totalReceipt)}</span>
-            </TableCell>
-          );
-        default:
-          return <>Invalid Data</>;
-      }
-    },
-    []
-  );
+  const renderCell = useCallback((order: Order, key: any) => {
+    switch (key) {
+      case "code":
+        return (
+          <TableCell
+            className={cn({
+              "line-through": order.status === OrderStatus.CANCEL,
+            })}
+          >
+            <Link href={`/orders/${order.id}`}>
+              <span className="label-link">{order.code}</span>
+            </Link>
+          </TableCell>
+        );
+      case "createdAt":
+        return (
+          <TableCell>
+            <span
+              className={cn({
+                "line-through": order.status === OrderStatus.CANCEL,
+              })}
+            >
+              {convertDateToString(order.createdAt)}
+            </span>
+          </TableCell>
+        );
+      case "status":
+        return (
+          <TableCell>
+            <div className="flex items-center justify-center">
+              <OrderStatusCard status={order.status} />
+            </div>
+          </TableCell>
+        );
+      case "transactionStatus":
+        return (
+          <TableCell>
+            <div className="flex items-center justify-center">
+              <OrderTransactionStatusCard status={order.transactionStatus} />
+            </div>
+          </TableCell>
+        );
+      case "total":
+        return (
+          <TableCell>
+            <span
+              className={cn({
+                "line-through": order.status === OrderStatus.CANCEL,
+              })}
+            >
+              {CurrencyFormatter.format(order.total)}
+            </span>
+          </TableCell>
+        );
 
-  if (receives.length === 0) {
+      case "customer":
+        return (
+          <TableCell>
+            <div
+              className={cn({
+                "line-through": order.status === OrderStatus.CANCEL,
+              })}
+            >
+              {order.customerId ? (
+                <Link
+                  href={`/customers/${order.customerId}`}
+                  className="label-link"
+                >
+                  {order.name}
+                </Link>
+              ) : (
+                <span>{order.name}</span>
+              )}
+            </div>
+          </TableCell>
+        );
+
+      case "phoneNumber":
+        return (
+          <TableCell>
+            <div
+              className={cn({
+                "line-through": order.status === OrderStatus.CANCEL,
+              })}
+            >
+              {order.phoneNumber}
+            </div>
+          </TableCell>
+        );
+
+      default:
+        return <TableCell>No data</TableCell>;
+    }
+  }, []);
+
+  if (orders.length === 0) {
     return (
       <>
         {/* <SupplierFilter /> */}
         <EmptyTableContent
-          title="Cửa hàng chưa có đơn nhập hàng nào"
-          subTitle="Tạo đơn nhập hàng để nhập hàng hóa vào kho hàng của cửa hàng"
-          addButton={
-            <LinkButton
-              href={`${CreateReceiveInventoryRoute}`}
-              buttonProps={{ startContent: <FaPlus size={18} /> }}
-            >
-              Tạo đơn nhập hàng
-            </LinkButton>
-          }
+          title="Cửa hàng chưa có đơn hàng nào"
+          //   subTitle=""
         />
       </>
     );
@@ -241,11 +236,11 @@ const ReceiveInventoryTable = ({
         <Table
           removeWrapper
           isHeaderSticky
-          onRowAction={(key) =>
-            router.push(`${ReceiveInventoryDetailRoute(key as string)}`)
-          }
+          onRowAction={(key) => {
+            router.push(`/orders/${key}`);
+          }}
           classNames={{
-            tr: ["group-data-[hover=true]:bg-gray-100 hover:cursor-pointer"],
+            tr: ["group-data-[hover=true]:bg-gray-100"],
             th: [
               "bg-transparent text-base text-black font-medium rounded-none bg-gray-200 border-b-1 z-80",
             ],
@@ -269,7 +264,7 @@ const ReceiveInventoryTable = ({
               </TableColumn>
             )}
           </TableHeader>
-          <TableBody items={receives}>
+          <TableBody items={orders}>
             {(item) => (
               <TableRow key={item.id}>
                 {(key) => renderCell(item, key.toString())}
@@ -313,4 +308,4 @@ const ReceiveInventoryTable = ({
   );
 };
 
-export { ReceiveInventoryTable };
+export { OrderTable };

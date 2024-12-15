@@ -2,7 +2,7 @@
 import { DateFilterOption, DateFilterOptionValue } from "@/libs/types/backend";
 import { cn } from "@/libs/utils";
 import { Button, DateValue, DatePicker } from "@nextui-org/react";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 const dateOptions: DateFilterOption[] = [
   { label: "Hôm nay", value: DateFilterOptionValue.TODAY },
@@ -20,6 +20,7 @@ const dateOptions: DateFilterOption[] = [
 
 type DateOptionProps = {
   defaultValue?: DateFilterOption;
+  buttonText?: string;
   onValueChange?: (option: DateFilterOption | undefined) => void;
   onFilter?: (option: DateFilterOption | undefined) => void;
   onMinDateChange?: (dateValue: DateValue) => void;
@@ -28,6 +29,7 @@ type DateOptionProps = {
 
 const DateOption = ({
   defaultValue,
+  buttonText = "Lọc",
   onValueChange,
   onFilter,
   onMinDateChange,
@@ -116,7 +118,7 @@ const DateOption = ({
           className="text-base font-medium"
           onClick={handleFilterClick}
         >
-          Lọc
+          {buttonText}
         </Button>
       </div>
     </>

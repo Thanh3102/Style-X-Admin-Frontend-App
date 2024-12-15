@@ -4,7 +4,12 @@ import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { memo, useState } from "react";
 import { FaTruckLoading } from "react-icons/fa";
-import { FaAngleLeft, FaAngleRight, FaUsers, FaWarehouse } from "react-icons/fa6";
+import {
+  FaAngleLeft,
+  FaAngleRight,
+  FaUsers,
+  FaWarehouse,
+} from "react-icons/fa6";
 import { IoBagHandleSharp } from "react-icons/io5";
 import { MdDashboardCustomize } from "react-icons/md";
 import { GoChecklist } from "react-icons/go";
@@ -30,12 +35,13 @@ import {
 } from "@/constants/route";
 import { cn } from "@/libs/utils";
 import { LuClipboardList } from "react-icons/lu";
+import { DateFilterOptionValue, FilterParam } from "@/libs/types/backend";
 
 const items = [
   {
     title: "Tổng quan",
     icon: <MdDashboardCustomize size={18} />,
-    url: DashboardRoute,
+    url: `${DashboardRoute}?${FilterParam.REPORT_DATE}=${DateFilterOptionValue.DAY_LAST_30}`,
   },
   {
     title: "Sản phẩm",
@@ -82,21 +88,21 @@ const items = [
     icon: <TbRosetteDiscount size={18} />,
     url: DiscountsRoute,
   },
-  {
-    title: "Báo cáo",
-    icon: <HiOutlineDocumentReport size={18} />,
-    url: ReportsRoute,
-  },
+  // {
+  //   title: "Báo cáo",
+  //   icon: <HiOutlineDocumentReport size={18} />,
+  //   url: ReportsRoute,
+  // },
   {
     title: "Nhân viên",
     icon: <BsPersonFillGear size={18} />,
     url: AccountsRoute,
   },
-  {
-    title: "Tùy chỉnh",
-    icon: <GrConfigure size={18} />,
-    url: CustomizeRoute,
-  },
+  // {
+  //   title: "Tùy chỉnh",
+  //   icon: <GrConfigure size={18} />,
+  //   url: CustomizeRoute,
+  // },
 ];
 
 const Sidebar = () => {
@@ -127,8 +133,9 @@ const Sidebar = () => {
     >
       <div
         className={cn(
-          "h-[var(--header-height)] flex items-center justify-between border-b-1 border-white px-2", {
-            "justify-center": !isExtend
+          "h-[var(--header-height)] flex items-center justify-between border-b-1 border-white px-2",
+          {
+            "justify-center": !isExtend,
           }
         )}
       >

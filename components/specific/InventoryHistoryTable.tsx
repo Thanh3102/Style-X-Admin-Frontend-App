@@ -188,7 +188,7 @@ const InventoryHistoryTable = (props: Props) => {
       case "changeUser":
         return (
           <TableCell>
-            <span>{item.changeUser.name}</span>
+            <span>{item.changeUser?.name ? item.changeUser.name : ""}</span>
           </TableCell>
         );
       case "onHand":

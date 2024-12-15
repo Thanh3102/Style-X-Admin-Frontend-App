@@ -72,3 +72,18 @@ export const POST_CREATE_DISCOUNT = `${SERVER_BASE_URL}/api/discount`;
 export const PUT_UPDATE_DISCOUNT = `${SERVER_BASE_URL}/api/discount`;
 export const PUT_UPDATE_DISCOUNT_ACTIVE = `${SERVER_BASE_URL}/api/discount/active`;
 export const DELETE_DISCOUNT = `${SERVER_BASE_URL}/api/discount`;
+
+// Order
+export const GET_ORDER_LIST = `${SERVER_BASE_URL}/api/order`;
+export const GET_ORDER_DETAIL = `${SERVER_BASE_URL}/api/order/admin`;
+export const CONFIRM_DELIVERY_ORDER = `${SERVER_BASE_URL}/api/order/confirm/delivery`;
+export const CANCEL_ORDER = `${SERVER_BASE_URL}/api/order/cancel`;
+export const CONFIRM_PAYMENT_RECEIVE = `${SERVER_BASE_URL}/api/order/confirm/payment`;
+export const DELETE_ORDER = `${SERVER_BASE_URL}/api/order/admin`;
+
+// Report
+export const REPORT_OVERVIEW = `${SERVER_BASE_URL}/api/report/overview`;
+export const REPORT_REVENUE = `${SERVER_BASE_URL}/api/report/revenue`;
+export const REPORT_BEST_SALE = `${SERVER_BASE_URL}/api/report/best-sale`;
+export const REPORT_LOW_STOCK = `${SERVER_BASE_URL}/api/report/low-stock`;
+export const REPORT_REVENUE_DETAIL = `${SERVER_BASE_URL}/api/report/detail/revenue`;

@@ -612,7 +612,7 @@ const FormCreateDiscount = ({ type, mode }: Props) => {
                   Tạo mã ngẫu nhiên
                 </span>
               }
-              className="flex gap-2"
+              className="flex flex-col gap-2"
             >
               <Input
                 isRequired

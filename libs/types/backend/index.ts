@@ -22,6 +22,10 @@ export enum FilterParam {
   ACTIVE = "active",
   RECEIVE_IDS = "receiveIds",
   VARIANT_IDS = "variantIds",
+  REPORT_DATE = "reportDate",
+  REPORT_DATE_MIN = "reportDateMin",
+  REPORT_DATE_MAX = "reportDateMax",
+
 }
 
 export type QueryParams = Partial<Record<FilterParam, string>>;

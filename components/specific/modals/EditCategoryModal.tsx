@@ -22,10 +22,12 @@ import { UpdateCategory } from "@/app/api/categories";
 
 interface Props extends Omit<ModalProps, "children"> {
   category: GetCategoryResponse[number];
+  collectionId: number;
 }
 
 const EditCategorySchema = z.object({
   id: z.number(),
+  collectionId: z.number(),
   title: z
     .string()
     .min(1, "Chưa nhập tiêu đề danh mục")
@@ -39,7 +41,7 @@ const EditCategorySchema = z.object({
 
 export type EditCategoryData = z.infer<typeof EditCategorySchema>;
 
-const EditCategoryModal = ({ category, ...props }: Props) => {
+const EditCategoryModal = ({ category, collectionId, ...props }: Props) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -50,6 +52,7 @@ const EditCategoryModal = ({ category, ...props }: Props) => {
   } = useForm<EditCategoryData>({
     resolver: zodResolver(EditCategorySchema),
     defaultValues: {
+      collectionId: collectionId,
       id: category.id,
       image: null,
       slug: category.slug,

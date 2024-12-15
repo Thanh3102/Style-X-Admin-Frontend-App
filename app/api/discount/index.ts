@@ -106,6 +106,7 @@ export const GetDiscounts = async (
       headers: {
         authorization: `Bearer ${accessToken}`,
       },
+      cache: "no-store"
     });
 
     const response = await res.json();

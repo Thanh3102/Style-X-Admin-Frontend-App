@@ -83,6 +83,7 @@ export const UpdateCategory = async (
     formData.append("id", data.id.toString());
     formData.append("title", data.title);
     formData.append("slug", data.slug);
+    formData.append("collectionId", data.collectionId.toString());
     if (data.image) {
       formData.append("image", data.image[0]);
     }
