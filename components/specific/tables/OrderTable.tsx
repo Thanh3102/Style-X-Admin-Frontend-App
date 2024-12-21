@@ -19,6 +19,7 @@ import OrderStatusCard from "@/components/ui/OrderStatusCard";
 import OrderTransactionStatusCard from "@/components/ui/OrderTransactionStatusCard";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { OrderFilter } from "@/components/common/filters/OrderFilter";
 
 type Props = {
   page: number;
@@ -220,7 +221,7 @@ const OrderTable = ({ orders, total, count, page, limit }: Props) => {
   if (orders.length === 0) {
     return (
       <>
-        {/* <SupplierFilter /> */}
+        <OrderFilter />
         <EmptyTableContent
           title="Cửa hàng chưa có đơn hàng nào"
           //   subTitle=""
@@ -231,7 +232,7 @@ const OrderTable = ({ orders, total, count, page, limit }: Props) => {
 
   return (
     <>
-      {/* <SupplierFilter /> */}
+      <OrderFilter />
       <div className="max-w-full overflow-x-auto max-h-[70vh]">
         <Table
           removeWrapper
@@ -273,7 +274,12 @@ const OrderTable = ({ orders, total, count, page, limit }: Props) => {
           </TableBody>
         </Table>
       </div>
-      <div className="flex justify-between items-center p-4 bg-white rounded-b-md shadow-md">
+      <div
+        className={cn(
+          "flex justify-between items-center p-4 bg-white rounded-b-md shadow-md flex-col gap-1",
+          "md:flex-row md:gap-0"
+        )}
+      >
         <span className="">
           {`Từ ${page === 1 ? 1 : (page - 1) * limit + 1} tới
           ${page * limit > count ? count : page * limit} trên tổng ${count}`}

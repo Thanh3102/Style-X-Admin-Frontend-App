@@ -17,7 +17,7 @@ export type ResponseUser = {
 };
 
 export type GetUsersResponse = {
-  users: ResponseUser[];
+  employees: ResponseUser[];
   paginition: {
     total: number;
     totalPage: number;

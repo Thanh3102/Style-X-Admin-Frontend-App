@@ -223,7 +223,13 @@ const ProductTable = (props: Props) => {
           )}
         </TableBody>
       </Table>
-      <div className="flex justify-between items-center p-4 bg-white rounded-b-md shadow-md">
+
+      <div
+        className={cn(
+          "flex justify-between items-center p-4 bg-white rounded-b-md shadow-md flex-col gap-1",
+          "md:flex-row md:gap-0"
+        )}
+      >
         <span className="">
           {`Từ ${page === 1 ? 1 : (page - 1) * limit + 1} tới
           ${page * limit > count ? count : page * limit} trên tổng ${count}`}
@@ -251,7 +257,7 @@ const ProductTable = (props: Props) => {
             <SelectItem key={"50"}>50</SelectItem>
             <SelectItem key={"100"}>100</SelectItem>
           </Select>
-          <span className="whitespace-nowrap">Kết quả</span>
+          <span className="whitespace-nowrap">kết quả</span>
         </div>
       </div>
     </>

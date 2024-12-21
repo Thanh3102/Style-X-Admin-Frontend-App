@@ -2,8 +2,6 @@
 import {
   Button,
   Radio,
-  Select,
-  SelectItem,
   Table,
   TableBody,
   TableCell,
@@ -30,9 +28,12 @@ import ProductOptionValueInput from "../filters/ProductOptionValueInput";
 
 import dynamic from "next/dynamic";
 import CategoriesSearch, { Category } from "../../common/CategoriesSearch";
-import { PUT_UPDATE_PRODUCT_ROUTE } from "@/constants/api-routes";
+import {
+  DELETE_PRODUCT,
+  PUT_UPDATE_PRODUCT_ROUTE,
+} from "@/constants/api-routes";
 import { getSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { EditVariantRoute, ProductRoute } from "@/constants/route";
 import ProductImages from "../../ui/ProductImages";
 import UploadImageModal from "../UploadImageModal";
@@ -41,6 +42,10 @@ import { FaDongSign, FaTrash } from "react-icons/fa6";
 import { GetProductDetailResponse } from "@/app/api/products/products.type";
 import { InfoTooltip } from "@/components/ui/InfoTooltip";
 import { COMPARE_PRICE_INFO, COST_PRICE_INFO } from "@/constants/text";
+import { ProductVariant } from "./FormCreateProduct";
+import ProductVariantEditModal from "../ProductVariantEditModal";
+import ProductNewVariantEditModal from "../ProductNewVariantEditModal";
+import ConfirmModal from "../ConfirmModal";
 
 const TextEditor = dynamic(() => import("../../common/TextEditor"), {
   ssr: false,
@@ -71,21 +76,49 @@ const EditProductSchema = z.object({
     .number()
     .min(0, "Giá so sánh nhỏ nhất là 0")
     .max(1e12, "Giá so sánh quá lớn"),
+  options: z
+    .array(
+      z.object({
+        id: z.number(),
+        position: z.number(),
+        name: z.string().min(1, "Chưa nhập tên thuộc tính"),
+        values: z.array(z.string()).refine(
+          (values) => {
+            return !(values.length === 0);
+          },
+          { message: "Giá trị thuộc tính trống" }
+        ),
+      })
+    )
+    .refine(
+      (options) => {
+        const nameSet = new Set();
+        for (const option of options) {
+          if (nameSet.has(option.name)) return false;
+          nameSet.add(option.name);
+        }
+        return true;
+      },
+      { message: "Tên thuộc tính trùng nhau" }
+    ),
 });
 
 type EditProductField = z.infer<typeof EditProductSchema>;
 
-type SelectedWarehouse = { id: number; name: string; onHand: number };
+// type SelectedWarehouse = { id: number; name: string; onHand: number };
 
-type Warehouse = Pick<SelectedWarehouse, "id" | "name">;
+// type Warehouse = Pick<SelectedWarehouse, "id" | "name">;
 
 type ProductOption = {
+  id: number;
   position: number;
   name: string;
   values: Array<string>;
 };
 
 type Variant = GetProductDetailResponse["variants"][number];
+
+export type NewVariant = Omit<ProductVariant, "warehouses">;
 
 type Props = {
   product: GetProductDetailResponse;
@@ -94,10 +127,20 @@ type Props = {
 const FormEditProduct = ({ product }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
-  const [openShortDesc, setOpenShortDesc] = useState(!!product.shortDescription);
+  const [openShortDesc, setOpenShortDesc] = useState(
+    !!product.shortDescription
+  );
   const [openAddImage, setOpenAddImage] = useState(false);
   const [options, setOptions] = useImmer<ProductOption[]>(product.options);
   const [variants, setVariants] = useImmer<Variant[]>(product.variants);
+  const [newVariants, setNewVariants] = useImmer<NewVariant[]>([]);
+  const [selectedVariant, setSelectedVariant] = useState<NewVariant>();
+  const [variantEditOpen, setVariantEditOpen] = useState(false);
+  const [deleteVariants, setDeleteVariants] = useState<
+    GetProductDetailResponse["variants"]
+  >([]);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+
   const inputTimeoutRef = useRef<NodeJS.Timeout>();
   const router = useRouter();
 
@@ -118,35 +161,144 @@ const FormEditProduct = ({ product }: Props) => {
       sellPrice: product.sellPrice,
       costPrice: product.costPrice,
       comparePrice: product.comparePrice,
-      // options: product.options,
+      options: product.options,
     },
   });
 
   const onSubmit: SubmitHandler<EditProductField> = async (fieldData) => {
-    setIsLoading(true);
-    const session = await getSession();
-    const res = await fetch(`${PUT_UPDATE_PRODUCT_ROUTE}`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${session?.accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...fieldData,
-        id: product.id,
-      }),
-    });
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const session = await getSession();
+      const res = await fetch(`${PUT_UPDATE_PRODUCT_ROUTE}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${session?.accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...fieldData,
+          deleteVariantIds: deleteVariants.map((item) => item.id),
+          id: product.id,
+          newVariants,
+        }),
+      });
+      setIsLoading(false);
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (res.ok) {
-      toast.success(data.message ?? "Đã cập nhật thông tin sản phẩm");
-      router.refresh();
-      return;
+      if (res.ok) {
+        toast.success(data.message ?? "Đã cập nhật thông tin sản phẩm");
+        setDeleteVariants([]);
+        setNewVariants([]);
+        location.reload();
+        return;
+      }
+
+      throw new Error(data.error);
+    } catch (error: any) {
+      toast.error(error.message ?? "Đã xảy ra lỗi");
     }
+  };
 
-    toast.error(data.error ?? "Đã xảy ra lỗi");
+  useEffect(() => {
+    updateVariants();
+  }, [options]);
+
+  const updateVariants = useCallback(() => {
+    setNewVariants(() => {
+      const result = options.reduce<NewVariant[]>((previosVariant, option) => {
+        const newVariants: NewVariant[] = [];
+
+        for (const variant of previosVariant) {
+          option.values.forEach((value, index) => {
+            const skuCode = variant.skuCode
+              ? `${variant.skuCode}-${index}`
+              : undefined;
+            const newVariant = {
+              ...variant,
+              title: [...variant.title.split("/"), value].join("/"),
+              skuCode: skuCode,
+              [`option${option.position}`]: value,
+            };
+
+            const findVariant = product.variants.find(
+              (item) =>
+                item.option1 === newVariant.option1 &&
+                item.option2 === newVariant.option2 &&
+                item.option3 === newVariant.option3
+            );
+
+            if (!findVariant) {
+              newVariants.push(newVariant);
+            }
+          });
+        }
+
+        // Khi chưa có variant nào
+        if (previosVariant.length === 0) {
+          option.values.forEach((value, index) => {
+            const skuCode = product.skuCode
+              ? `${product.skuCode}-${index}`
+              : `${index}`;
+
+            const newVariant: NewVariant = {
+              title: value,
+              comparePrice: getValues("comparePrice"),
+              sellPrice: getValues("sellPrice"),
+              costPrice: getValues("costPrice"),
+              // warehouses: getValues("warehouses"),
+              barCode: undefined,
+              skuCode: skuCode,
+              unit: product.unit ?? undefined,
+              option1: value,
+              option2: "",
+              option3: "",
+            };
+            const findVariant = product.variants.find(
+              (item) =>
+                item.option1 === newVariant.option1 &&
+                item.option2 === newVariant.option2 &&
+                item.option3 === newVariant.option3
+            );
+
+            if (!findVariant) {
+              newVariants.push(newVariant);
+            }
+          });
+        }
+
+        return newVariants;
+      }, []);
+      console.log("result", result);
+
+      return result;
+    });
+  }, [options]);
+
+  const handleDeleteProduct = async () => {
+    try {
+      setIsDeleteLoading(true);
+      const session = await getSession();
+      const res = await fetch(`${DELETE_PRODUCT}/${product.id}`, {
+        method: "DELETE",
+        headers: {
+          authorization: `Bearer ${session?.accessToken}`,
+        },
+      });
+
+      const response = await res.json();
+      setIsDeleteLoading(false);
+
+      if (res.ok) {
+        toast.success(response.message);
+        router.push(ProductRoute);
+      }
+
+      throw new Error(response.message);
+    } catch (error: any) {
+      setIsDeleteLoading(false);
+      toast.error(error.message);
+    }
   };
 
   const countVariantOnhand = useCallback(
@@ -166,35 +318,6 @@ const FormEditProduct = ({ product }: Props) => {
     []
   );
 
-  const handleAddOption = useCallback(() => {
-    if (options.length === 3) return;
-
-    setOptions((options) => {
-      options.push({
-        position: options.length + 1,
-        name: "",
-        values: [],
-      });
-    });
-  }, []);
-
-  const handleDeleteOption = useCallback((position: number) => {
-    setOptions((options) => {
-      const index = options.findIndex((option) => option.position === position);
-
-      if (index === -1) return options;
-
-      options.splice(index, 1);
-
-      for (const option of options) {
-        if (option.position < position) continue;
-        option.position = option.position - 1;
-      }
-
-      return options;
-    });
-  }, []);
-
   const handleDeleteOptionValue = useCallback(
     (value: string, position: number) => {
       setOptions((options) => {
@@ -202,12 +325,27 @@ const FormEditProduct = ({ product }: Props) => {
 
         if (index === -1) return options;
 
+        if (options[index].values.length === 1) {
+          toast.error("Mỗi thuộc tính phải có ít nhất 1 giá trị");
+          return;
+        }
+
+        setDeleteVariants((variants) => {
+          const deleteVariants = product.variants.filter(
+            (variant) =>
+              variant[
+                `option${position}` as keyof GetProductDetailResponse["variants"][0]
+              ] === value
+          );
+          return [...variants, ...deleteVariants];
+        });
+
         const valueIndex = options[index].values.findIndex((v) => v === value);
         options[index].values.splice(valueIndex, 1);
         return options;
       });
     },
-    []
+    [options]
   );
 
   const handleAddOptionValue = useCallback(
@@ -285,16 +423,40 @@ const FormEditProduct = ({ product }: Props) => {
     });
   }, []);
 
-  const handlePriceChange = useCallback(
-    (value: string, field: "sellPrice" | "costPrice" | "comparePrice") => {
-      if (value === "") setValue(field, 0);
-      else
-        setValue(field, parseInt(value), {
-          shouldValidate: true,
-        });
-    },
-    []
-  );
+  // const handlePriceChange = useCallback(
+  //   (value: string, field: "sellPrice" | "costPrice" | "comparePrice") => {
+  //     if (value === "") setValue(field, 0);
+  //     else
+  //       setValue(field, parseInt(value), {
+  //         shouldValidate: true,
+  //       });
+  //   },
+  //   []
+  // );
+
+  const handleVariantClick = useCallback((variant: NewVariant) => {
+    setSelectedVariant(variant);
+    setVariantEditOpen(true);
+  }, []);
+
+  const handleSaveVariant = useCallback((newVariant: NewVariant) => {
+    setNewVariants((variants) => {
+      const index = variants.findIndex((variant) => {
+        return variant.title === newVariant.title;
+      });
+
+      if (index === -1) return variants;
+
+      variants[index] = newVariant;
+      return variants;
+    });
+  }, []);
+
+  const handleCancelVariantChange = () => {
+    setOptions(product.options);
+    setDeleteVariants([]);
+    setNewVariants([]);
+  };
 
   useEffect(() => {
     if (isSubmitted && !isValid) {
@@ -306,15 +468,15 @@ const FormEditProduct = ({ product }: Props) => {
           typeof firstErrorMessage === "string"
             ? firstErrorMessage
             : "Có thông tin không hợp lệ";
-
+        // toast.error(firstErrorField);
         toast.error(messageToDisplay);
       }
     }
   }, [submitCount]);
 
-  // useEffect(() => {
-  //   setValue("options", options, { shouldValidate: true });
-  // }, [options]);
+  useEffect(() => {
+    setValue("options", options, { shouldValidate: true });
+  }, [options]);
 
   return (
     <>
@@ -390,7 +552,7 @@ const FormEditProduct = ({ product }: Props) => {
             </div>
           </GroupBox>
 
-          <GroupBox title="Thông tin giá">
+          {/* <GroupBox title="Thông tin giá">
             <div className="flex flex-wrap gap-y-2 -mx-2 [&>*]:px-2">
               <Controller
                 control={control}
@@ -469,92 +631,139 @@ const FormEditProduct = ({ product }: Props) => {
                 )}
               />
             </div>
-          </GroupBox>
+          </GroupBox> */}
 
-          <GroupBox
-            title="Thuộc tính"
-            titleEndContent={
+          <RenderIf condition={options.length > 0}>
+            <GroupBox
+              title="Thuộc tính"
+              titleEndContent={
+                <RenderIf
+                  condition={
+                    deleteVariants.length > 0 || newVariants.length > 0
+                  }
+                >
+                  <span
+                    className="label-link"
+                    onClick={handleCancelVariantChange}
+                  >
+                    Hủy thay đổi
+                  </span>
+                </RenderIf>
+              }
+            >
               <RenderIf condition={options.length === 0}>
-                <span className="label-link" onClick={handleAddOption}>
-                  Thêm thuộc tính
-                </span>
+                Sản phẩm có nhiều thuộc tính khác nhau. Ví dụ: kích thước, màu
+                sắc.
               </RenderIf>
-            }
-          >
-            <RenderIf condition={options.length === 0}>
-              Sản phẩm có nhiều thuộc tính khác nhau. Ví dụ: kích thước, màu
-              sắc.
-            </RenderIf>
 
-            <RenderIf condition={options.length > 0}>
-              <Table removeWrapper>
-                <TableHeader>
-                  <TableColumn key={"option_name"} className="w-1/2">
-                    Tên thuộc tính
-                  </TableColumn>
-                  <TableColumn key={"option_values"} className="w-1/2">
-                    Giá trị
-                  </TableColumn>
-                </TableHeader>
-                <TableBody items={options}>
-                  {options.map((option, index) => (
-                    <TableRow key={option.position}>
-                      <TableCell className="align-top">
-                        <FormInput
-                          aria-label="Tên thuộc tính"
-                          defaultValue={option.name}
-                          placeholder="Nhập tên thuộc tính"
-                          // isInvalid={
-                          //   errors?.options?.[index]?.name ? true : false
-                          // }
-                          // errorMessage={errors?.options?.[index]?.name?.message}
-                          endContent={
-                            <div className="text-gray-400 hover:text-gray-700 hover:cursor-pointer">
-                              <FaTrash
-                                size={16}
-                                onClick={() =>
-                                  handleDeleteOption(option.position)
-                                }
-                              />
-                            </div>
-                          }
-                          onChange={(e) =>
-                            handleOptionNameInputChange(
-                              e.target.value,
-                              option.position
-                            )
-                          }
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <ProductOptionValueInput
-                          values={option.values}
-                          position={option.position}
-                          onInputEnter={handleAddOptionValue}
-                          onValueDelete={handleDeleteOptionValue}
-                          // isInvalid={
-                          //   errors?.options?.[index]?.values ? true : false
-                          // }
-                          // errorMessage={
-                          //   errors?.options?.[index]?.values?.message
-                          // }
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </RenderIf>
+              <RenderIf condition={options.length > 0}>
+                <Table removeWrapper>
+                  <TableHeader>
+                    <TableColumn key={"option_name"} className="w-1/2">
+                      Tên thuộc tính
+                    </TableColumn>
+                    <TableColumn key={"option_values"} className="w-1/2">
+                      Giá trị
+                    </TableColumn>
+                  </TableHeader>
+                  <TableBody items={options}>
+                    {options.map((option, index) => (
+                      <TableRow key={option.position}>
+                        <TableCell className="align-top">
+                          <FormInput
+                            aria-label="Tên thuộc tính"
+                            defaultValue={option.name}
+                            placeholder="Nhập tên thuộc tính"
+                            // isInvalid={
+                            //   errors?.options?.[index]?.name ? true : false
+                            // }
+                            // errorMessage={errors?.options?.[index]?.name?.message}
+                            // endContent={
+                            //   <div className="text-gray-400 hover:text-gray-700 hover:cursor-pointer">
+                            //     <FaTrash
+                            //       size={16}
+                            //       onClick={() =>
+                            //         handleDeleteOption(option.position)
+                            //       }
+                            //     />
+                            //   </div>
+                            // }
+                            onChange={(e) =>
+                              handleOptionNameInputChange(
+                                e.target.value,
+                                option.position
+                              )
+                            }
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <ProductOptionValueInput
+                            values={option.values}
+                            position={option.position}
+                            onInputEnter={handleAddOptionValue}
+                            onValueDelete={handleDeleteOptionValue}
+                            isInvalid={
+                              errors?.options?.[index]?.values ? true : false
+                            }
+                            errorMessage={
+                              errors?.options?.[index]?.values?.message
+                            }
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </RenderIf>
 
-            <RenderIf condition={options.length > 0 && options.length < 3}>
-              <div className="flex gap-2 items-center">
-                <FiPlusCircle className="text-blue-500" />
-                <span className="label-link" onClick={handleAddOption}>
-                  Thêm thuộc tính
+              {/* <RenderIf condition={options.length > 0 && options.length < 3}>
+                <div className="flex gap-2 items-center">
+                  <FiPlusCircle className="text-blue-500" />
+                  <span className="label-link" onClick={handleAddOption}>
+                    Thêm thuộc tính
+                  </span>
+                </div>
+              </RenderIf> */}
+            </GroupBox>
+          </RenderIf>
+
+          <RenderIf condition={newVariants.length > 0}>
+            <GroupBox title="Phiên bản thêm mới">
+              <div className="text-base py-4 px-2 flex items-center border-y-1 border-gray-200">
+                <span className="font-semibold">
+                  {newVariants.length} phiên bản
                 </span>
               </div>
-            </RenderIf>
-          </GroupBox>
+              <div className="max-h-[400px] overflow-y-auto">
+                {newVariants.map((variant) => (
+                  <div
+                    key={variant.title}
+                    className="py-4 px-2 flex justify-between border-b-1 border-gray-200 hover:bg-gray-100 hover:cursor-pointer items-center text-sm"
+                    onClick={() => handleVariantClick(variant)}
+                  >
+                    <div className="flex flex-col gap-2">
+                      <span>
+                        {variant.title !== "Default Title"
+                          ? variant.title
+                          : "Mặc định"}
+                      </span>
+                      <RenderIf condition={!!variant.skuCode}>
+                        <span className="text-sm">Sku: {variant.skuCode}</span>
+                      </RenderIf>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <span>
+                        Giá bán:{" "}
+                        <strong>
+                          {CurrencyFormatter().format(variant.sellPrice)}
+                        </strong>
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </GroupBox>
+          </RenderIf>
 
           <RenderIf condition={variants.length > 0}>
             <GroupBox title="Phiên bản">
@@ -563,35 +772,54 @@ const FormEditProduct = ({ product }: Props) => {
                   {variants.length} phiên bản
                 </span>
               </div>
-              {variants.map((variant) => (
-                <div
-                  key={variant.title}
-                  onClick={() =>
-                    router.push(EditVariantRoute(product.id, variant.id))
-                  }
-                  className="py-4 px-2 flex justify-between border-b-1 border-gray-200 hover:bg-gray-100 hover:cursor-pointer items-center text-sm"
-                >
-                  <div className="flex flex-col gap-2">
-                    <span>{variant.title}</span>
-                    <RenderIf condition={!!variant.skuCode}>
-                      <span className="text-sm">Sku: {variant.skuCode}</span>
-                    </RenderIf>
+              <div className="max-h-[400px] overflow-y-auto">
+                {variants.map((variant) => (
+                  <div
+                    key={variant.title}
+                    onClick={() =>
+                      router.push(EditVariantRoute(product.id, variant.id))
+                    }
+                    className={cn(
+                      "py-4 px-2 flex justify-between  items-center text-sm",
+                      "hover:bg-gray-100 hover:cursor-pointer",
+                      "border-b-1 border-gray-200",
+                      {
+                        "bg-red-200 hover:bg-red-200 line-through":
+                          deleteVariants
+                            .map((item) => item.id)
+                            .includes(variant.id),
+                      }
+                    )}
+                  >
+                    <div className="flex flex-col gap-2">
+                      <span>
+                        {variant.title !== "Default Title"
+                          ? variant.title
+                          : "Mặc định"}
+                      </span>
+                      <RenderIf condition={!!variant.skuCode}>
+                        <span className="text-sm">Sku: {variant.skuCode}</span>
+                      </RenderIf>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <span>
+                        Giá bán:{" "}
+                        <strong>
+                          {CurrencyFormatter().format(variant.sellPrice)}
+                        </strong>
+                      </span>
+                      <span>
+                        Có thể bán{" "}
+                        <strong>
+                          {countVariantOnhand(variant.inventories)}
+                        </strong>{" "}
+                        tại{" "}
+                        <strong>{`${variant.inventories.length} kho`}</strong>
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex flex-col items-end">
-                    <span>
-                      Giá bán:{" "}
-                      <strong>
-                        {CurrencyFormatter().format(variant.sellPrice)}
-                      </strong>
-                    </span>
-                    <span>
-                      Có thể bán{" "}
-                      <strong>{countVariantOnhand(variant.inventories)}</strong>{" "}
-                      tại <strong>{`${variant.inventories.length} kho`}</strong>
-                    </span>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
               {/* <div className="flex justify-between text-sm items-center py-4">
                 <span>Tổng tồn kho</span>
                 <span>Có thể bán: {totalVariantsOnHand}</span>
@@ -680,7 +908,9 @@ const FormEditProduct = ({ product }: Props) => {
           color="danger"
           isLoading={isDeleteLoading}
           isDisabled={isLoading || isDeleteLoading}
-          onClick={() => {}}
+          onClick={() => {
+            setDeleteConfirm(true);
+          }}
         >
           Xóa
         </Button>
@@ -701,6 +931,26 @@ const FormEditProduct = ({ product }: Props) => {
         isOpen={openAddImage}
         onOpenChange={(open) => setOpenAddImage(open)}
       />
+
+      <RenderIf condition={variantEditOpen}>
+        <ProductNewVariantEditModal
+          variant={selectedVariant}
+          isOpen={variantEditOpen}
+          onOpenChange={(open) => setVariantEditOpen(open)}
+          onSave={handleSaveVariant}
+        />
+      </RenderIf>
+
+      {deleteConfirm && (
+        <ConfirmModal
+          isOpen={deleteConfirm}
+          onOpenChange={(open) => setDeleteConfirm(open)}
+          onConfirm={handleDeleteProduct}
+          title="Xác nhận xóa"
+        >
+          Xác nhận xóa sản phẩm ?. Hành động này không thể hoàn tác
+        </ConfirmModal>
+      )}
     </>
   );
 };

@@ -55,6 +55,15 @@ const ReportDateRangePicker = () => {
     DateFilterOption | undefined
   >(() => {
     const reportDate = searchParams.get(FilterParam.REPORT_DATE);
+    const reportMinDate = searchParams.get(FilterParam.REPORT_DATE_MIN);
+    const reportMaxDate = searchParams.get(FilterParam.REPORT_DATE_MAX);
+    if (reportMaxDate || reportMinDate) {
+      return {
+        label: "Tùy chọn",
+        value: DateFilterOptionValue.OPTION,
+      };
+    }
+
     if (reportDate) {
       const option = dateOptions.find((item) => item.value === reportDate);
       if (option) return option;
@@ -154,12 +163,8 @@ const ReportDateRangePicker = () => {
         pathname
       );
     }
-
     setOpen(false);
-
     router.push(url);
-
-    // setSelectedOption(undefined);
   };
 
   const handleMinDateChange = (v: DateValue) => {

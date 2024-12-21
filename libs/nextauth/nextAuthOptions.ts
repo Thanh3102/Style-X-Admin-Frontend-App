@@ -44,7 +44,7 @@ export const nextAuthOptions: NextAuthOptions = {
           };
         } else {
           const res = await response.json();
-          throw new Error(res.error);
+          throw new Error(res.message);
         }
       },
     }),

@@ -9,17 +9,16 @@ import { getServerSession } from "next-auth";
 import { Suspense } from "react";
 
 type Props = {
-  params: QueryParams;
+  searchParams: QueryParams;
 };
 
-const Page = async ({ params }: Props) => {
+const Page = async ({ searchParams }: Props) => {
   try {
     const session = await getServerSession(nextAuthOptions);
     const { data, paginition } = await GetOrderList(
-      params,
+      searchParams,
       session?.accessToken
     );
-    console.log("Paginition", paginition);
     return (
       <div className="px-14 mb-5">
         <div className="flex justify-between items-center">

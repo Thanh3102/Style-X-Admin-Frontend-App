@@ -112,7 +112,6 @@ const CreateReceiveInventorySchema = z.object({
 
 type CreateReceiveInventoryField = z.infer<typeof CreateReceiveInventorySchema>;
 
-
 type LandedCost = {
   name: string;
   price: number;
@@ -441,6 +440,7 @@ const FormCreateReceiveInventory = () => {
                     {...register("transactionAmount", { valueAsNumber: true })}
                   />
                   <Select
+                    disallowEmptySelection
                     label="Phương thức thanh toán"
                     defaultSelectedKeys={[PaymentMethod.CASH]}
                     selectionMode="single"

@@ -6,6 +6,7 @@ import {
 } from "../../../libs/types/backend";
 import {
   Button,
+  ButtonProps,
   DateValue,
   Popover,
   PopoverContent,
@@ -15,7 +16,6 @@ import { useEffect, useState } from "react";
 import { RxTriangleDown } from "react-icons/rx";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { DateOption } from "./DateOption";
-
 
 const dateOptions: DateFilterOption[] = [
   { label: "Hôm nay", value: DateFilterOptionValue.TODAY },
@@ -31,32 +31,53 @@ const dateOptions: DateFilterOption[] = [
   { label: "Tùy chọn", value: DateFilterOptionValue.OPTION },
 ];
 
-const DateFilterButton = () => {
-  const [isOpen, setOpen] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState<DateFilterOption>();
-  const [minDateString, setMinDateString] = useState<string>("");
-  const [maxDateString, setMaxDateString] = useState<string>("");
+type Props = {
+  buttonProps?: ButtonProps;
+};
 
+const DateFilterButton = ({ buttonProps }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const handleFilter = (option: DateFilterOption | undefined) => {
-    /*
-      searchParams chỉ trả về ReadonlyURLSearchParams
-      Chuyển sang URLSearchParams để có thể chỉnh sửa
-     */
+  const [isOpen, setOpen] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<
+    DateFilterOption | undefined
+  >(() => {
+    const createdOn = searchParams.get(FilterParam.CREATED_ON);
+    const createdOnMin = searchParams.get(FilterParam.CREATED_ON_MIN);
+    const createdOnMax = searchParams.get(FilterParam.CREATED_ON_MAX);
+    if (createdOnMin || createdOnMax) {
+      return {
+        label: "Tùy chọn",
+        value: DateFilterOptionValue.OPTION,
+      };
+    }
 
+    if (createdOn) {
+      const option = dateOptions.find((item) => item.value === createdOn);
+      if (option) return option;
+    }
+    return undefined;
+  });
+  const [minDateString, setMinDateString] = useState<string>(
+    searchParams.get(FilterParam.CREATED_ON_MIN) ?? ""
+  );
+  const [maxDateString, setMaxDateString] = useState<string>(
+    searchParams.get(FilterParam.CREATED_ON_MAX) ?? ""
+  );
+
+  const handleFilter = () => {
     const currentParams = new URLSearchParams(
       Array.from(searchParams.entries())
     );
 
     // Không chọn giá trị -> Xóa các param
     if (!selectedOption) {
+      setOpen(false);
       currentParams.delete(FilterParam.CREATED_ON);
       currentParams.delete(FilterParam.CREATED_ON_MIN);
       currentParams.delete(FilterParam.CREATED_ON_MIN);
-      setOpen(false);
       const search = currentParams.toString();
       const query = search ? `?${search}` : "";
       router.push(`${pathname}${query}`);
@@ -145,8 +166,9 @@ const DateFilterButton = () => {
     >
       <PopoverTrigger>
         <Button
-          endContent={<RxTriangleDown size={16} className="text-gray-500" />}
           disableRipple
+          {...buttonProps}
+          endContent={<RxTriangleDown size={16} className="text-gray-500" />}
         >
           Ngày tạo
         </Button>
@@ -154,7 +176,7 @@ const DateFilterButton = () => {
       <PopoverContent>
         <DateOption
           defaultValue={selectedOption}
-          onFilter={(option) => handleFilter(option)}
+          onFilter={() => handleFilter()}
           onValueChange={(option) => setSelectedOption(option)}
           onMinDateChange={handleMinDateChange}
           onMaxDateChange={handleMaxDateChange}

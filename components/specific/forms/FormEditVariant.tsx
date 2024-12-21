@@ -168,7 +168,7 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
           </GroupBox>
 
           <GroupBox title="Phiên bản">
-            <div className="h-[500px] overflow-y-auto">
+            <div className="max-h-[500px] overflow-y-auto">
               {product.variants.map((variant) => (
                 <Link
                   href={`${ProductRoute}/${product.id}/variants/${variant.id}`}
@@ -192,7 +192,11 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
                       className="border-1 border-gray-500"
                     />
                     <div className="flex flex-col gap-1 text-xs flex-1">
-                      <span className="label-link">{variant.title}</span>
+                      <span className="label-link">
+                        {variant.title !== "Default Title"
+                          ? variant.title
+                          : "Mặc định"}
+                      </span>
                       <div className="flex gap-2 justify-between flex-1">
                         <span className="line-clamp-1">
                           Tồn kho:{" "}
@@ -235,7 +239,7 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
                   />
                 ))}
               </div>
-              <Tooltip
+              {/* <Tooltip
                 showArrow
                 content="Tạm thời chưa thể sử dụng"
                 color="danger"
@@ -250,7 +254,7 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
                 >
                   Chọn hình ảnh
                 </div>
-              </Tooltip>
+              </Tooltip> */}
             </div>
           </GroupBox>
           <GroupBox title="Thông tin phiên bản">

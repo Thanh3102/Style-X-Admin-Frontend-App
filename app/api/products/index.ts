@@ -70,7 +70,7 @@ export const getProductDetail = async (
       headers: {
         authorization: `Bearer ${accessToken}`,
       },
-      cache: "no-cache",
+      cache: "no-store",
     });
 
     const data = await res.json();

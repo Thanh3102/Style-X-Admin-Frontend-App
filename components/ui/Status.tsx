@@ -20,7 +20,7 @@ const Status = ({ content, color = "default" }: StatusProps) => {
   return (
     <div
       className={cn(
-        "px-4 py-1 rounded-full text-xs w-fit flex items-center justify-center",
+        "px-4 py-1 rounded-full text-xs w-fit min-w-fit flex items-center justify-center",
         colors[color]
       )}
     >

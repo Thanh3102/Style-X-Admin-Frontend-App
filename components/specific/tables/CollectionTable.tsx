@@ -1,9 +1,5 @@
 "use client";
-import { convertDateToString, updateSearchParams } from "@/libs/helper";
 import {
-  Pagination,
-  Select,
-  SelectItem,
   Table,
   TableBody,
   TableCell,
@@ -13,12 +9,9 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { EditDiscountRoute } from "@/constants/route";
 import { useCallback, useState } from "react";
 import { EmptyTableContent } from "../EmptyTableContent";
 import { GetCollectionResponse } from "@/app/api/categories/categories.type";
-import Image from "next/image";
-import { ImagePlaceholderPath } from "@/constants/filepath";
 import CreateCollectionButton from "@/components/ui/CreateCollectionButton";
 import { FaTrash } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";

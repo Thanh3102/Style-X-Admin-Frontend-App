@@ -6,6 +6,24 @@ export const REFRESH_TOKEN_ROUTE = `${SERVER_BASE_URL}/auth/refreshToken`;
 
 // Employee Route
 export const EMPLOYEE_GET_ROUTE = `${SERVER_BASE_URL}/api/employee`;
+export const GET_ROLES_ROUTE = `${SERVER_BASE_URL}/api/employee/roles`;
+export const GET_PERMISSION_ROUTE = `${SERVER_BASE_URL}/api/employee/permissions`;
+export const CREATE_ROLE_ROUTE = `${SERVER_BASE_URL}/api/employee/roles`;
+export const UPDATE_ROLE_ROUTE = `${SERVER_BASE_URL}/api/employee/roles`;
+export const DELETE_ROLE_ROUTE = `${SERVER_BASE_URL}/api/employee/roles`;
+export const CREATE_EMPLOYEE_ROUTE = `${SERVER_BASE_URL}/api/employee`;
+export const UPDATE_EMPLOYEE_ROUTE = `${SERVER_BASE_URL}/api/employee`;
+export const DELETE_EMPLOYEE_ROUTE = `${SERVER_BASE_URL}/api/employee`;
+export const GET_USER_INFO_ROUTE = `${SERVER_BASE_URL}/api/employee/me`;
+export const CHANGE_PASSWORD_ROUTE = `${SERVER_BASE_URL}/api/employee/change-password`;
+
+
+
+// Customer Route
+export const CUSTOMER_GET_ROUTE = `${SERVER_BASE_URL}/api/customer`
+export const GET_CUSTOMER_DETAIL_ROUTE = `${SERVER_BASE_URL}/api/customer`;
+
+
 
 // Product
 export const GET_PRODUCT_ROUTE = `${SERVER_BASE_URL}/api/product`;
@@ -28,7 +46,7 @@ export const GET_COLLECTIONS = `${SERVER_BASE_URL}/api/product/collection`;
 export const POST_CREATE_COLLECTION = `${SERVER_BASE_URL}/api/product/collection`;
 export const PUT_UPDATE_COLLECTION = `${SERVER_BASE_URL}/api/product/collection`;
 export const DELETE_COLLECTION = `${SERVER_BASE_URL}/api/product/collection`;
-
+export const DELETE_PRODUCT = `${SERVER_BASE_URL}/api/product`;
 // Supplier
 export const CREATE_SUPPLIER_ROUTE = `${SERVER_BASE_URL}/api/suppliers/create`;
 export const UPDATE_SUPPLIER_ROUTE = `${SERVER_BASE_URL}/api/suppliers`;
@@ -87,3 +105,5 @@ export const REPORT_REVENUE = `${SERVER_BASE_URL}/api/report/revenue`;
 export const REPORT_BEST_SALE = `${SERVER_BASE_URL}/api/report/best-sale`;
 export const REPORT_LOW_STOCK = `${SERVER_BASE_URL}/api/report/low-stock`;
 export const REPORT_REVENUE_DETAIL = `${SERVER_BASE_URL}/api/report/detail/revenue`;
+export const REPORT_PRODUCT_REVENUE_DETAIL = `${SERVER_BASE_URL}/api/report/detail/product`;
+

@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Checkbox, Input } from "@nextui-org/react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -20,6 +20,7 @@ type LoginField = z.infer<typeof loginSchema>;
 const FormLogin = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const router = useRouter();
+  const search = useSearchParams();
   const {
     register,
     handleSubmit,
@@ -43,8 +44,10 @@ const FormLogin = () => {
     });
 
     if (result?.ok) {
-      router.push("/dashboard");
+      router.push(search.get("callbackUrl") || "/dashboard");
     } else {
+      console.log(result);
+
       toast.error(result ? result.error : "Đã xảy ra lỗi", {
         position: "top-center",
         duration: 1000,

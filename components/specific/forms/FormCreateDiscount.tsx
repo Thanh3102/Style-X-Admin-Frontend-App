@@ -955,14 +955,14 @@ const FormCreateDiscount = ({ type, mode }: Props) => {
             </RadioGroup>
           </GroupBox>
 
-          <GroupBox title="Nhóm khách hàng">
+          {/* <GroupBox title="Nhóm khách hàng">
             <RadioGroup value={"all"}>
               <Radio value={"all"}>Tất cả</Radio>
               <Radio value={"customer"} isDisabled>
                 Nhóm khách hàng đã lưu
               </Radio>
             </RadioGroup>
-          </GroupBox>
+          </GroupBox> */}
 
           <RenderIf condition={mode === "coupon"}>
             <GroupBox title="Giới hạn sử dụng">

@@ -7,5 +7,8 @@ export const config = {
     "/suppliers(.*)",
     "/receive-inventory(.*)",
     "/discounts(.*)",
+    "/customers(.*)",
+    "/employees(.*)",
+    "/profile(.*)",
   ],
 };

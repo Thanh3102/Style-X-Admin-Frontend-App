@@ -41,5 +41,5 @@ export const EditDiscountRoute = (id: string | number) =>
   `${DiscountsRoute}/${id}`;
 
 export const ReportsRoute = "/reports";
-export const AccountsRoute = "/accounts";
+export const EmployeeRoute = "/employees";
 export const CustomizeRoute = "/customize";

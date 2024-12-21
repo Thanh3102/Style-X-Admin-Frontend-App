@@ -70,6 +70,7 @@ export type GetProductResponse = {
 };
 
 export type GetProductDetailResponse = {
+  void: boolean;
   id: number;
   name: string;
   barCode: string | null;
@@ -113,7 +114,7 @@ export type GetProductDetailResponse = {
   categories: {
     id: number;
     title: string;
-    collection: { id: number, title: string; slug: string; position: number };
+    collection: { id: number; title: string; slug: string; position: number };
   }[];
   tags: string[];
 };

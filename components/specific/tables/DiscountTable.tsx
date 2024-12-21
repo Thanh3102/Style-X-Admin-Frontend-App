@@ -21,8 +21,9 @@ import { Status } from "@/components/ui/Status";
 import RenderIf from "@/components/ui/RenderIf";
 import CreateDiscountButton from "@/components/ui/CreateDiscountButton";
 import { PiSpeakerHighLight } from "react-icons/pi";
+import { DiscountFilter } from "../filters/DiscountFilter";
 
-type SupplierTableProps = {
+type DiscountTableProps = {
   page: number;
   limit: number;
   total: number;
@@ -94,7 +95,7 @@ const DiscountTable = ({
   count,
   page,
   limit,
-}: SupplierTableProps) => {
+}: DiscountTableProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -196,7 +197,9 @@ const DiscountTable = ({
         case "start":
           return (
             <TableCell>
-              <span>{convertDateToString(discount.startOn, {getTime: false})}</span>
+              <span>
+                {convertDateToString(discount.startOn, { getTime: false })}
+              </span>
             </TableCell>
           );
         case "end":
@@ -221,7 +224,7 @@ const DiscountTable = ({
   if (discount.length === 0) {
     return (
       <>
-        {/* <SupplierFilter /> */}
+        <DiscountFilter />
         <EmptyTableContent
           title="Cửa hàng chưa có khuyến mại"
           subTitle="Tạo khuyến mại để thêm các ưu đãi cho khách hàng"
@@ -233,8 +236,8 @@ const DiscountTable = ({
 
   return (
     <>
-      {/* <SupplierFilter /> */}
-      <div className="max-w-full overflow-x-auto max-h-[70vh]">
+      <DiscountFilter />
+      <div className="max-w-full overflow-x-auto max-h-[70vh] mt-2">
         <Table
           removeWrapper
           isHeaderSticky

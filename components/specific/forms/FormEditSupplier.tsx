@@ -27,7 +27,6 @@ const FormEditSupplier = ({ supplier }: FormEditSupplierProps) => {
     formState: { errors },
     getValues,
     setValue,
-    register,
     watch,
     control,
   } = useFormContext<EditSupplierField>();

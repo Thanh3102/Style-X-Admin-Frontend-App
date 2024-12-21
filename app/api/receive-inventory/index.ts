@@ -37,18 +37,8 @@ export const getReceiveInventory = async (
   accessToken: string | null | undefined
 ) => {
   try {
-    const { page: pg = "", limit: lim = "", query = "" } = queryParams;
-
-    const page = isInteger(pg) ? parseInt(pg) : 1;
-    const limit = isInteger(lim) ? parseInt(lim) : 20;
-    const params = {
-      [FilterParam.PAGE]: page.toString(),
-      [FilterParam.LIMIT]: limit.toString(),
-      [FilterParam.QUERY]: query ? query : "",
-    };
-
-    const paramString = new URLSearchParams(params);
-    const url = `${GET_RECEIVE_INVENTORY}?` + paramString.toString();
+    const param = new URLSearchParams(queryParams);
+    const url = `${GET_RECEIVE_INVENTORY}?${param.toString()}`;
     const res = await fetch(url, {
       headers: {
         Authorization: `Bearer ${accessToken}`,

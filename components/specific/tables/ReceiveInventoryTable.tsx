@@ -14,9 +14,7 @@ import {
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   CreateReceiveInventoryRoute,
-  CreateSupplierRoute,
   ReceiveInventoryDetailRoute,
-  SuppliersRoute,
 } from "@/constants/route";
 import { useCallback } from "react";
 import { cn } from "@/libs/utils";
@@ -27,6 +25,7 @@ import LinkButton from "@/components/ui/LinkButton";
 import ReceiveInventoryStatusCard from "@/components/ui/ReceiveInventoryStatusCard";
 import ReceiveTransactionStatusCard from "@/components/ui/ReceiveTransactionStatusCard";
 import { CurrencyFormatter } from "@/libs/format-helper";
+import { ReceiveInventoryFilter } from "../filters/ReceiveInventoryFilter";
 
 type ReceiveTableProps = {
   page: number;
@@ -60,7 +59,7 @@ const columns: Column[] = [
   },
   {
     key: "warehouse",
-    label: "Chi nhánh nhập",
+    label: "Kho nhập",
     isSortable: false,
     className: "min-w-[200px]",
   },
@@ -217,7 +216,7 @@ const ReceiveInventoryTable = ({
   if (receives.length === 0) {
     return (
       <>
-        {/* <SupplierFilter /> */}
+        <ReceiveInventoryFilter />
         <EmptyTableContent
           title="Cửa hàng chưa có đơn nhập hàng nào"
           subTitle="Tạo đơn nhập hàng để nhập hàng hóa vào kho hàng của cửa hàng"
@@ -236,7 +235,7 @@ const ReceiveInventoryTable = ({
 
   return (
     <>
-      {/* <SupplierFilter /> */}
+      <ReceiveInventoryFilter />
       <div className="max-w-full overflow-x-auto max-h-[70vh]">
         <Table
           removeWrapper

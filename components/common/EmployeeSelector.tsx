@@ -32,14 +32,16 @@ const EmployeeSelector = ({
   const [page, setPage] = useState<number>(1);
   const [users, setUser] = useImmer<UserBasic[]>([]);
   const queryTimeoutRef = useRef<NodeJS.Timeout>();
-  const limit = 10;
+  const limit = 20;
 
   const getUsers = useCallback(
     async (p: number, lim: number, query?: string) => {
       try {
         setIsLoading(true);
         const session = await getSession();
-        const url = `${EMPLOYEE_GET_ROUTE}?${FilterParam.QUERY}=${query}&${FilterParam.PAGE}=${p}&${FilterParam.LIMIT}=${lim}`;
+        const url = `${EMPLOYEE_GET_ROUTE}?${FilterParam.QUERY}=${
+          query ?? ""
+        }&${FilterParam.PAGE}=${p}&${FilterParam.LIMIT}=${lim}`;
         const res = await fetch(url, {
           headers: {
             authorization: `Bearer ${session?.accessToken}`,
@@ -47,7 +49,7 @@ const EmployeeSelector = ({
         });
         if (res.ok) {
           const data: GetUsersResponse = await res.json();
-          setUser(data.users);
+          setUser(data.employees);
           setHasMore(data.paginition.hasMore);
         }
         setIsLoading(false);
@@ -69,8 +71,6 @@ const EmployeeSelector = ({
   };
 
   const loadMoreUser = async () => {
-    console.log("load more");
-
     setIsLoading(true);
     const session = await getSession();
     const res = await fetch(
@@ -85,7 +85,7 @@ const EmployeeSelector = ({
     );
     if (res.ok) {
       const data: GetUsersResponse = await res.json();
-      setUser((users) => [...users, data.users]);
+      setUser((users) => [...users, data.employees]);
       setHasMore(data.paginition.hasMore);
     }
     setIsLoading(false);

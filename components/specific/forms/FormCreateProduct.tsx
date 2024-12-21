@@ -33,14 +33,12 @@ import ProductVariantEditModal from "../ProductVariantEditModal";
 import ImageDrop from "../../common/CreateProductImageDrop";
 import dynamic from "next/dynamic";
 import CategoriesSearch from "../../common/CategoriesSearch";
-import {
-  GET_WAREHOUSE_ROUTE,
-  POST_CREATE_PRODUCT_ROUTE,
-} from "@/constants/api-routes";
+import { POST_CREATE_PRODUCT_ROUTE } from "@/constants/api-routes";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { ProductRoute } from "@/constants/route";
 import { getWarehouse } from "@/app/api/warehouses";
+import Link from "next/link";
 
 const TextEditor = dynamic(() => import("../../common/TextEditor"), {
   ssr: false,
@@ -182,35 +180,40 @@ const FormCreateProduct = () => {
     images,
     ...productData
   }) => {
-    const formData = new FormData();
+    try {
+      const formData = new FormData();
 
-    if (images.length > 0) {
-      images.forEach((img) => {
-        formData.append("images", img);
+      if (images.length > 0) {
+        images.forEach((img) => {
+          formData.append("images", img);
+        });
+      }
+
+      formData.append("productData", JSON.stringify(productData));
+
+      setIsLoading(true);
+      const session = await getSession();
+      const res = await fetch(`${POST_CREATE_PRODUCT_ROUTE}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+        body: formData,
       });
+      setIsLoading(false);
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success("Thêm sản phẩm thành công");
+        router.push(`${ProductRoute}/${data.id}`);
+        return;
+      }
+
+      throw new Error(data.error);
+    } catch (error: any) {
+      setIsLoading(false);
+      toast.error(error.message ?? "Đã xảy ra lỗi");
     }
-
-    formData.append("productData", JSON.stringify(productData));
-
-    setIsLoading(true);
-    const session = await getSession();
-    const res = await fetch(`${POST_CREATE_PRODUCT_ROUTE}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${session?.accessToken}`,
-      },
-      body: formData,
-    });
-    setIsLoading(false);
-    const data = await res.json();
-
-    if (res.ok) {
-      toast.success("Thêm sản phẩm thành công");
-      router.push(`${ProductRoute}/${data.id}`);
-      return;
-    }
-
-    toast.error(data.error ?? "Đã xảy ra lỗi");
   };
 
   const getWarehouseData = useCallback(async () => {
@@ -997,11 +1000,13 @@ const FormCreateProduct = () => {
 
       <div className="flex justify-end gap-4 mt-4 py-4 border-t-1 border-gray-400">
         <Button
+          as={Link}
           radius="sm"
           variant="bordered"
           color="danger"
           isLoading={isDeleteLoading}
           isDisabled={isLoading || isDeleteLoading}
+          href={ProductRoute}
         >
           Hủy
         </Button>

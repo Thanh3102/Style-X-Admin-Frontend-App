@@ -20,11 +20,10 @@ import { BsPersonFillGear } from "react-icons/bs";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import { CiBoxList } from "react-icons/ci";
 import {
-  AccountsRoute,
   CollectionRoute,
-  CustomizeRoute,
   DashboardRoute,
   DiscountsRoute,
+  EmployeeRoute,
   InventoriesRoute,
   OrdersRoute,
   ProductRoute,
@@ -36,6 +35,7 @@ import {
 import { cn } from "@/libs/utils";
 import { LuClipboardList } from "react-icons/lu";
 import { DateFilterOptionValue, FilterParam } from "@/libs/types/backend";
+import { Image } from "@nextui-org/react";
 
 const items = [
   {
@@ -96,7 +96,7 @@ const items = [
   {
     title: "Nhân viên",
     icon: <BsPersonFillGear size={18} />,
-    url: AccountsRoute,
+    url: EmployeeRoute,
   },
   // {
   //   title: "Tùy chỉnh",
@@ -133,13 +133,24 @@ const Sidebar = () => {
     >
       <div
         className={cn(
-          "h-[var(--header-height)] flex items-center justify-between border-b-1 border-white px-2",
+          "h-[var(--header-height)] flex items-center gap-2 border-b-1 border-white px-2",
           {
             "justify-center": !isExtend,
           }
         )}
       >
-        <div className={cn("text-lg", { hidden: !isExtend })}>StyleX</div>
+        <div
+          className={cn("text-lg flex-1 flex justify-center", {
+            hidden: !isExtend,
+          })}
+        >
+          <Image
+            src="/images/stylex-high-resolution-logo-grayscale-transparent.png"
+            width={40}
+            height={40}
+            className="bg-white rounded-full"
+          />
+        </div>
         <div
           className="hover:cursor-pointer"
           onClick={() => setIsExtend(!isExtend)}

@@ -1,13 +1,11 @@
 "use client";
 import { updateSearchParams } from "@/libs/helper";
-import { Button, ButtonGroup, Input } from "@nextui-org/react";
+import { ButtonGroup, Input } from "@nextui-org/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, useRef } from "react";
 import { IoMdSearch } from "react-icons/io";
-import { RxTriangleDown } from "react-icons/rx";
 import DateFilterButton from "../common/filters/DateFilterButton";
-import { AssignedFilterButton } from "../common/filters/AssignedFilter";
-import { FiFilter } from "react-icons/fi";
+
 
 const ProductTableFilter = () => {
   const searchTimeoutRef = useRef<NodeJS.Timeout>(null);
@@ -44,24 +42,13 @@ const ProductTableFilter = () => {
       />
       <ButtonGroup radius="sm" variant="bordered">
         <DateFilterButton />
-        <Button
-          endContent={<RxTriangleDown size={16} className="text-gray-500" />}
-          disableRipple
-        >
-          Loại sản phẩm
-        </Button>
+        {/* <CategoryFilterButton />
         <Button
           endContent={<RxTriangleDown size={16} className="text-gray-500" />}
           disableRipple
         >
           Tag
-        </Button>
-        <Button
-          startContent={<FiFilter size={16} className="text-gray-500" />}
-          disableRipple
-        >
-          Bộ lọc khác
-        </Button>
+        </Button> */}
       </ButtonGroup>
     </div>
   );

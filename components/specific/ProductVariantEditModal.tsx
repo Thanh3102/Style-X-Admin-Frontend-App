@@ -28,12 +28,6 @@ type Props = {
   onSave?: (variant: ProductVariant) => void;
 } & Omit<ModalProps, "children">;
 
-/*
-
-  Chưa validate
-
-*/
-
 const ProductVariantEditModal = (props: Props) => {
   const { variant, onSave, ...restProps } = props;
   const [thisVariant, setThisVariant] = useImmer<ProductVariant | undefined>(
@@ -45,7 +39,11 @@ const ProductVariantEditModal = (props: Props) => {
     field: "sellPrice" | "costPrice" | "comparePrice"
   ) => {
     setThisVariant((variant) => {
-      if (variant) variant[field] = parseInt(value);
+      if (variant) {
+        // variant[field] = parseInt(value);
+        if (value === "") variant[field] = 0;
+        else variant[field] = parseInt(value);
+      }
       return variant;
     });
   };

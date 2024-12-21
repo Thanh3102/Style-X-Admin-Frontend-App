@@ -8,7 +8,6 @@ import { RxTriangleDown } from "react-icons/rx";
 import DateFilterButton from "../common/filters/DateFilterButton";
 import { AssignedFilterButton } from "../common/filters/AssignedFilter";
 
-
 const SupplierFilter = () => {
   const searchTimeoutRef = useRef<NodeJS.Timeout>(null);
   const router = useRouter();
@@ -45,12 +44,6 @@ const SupplierFilter = () => {
       <ButtonGroup radius="sm" variant="bordered">
         <DateFilterButton />
         <AssignedFilterButton />
-        <Button
-          endContent={<RxTriangleDown size={16} className="text-gray-500" />}
-          disableRipple
-        >
-          Tag
-        </Button>
       </ButtonGroup>
     </div>
   );

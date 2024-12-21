@@ -1,4 +1,6 @@
 "use client";
+import { GetEmployees } from "@/app/api/employee";
+import { Employee } from "@/app/api/employee/employee.type";
 import RenderIf from "@/components/ui/RenderIf";
 import { EMPLOYEE_GET_ROUTE } from "@/constants/api-routes";
 import { updateSearchParams } from "@/libs/helper";
@@ -26,6 +28,7 @@ const AssignedFilterButton = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+
   const handleClick = (selectedValues: string[]) => {
     const url = new URLSearchParams(Array.from(searchParams.entries()));
     const assignedIdString = selectedValues.join(",");
@@ -76,7 +79,7 @@ const AssignedFilterDropdown = ({
   onFilterClick,
 }: AssignedFilterDropdownProps) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [users, setUsers] = useState<ResponseUser[]>([]);
+  const [users, setUsers] = useState<Employee[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   const [inputValue, setInputValue] = useState("");
@@ -93,22 +96,18 @@ const AssignedFilterDropdown = ({
       try {
         setIsLoading(true);
         const session = await getSession();
-        const url = `${EMPLOYEE_GET_ROUTE}?${FilterParam.QUERY}=${
-          input ?? ""
-        }&${FilterParam.PAGE}=${page}&${FilterParam.LIMIT}=${limit}`;
-        const res = await fetch(url, {
-          headers: {
-            authorization: `Bearer ${session?.accessToken}`,
+        const responseData = await GetEmployees(
+          {
+            page: page.toString(),
+            limit: limit.toString(),
+            query: input,
           },
-          cache: "no-cache",
-        });
-
-        if (res.ok) {
-          const data: GetUsersResponse = await res.json();
-
-          setUsers(data.users);
-          setHasMore(data.paginition.hasMore);
-        }
+          session?.accessToken
+        );
+        setUsers(responseData.employees);
+        setHasMore(
+          responseData.paginition.page < responseData.paginition.total
+        );
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
@@ -122,22 +121,18 @@ const AssignedFilterDropdown = ({
       setIsLoading(true);
       try {
         const session = await getSession();
-        const url = `${EMPLOYEE_GET_ROUTE}?${FilterParam.QUERY}=${input}&${
-          FilterParam.PAGE
-        }=${page + 1}&${FilterParam.LIMIT}=${limit}`;
-        const res = await fetch(url, {
-          headers: {
-            authorization: `Bearer ${session?.accessToken}`,
+        const responseData = await GetEmployees(
+          {
+            page: (page + 1).toString(),
+            limit: limit.toString(),
+            query: input,
           },
-          cache: "no-cache",
-        });
-
-        if (res.ok) {
-          const data: GetUsersResponse = await res.json();
-          setUsers((users) => [...users, ...data.users]);
-          setHasMore(data.paginition.hasMore);
-          setPage(page + 1);
-        }
+          session?.accessToken
+        );
+        setUsers(responseData.employees);
+        setHasMore(
+          responseData.paginition.page < responseData.paginition.total
+        );
 
         setIsLoading(false);
       } catch (error) {
@@ -214,14 +209,13 @@ const AssignedFilterDropdown = ({
         ref={checkboxScrollRef}
       >
         <CheckboxGroup
-          // defaultValue={defaultSelect}
           onChange={handleGroupChange}
           classNames={{ base: "p-2" }}
         >
           {users.map((user) => (
             <Checkbox
               key={user.id}
-              value={user.id}
+              value={user.id.toString()}
               size="sm"
               classNames={{
                 base: cn(

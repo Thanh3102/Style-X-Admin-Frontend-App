@@ -13,9 +13,15 @@ import ReportDateRangePicker from "@/components/ui/ReportDateRangePicker";
 import ReportOverviewInfo from "@/components/ui/ReportOverviewInfo";
 import { CurrencyFormatter } from "@/libs/format-helper";
 import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
-import { DateFilterOptionValue, QueryParams } from "@/libs/types/backend";
+import {
+  DateFilterOptionValue,
+  FilterParam,
+  QueryParams,
+} from "@/libs/types/backend";
 import { getServerSession } from "next-auth";
+import Link from "next/link";
 import { Suspense } from "react";
+import { BsArrowRightCircle } from "react-icons/bs";
 
 type Props = {
   searchParams: QueryParams;
@@ -62,9 +68,13 @@ const Page = async ({ searchParams }: Props) => {
           <div className="w-1/2">
             <div className="flex flex-col shadow-medium  bg-white rounded-md p-4 ">
               <div className="flex flex-col">
-                <div className="h-[52px]">
+                <div className="h-[52px] flex justify-between items-center">
                   <span>Top sản phẩm bán chạy</span>
+                  <Link href={`/report/product`}>
+                    <BsArrowRightCircle size={20} />
+                  </Link>
                 </div>
+
                 <div className="h-[300px] mt-5 flex flex-col gap-2">
                   {ReportBestSale.map((item) => (
                     <div
