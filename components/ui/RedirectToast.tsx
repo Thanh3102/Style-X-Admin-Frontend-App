@@ -14,7 +14,7 @@ const RedirectToast = ({ href, type, content, options }: Props) => {
   const router = useRouter();
 
   useEffect(() => {
-    router.push(href);
+    router.replace(href);
 
     if (content) {
       switch (type) {

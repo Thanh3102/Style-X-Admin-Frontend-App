@@ -86,7 +86,7 @@ const ProductTable = (props: Props) => {
       [{ name: "page", value: page.toString() }],
       pathname
     );
-    router.push(newUrl);
+    router.replace(newUrl);
   };
 
   const handleLimitChange = (limit: string) => {
@@ -102,7 +102,7 @@ const ProductTable = (props: Props) => {
       ],
       pathname
     );
-    router.push(newUrl);
+    router.replace(newUrl);
   };
 
   const renderCell = useCallback((product: ProductResponse, key: any) => {

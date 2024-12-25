@@ -125,7 +125,7 @@ const ReceiveInventoryTable = ({
       [{ name: "page", value: page.toString() }],
       pathname
     );
-    router.push(newUrl);
+    router.replace(newUrl);
   };
 
   const handleLimitChange = (limit: string) => {
@@ -141,7 +141,7 @@ const ReceiveInventoryTable = ({
       ],
       pathname
     );
-    router.push(newUrl);
+    router.replace(newUrl);
   };
 
   const renderCell = useCallback(
@@ -236,7 +236,7 @@ const ReceiveInventoryTable = ({
   return (
     <>
       <ReceiveInventoryFilter />
-      <div className="max-w-full overflow-x-auto max-h-[70vh]">
+      <div className="max-w-full overflow-x-auto max-h-[70vh] mt-2">
         <Table
           removeWrapper
           isHeaderSticky

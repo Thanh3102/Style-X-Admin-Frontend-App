@@ -9,7 +9,7 @@ import DateFilterButton from "../common/filters/DateFilterButton";
 import { AssignedFilterButton } from "../common/filters/AssignedFilter";
 
 const SupplierFilter = () => {
-  const searchTimeoutRef = useRef<NodeJS.Timeout>(null);
+  const searchTimeoutRef = useRef<NodeJS.Timeout>();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -17,7 +17,7 @@ const SupplierFilter = () => {
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (searchTimeoutRef.current) clearInterval(searchTimeoutRef.current);
 
-    setTimeout(() => {
+    searchTimeoutRef.current = setTimeout(() => {
       const newUrl = updateSearchParams(
         new URLSearchParams(Array.from(searchParams.entries())),
         [
@@ -27,7 +27,7 @@ const SupplierFilter = () => {
         pathname
       );
 
-      router.push(newUrl);
+      router.replace(newUrl);
     }, 300);
   };
 

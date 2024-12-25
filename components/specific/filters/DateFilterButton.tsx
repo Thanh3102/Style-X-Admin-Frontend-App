@@ -58,7 +58,7 @@ const DateFilterButton = () => {
       setOpen(false);
       const search = currentParams.toString();
       const query = search ? `?${search}` : "";
-      router.push(`${pathname}${query}`);
+      router.replace(`${pathname}${query}`);
       return;
     }
 
@@ -105,7 +105,7 @@ const DateFilterButton = () => {
     const query = search ? `?${search}` : "";
 
     // Đẩy param mới lên url
-    router.push(`${pathname}${query}`);
+    router.replace(`${pathname}${query}`);
 
     // setSelectedOption(undefined);
   };

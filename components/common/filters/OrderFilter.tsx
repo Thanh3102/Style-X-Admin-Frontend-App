@@ -10,7 +10,7 @@ import { FilterParam } from "@/libs/types/backend";
 import { MdOutlineFilterAltOff } from "react-icons/md";
 
 const OrderFilter = () => {
-  const searchTimeoutRef = useRef<NodeJS.Timeout>(null);
+  const searchTimeoutRef = useRef<NodeJS.Timeout>();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -19,9 +19,9 @@ const OrderFilter = () => {
   );
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (searchTimeoutRef.current) clearInterval(searchTimeoutRef.current);
+    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
 
-    setTimeout(() => {
+    searchTimeoutRef.current = setTimeout(() => {
       const newUrl = updateSearchParams(
         new URLSearchParams(Array.from(searchParams.entries())),
         [
@@ -32,7 +32,7 @@ const OrderFilter = () => {
       );
 
       router.replace(newUrl);
-    }, 300);
+    }, 1000);
   };
 
   const handleOrderStatusChange = (status: string) => {

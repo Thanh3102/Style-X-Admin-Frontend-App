@@ -27,6 +27,7 @@ import toast from "react-hot-toast";
 import { Variant } from "./forms/FormEditVariant";
 import RenderIf from "../ui/RenderIf";
 import { useRouter } from "next/navigation";
+import { getWarehouse } from "@/app/api/warehouses";
 
 type Warehouse = { id: number; name: string };
 
@@ -86,22 +87,15 @@ const AddInventoryModal = ({ variant, ...props }: Props) => {
     [selectedWarehouses]
   );
 
-  const getWarehouse = useCallback(async () => {
+  const getWarehouseData = useCallback(async () => {
     try {
       const session = await getSession();
-      const res = await fetch(`${GET_WAREHOUSE_ROUTE}`, {
-        headers: {
-          Authorization: `Bearer ${session?.accessToken}`,
-        },
-        cache: "force-cache",
-      });
+      const data = await getWarehouse(session?.accessToken, { active: "true" });
 
-      if (res.ok) {
-        const data = (await res.json()) as Warehouse[];
-        setWarehouses(data);
-      }
+      setWarehouses(data.map((item) => ({ id: item.id, name: item.name })));
     } catch (error: any) {
-      toast.error(error.message ?? "Đã xảy ra lỗi khi tải dữ liệu");
+      // toast.error(error.message ?? "Đã xảy ra lỗi khi tải dữ liệu");
+      setWarehouses([]);
     }
   }, []);
 
@@ -156,7 +150,7 @@ const AddInventoryModal = ({ variant, ...props }: Props) => {
   );
 
   useEffect(() => {
-    getWarehouse();
+    getWarehouseData();
   }, []);
 
   return (
@@ -222,7 +216,10 @@ const AddInventoryModal = ({ variant, ...props }: Props) => {
                   radius="sm"
                   variant="bordered"
                   color="primary"
-                  onClick={() => onClose()}
+                  onClick={() => {
+                    setSelectedWarehouses([]);
+                    onClose();
+                  }}
                 >
                   Đóng
                 </Button>
@@ -230,6 +227,8 @@ const AddInventoryModal = ({ variant, ...props }: Props) => {
                   radius="sm"
                   color="primary"
                   onClick={() => handleSave(onClose)}
+                  isLoading={isLoading}
+                  isDisabled={isLoading}
                 >
                   Lưu
                 </Button>

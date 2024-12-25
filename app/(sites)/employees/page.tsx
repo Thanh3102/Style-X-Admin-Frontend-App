@@ -1,3 +1,4 @@
+import { getCurrentPermissions } from "@/app/api/customer";
 import { GetEmployees } from "@/app/api/employee";
 import EmployeePageTabs from "@/components/specific/EmployeePageTabs";
 import ErrorPage from "@/components/ui/ErrorPage";
@@ -14,11 +15,15 @@ type Props = {
 const Page = async ({ searchParams }: Props) => {
   try {
     const session = await getServerSession(nextAuthOptions);
+    const permissions = await getCurrentPermissions(session?.accessToken);
     const employeeData = await GetEmployees(searchParams, session?.accessToken);
     return (
       <div className="px-10 py-5">
         <Suspense fallback={<LoadingPage />}>
-          <EmployeePageTabs employeeData={employeeData} />
+          <EmployeePageTabs
+            employeeData={employeeData}
+            permissions={permissions}
+          />
         </Suspense>
       </div>
     );

@@ -46,7 +46,7 @@ const EmptyTableContent = ({ addButton, title, subTitle }: Props) => {
         variant="ghost"
         color="primary"
         radius="sm"
-        onClick={() => router.push(pathname)}
+        onClick={() => router.replace(pathname)}
       >
         Xem tất cả danh sách
       </Button>

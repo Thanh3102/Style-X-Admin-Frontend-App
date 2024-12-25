@@ -16,8 +16,10 @@ import { EmptyTableContent } from "./EmptyTableContent";
 
 import { useCallback } from "react";
 import { GetInventoriesHistoryResponse } from "@/app/api/inventories/inventories.type";
-import { ReceiveInventoryDetailRoute } from "@/constants/route";
+import { OrdersRoute, ReceiveInventoryDetailRoute } from "@/constants/route";
 import Link from "next/link";
+import { InventoryHistoryFilter } from "./filters/InventoryHistoryFilter";
+import RenderIf from "../ui/RenderIf";
 type InventoryHistory =
   GetInventoriesHistoryResponse["inventoryHistory"][number];
 
@@ -119,7 +121,7 @@ const InventoryHistoryTable = (props: Props) => {
       [{ name: "page", value: page.toString() }],
       pathname
     );
-    router.push(newUrl);
+    router.replace(newUrl);
   };
 
   const handleLimitChange = (limit: string) => {
@@ -135,7 +137,7 @@ const InventoryHistoryTable = (props: Props) => {
       ],
       pathname
     );
-    router.push(newUrl);
+    router.replace(newUrl);
   };
 
   const renderCell = useCallback((item: InventoryHistory, key: string) => {
@@ -161,6 +163,13 @@ const InventoryHistoryTable = (props: Props) => {
                   </span>
                 </Link>
               )}
+
+              {item.order && (
+                <Link href={`${OrdersRoute}/${item.order.id}`}>
+                  <span className="label-link text-sm">{item.order.code}</span>
+                </Link>
+              )}
+
               <span>
                 Loại: <span className="text-black">{item.transactionType}</span>
               </span>
@@ -259,6 +268,7 @@ const InventoryHistoryTable = (props: Props) => {
   if (inventoryHistory.length === 0) {
     return (
       <>
+        <InventoryHistoryFilter />
         <EmptyTableContent
           title="Hiện tại chưa có giao dịch nào"
           subTitle="Khi thực hiện thay đổi về tồn kho, lịch sử sẽ được lưu lại"
@@ -269,8 +279,8 @@ const InventoryHistoryTable = (props: Props) => {
 
   return (
     <>
-      {/* <ProductTableFilter /> */}
-      <div className="max-w-full overflow-x-auto max-h-[80vh] overflow-y-auto">
+      <InventoryHistoryFilter />
+      <div className="max-w-full overflow-x-auto max-h-[80vh] overflow-y-auto mt-2">
         <Table
           removeWrapper
           isHeaderSticky

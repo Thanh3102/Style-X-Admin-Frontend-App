@@ -133,7 +133,7 @@ const CategoriesSearch = (props: Props) => {
 
     inputTimeoutRef.current = setTimeout(() => {
       getCategory({ query: value });
-    }, 300);
+    }, 1000);
 
     setInputValue(value);
   }, []);

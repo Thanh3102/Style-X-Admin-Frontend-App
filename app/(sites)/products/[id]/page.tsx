@@ -1,18 +1,19 @@
+import { getCurrentPermissions } from "@/app/api/customer";
 import { getProductDetail } from "@/app/api/products";
 import FormEditProduct from "@/components/specific/forms/FormEditProduct";
+import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
 import ErrorPage from "@/components/ui/ErrorPage";
 import GoBackButton from "@/components/ui/GoBackButton";
 import LoadingCard from "@/components/ui/LoadingCard";
 import PageTitle from "@/components/ui/PageTitle";
 import RedirectToast from "@/components/ui/RedirectToast";
-import { GET_PRODUCT_DETAIL_ROUTE } from "@/constants/api-routes";
 import { ProductRoute } from "@/constants/route";
 import { isInteger } from "@/libs/helper";
 import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+import { ProductPermission } from "@/libs/types/backend";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import toast from "react-hot-toast";
 
 type Props = { params: { id: string } };
 
@@ -31,9 +32,14 @@ const getProductDetailData = async (id: number) => {
 async function Page({ params: { id } }: Props) {
   try {
     if (!isInteger(id)) {
-      toast.error("Sản phẩm không hợp lệ");
       redirect(ProductRoute);
     }
+
+    const session = await getServerSession(nextAuthOptions);
+    const permissions = await getCurrentPermissions(session?.accessToken);
+
+    if (!permissions.includes(ProductPermission.Access))
+      return <AccessDeniedPage />;
 
     const { product, error } = await getProductDetailData(parseInt(id));
 

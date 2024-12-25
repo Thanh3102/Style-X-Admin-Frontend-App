@@ -73,7 +73,7 @@ const TagSearch = ({
     if (queryTimeoutRef.current) clearTimeout(queryTimeoutRef.current);
     const queryTimeout = setTimeout(() => {
       getTags(1, 10, value);
-    }, 300);
+    }, 1000);
     queryTimeoutRef.current = queryTimeout;
   };
 

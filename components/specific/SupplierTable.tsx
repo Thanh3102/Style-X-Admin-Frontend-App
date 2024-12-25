@@ -87,7 +87,7 @@ const SupplierTable = ({
       [{ name: "page", value: page.toString() }],
       pathname
     );
-    router.push(newUrl);
+    router.replace(newUrl);
   };
 
   const handleLimitChange = (limit: string) => {
@@ -103,7 +103,7 @@ const SupplierTable = ({
       ],
       pathname
     );
-    router.push(newUrl);
+    router.replace(newUrl);
   };
 
   const renderCell = useCallback((supplier: SupplierResponse, key: any) => {

@@ -86,7 +86,7 @@ const ProductSelector = (props: Props) => {
     clearTimeout(searchTimeoutRef.current);
     searchTimeoutRef.current = setTimeout(() => {
       getProductData(1, limit, value);
-    }, 300);
+    }, 1000);
     setPage(1);
     setInputValue(value);
   };

@@ -218,7 +218,8 @@ const FormCreateProduct = () => {
 
   const getWarehouseData = useCallback(async () => {
     try {
-      const data = await getWarehouse();
+      const session = await getSession();
+      const data = await getWarehouse(session?.accessToken);
       setWarehouses(data);
     } catch (error: any) {
       toast.error(error.message ?? "Đã xảy ra lỗi khi tải dữ liệu");
@@ -463,7 +464,7 @@ const FormCreateProduct = () => {
             options[index].name = value;
             return options;
           }),
-        300
+        1000
       );
     },
     []

@@ -10,30 +10,16 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-  useDisclosure,
 } from "@nextui-org/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
-import {
-  GetCategoryResponse,
-  GetCollectionResponse,
-} from "@/app/api/categories/categories.type";
-import Image from "next/image";
-import { ImagePlaceholderPath } from "@/constants/filepath";
-import { FaTrash } from "react-icons/fa6";
-import { FaEdit } from "react-icons/fa";
-import EditCategoryModal from "../modals/EditCategoryModal";
-import ConfirmModal from "../ConfirmModal";
-import toast from "react-hot-toast";
-import { getSession } from "next-auth/react";
-import { DeleteCategory } from "@/app/api/categories";
+import { useCallback } from "react";
 import { Employee } from "@/app/api/employee/employee.type";
 import { updateSearchParams } from "@/libs/helper";
 import { Status } from "@/components/ui/Status";
 import UpdateEmployeeButton from "@/components/ui/UpdateEmployeeButton";
-import { Role } from "../RoleTab";
-import { GET_ROLES_ROUTE } from "@/constants/api-routes";
 import DeleteEmployeeButton from "@/components/ui/DeleteEmployeeButton";
+import { useSession } from "next-auth/react";
+import RenderIf from "@/components/ui/RenderIf";
 
 type EmployeeTableProps = {
   employees: Employee[];
@@ -41,7 +27,6 @@ type EmployeeTableProps = {
   limit: number;
   total: number;
   count: number;
-  roles: Role[];
 };
 
 type Column = {
@@ -91,11 +76,11 @@ const EmployeeTable = ({
   limit,
   page,
   total,
-  roles,
 }: EmployeeTableProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { data } = useSession();
 
   const handlePageChange = (page: number) => {
     const current = new URLSearchParams(Array.from(searchParams.entries()));
@@ -104,7 +89,7 @@ const EmployeeTable = ({
       [{ name: "page", value: page.toString() }],
       pathname
     );
-    router.push(newUrl);
+    router.replace(newUrl);
   };
 
   const handleLimitChange = (limit: string) => {
@@ -120,7 +105,7 @@ const EmployeeTable = ({
       ],
       pathname
     );
-    router.push(newUrl);
+    router.replace(newUrl);
   };
 
   const renderCell = useCallback((employee: Employee, key: any) => {
@@ -165,15 +150,10 @@ const EmployeeTable = ({
         return (
           <TableCell>
             <div className="flex gap-4">
-              <UpdateEmployeeButton
-                employee={employee}
-      
-                roles={roles}
-              />
-              <DeleteEmployeeButton
-                employee={employee}
-   
-              />
+              <UpdateEmployeeButton employee={employee} />
+              <RenderIf condition={employee.id !== data?.user.id}>
+                <DeleteEmployeeButton employee={employee} />
+              </RenderIf>
             </div>
           </TableCell>
         );
@@ -223,6 +203,7 @@ const EmployeeTable = ({
           </TableBody>
         </Table>
       </div>
+      
       <div className="flex justify-between items-center p-4 bg-white rounded-b-md shadow-md">
         <span className="">
           {`Từ ${count === 0 ? 0 : page === 1 ? 1 : (page - 1) * limit + 1} tới

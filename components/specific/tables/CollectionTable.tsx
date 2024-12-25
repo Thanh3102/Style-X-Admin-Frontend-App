@@ -121,7 +121,7 @@ const CollectionTable = ({ collections }: CollectionTableProps) => {
       toast.success(message ?? "Đã xóa bộ sưu tập");
       router.refresh();
     } catch (error: any) {
-      toast.error(error);
+      toast.error(error.message);
     }
   };
 

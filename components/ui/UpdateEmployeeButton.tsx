@@ -14,9 +14,10 @@ import { Role } from "../specific/RoleTab";
 
 type Props = {
   employee: Employee;
-  roles: Role[];
 };
-const UpdateEmployeeButton = ({ employee, roles }: Props) => {
+const UpdateEmployeeButton = ({ employee }: Props) => {
+
+
   const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure();
   return (
     <>
@@ -32,7 +33,6 @@ const UpdateEmployeeButton = ({ employee, roles }: Props) => {
           <ModalBody className="max-h-[60vh] overflow-y-auto">
             <FormUpdateEmployee
               employee={employee}
-              roles={roles}
               onClose={onClose}
             />
           </ModalBody>

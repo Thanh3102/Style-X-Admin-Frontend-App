@@ -6,11 +6,14 @@ import { Status } from "@/components/ui/Status";
 import { GET_SUPPLIER_DETAIL_ROUTE } from "@/constants/api-routes";
 import { SuppliersRoute } from "@/constants/route";
 import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
-import { DetailSuppler } from "@/libs/types/backend";
+import { DetailSuppler, SupplierPermission } from "@/libs/types/backend";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import LoadingCard from "@/components/ui/LoadingCard";
+import { getCurrentPermissions } from "@/app/api/customer";
+import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
+import ErrorPage from "@/components/ui/ErrorPage";
 
 type Props = {
   params: {
@@ -48,37 +51,48 @@ const getSupplier = async (id: string) => {
 };
 
 const Page = async ({ params: { id } }: Props) => {
-  const { supplier, error } = await getSupplier(id);
+  try {
+    const session = await getServerSession(nextAuthOptions);
+    const permissions = await getCurrentPermissions(session?.accessToken);
+    if (!permissions.includes(SupplierPermission.Access)) {
+      return <AccessDeniedPage />;
+    }
 
-  if (error) {
-    console.log("[Supplier/:id - Error]", error);
-    redirect(`${SuppliersRoute}`);
-  }
+    const { supplier, error } = await getSupplier(id);
 
-  if (!supplier) return <></>;
+    if (error) {
+      throw new Error(error);
+    }
 
-  return (
-    <div className="px-16">
-      <div className="flex gap-4 items-center">
-        <GoBackButton href={SuppliersRoute} />
-        <PageTitle>{supplier.name}</PageTitle>
-        <Status
-          content={`${supplier.active ? "Đang hoạt động" : "Ngừng hoạt động"}`}
-          color={`${supplier.active ? "success" : "default"}`}
-        />
-      </div>
-      <Suspense fallback={<LoadingCard />}>
-        <div className="flex gap-5">
-          <div className="flex-[2] min-w-[500px]">
-            <SupplierOrdersPanel supplier={supplier} />
-          </div>
-          <div className="flex-1 min-w-[250px]">
-            <SupplierInfo supplier={supplier} />
-          </div>
+    if (!supplier) return <></>;
+
+    return (
+      <div className="px-16">
+        <div className="flex gap-4 items-center">
+          <GoBackButton href={SuppliersRoute} />
+          <PageTitle>{supplier.name}</PageTitle>
+          <Status
+            content={`${
+              supplier.active ? "Đang hoạt động" : "Ngừng hoạt động"
+            }`}
+            color={`${supplier.active ? "success" : "default"}`}
+          />
         </div>
-      </Suspense>
-    </div>
-  );
+        <Suspense fallback={<LoadingCard />}>
+          <div className="flex gap-5">
+            <div className="flex-[2] min-w-[500px]">
+              <SupplierOrdersPanel supplier={supplier} />
+            </div>
+            <div className="flex-1 min-w-[250px]">
+              <SupplierInfo supplier={supplier} />
+            </div>
+          </div>
+        </Suspense>
+      </div>
+    );
+  } catch (error) {
+    return <ErrorPage />;
+  }
 };
 
 export default Page;

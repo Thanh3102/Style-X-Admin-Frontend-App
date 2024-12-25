@@ -217,8 +217,8 @@ export const DeleteCollection = async (
       return response;
     }
 
-    return response;
+    throw new Error(response.message);
   } catch (error: any) {
-    throw new Error(error.message ?? "Đã xảy ra lỗi khi xóa danh mục");
+    throw error;
   }
 };

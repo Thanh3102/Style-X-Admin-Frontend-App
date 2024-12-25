@@ -186,7 +186,7 @@ const TextEditor = (props: Props) => {
       const data = editor.getData();
       onValueChange && onValueChange(data);
       // setCharacterCount(data.length);
-    }, 400);
+    }, 1000);
   };
 
   // const handleWordCountUpdate = (stats: {

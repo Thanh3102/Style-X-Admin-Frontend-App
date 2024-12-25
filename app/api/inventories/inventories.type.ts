@@ -41,6 +41,10 @@ export type GetInventoriesHistoryResponse = {
       id: number;
       code: string;
     };
+    order: {
+      id: string;
+      code: string;
+    };
   }[];
   paginition: {
     total: number;

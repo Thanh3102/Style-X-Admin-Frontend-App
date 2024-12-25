@@ -1,3 +1,4 @@
+import { getCurrentPermissions } from "@/app/api/customer";
 import {
   GetBestSale,
   GetLowStock,
@@ -8,14 +9,15 @@ import AverageOrderTotalLineChart from "@/components/specific/charts/AverageOrde
 import OrderByTimeLineChart from "@/components/specific/charts/OrderByTimeLineChart";
 import RevenueLineChart from "@/components/specific/charts/RevenueLineChart";
 import { LowStockTable } from "@/components/specific/tables/LowStockTable";
+import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
 import ErrorPage from "@/components/ui/ErrorPage";
 import ReportDateRangePicker from "@/components/ui/ReportDateRangePicker";
 import ReportOverviewInfo from "@/components/ui/ReportOverviewInfo";
 import { CurrencyFormatter } from "@/libs/format-helper";
 import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
 import {
+  DashboardPermission,
   DateFilterOptionValue,
-  FilterParam,
   QueryParams,
 } from "@/libs/types/backend";
 import { getServerSession } from "next-auth";
@@ -30,6 +32,11 @@ type Props = {
 const Page = async ({ searchParams }: Props) => {
   try {
     const session = await getServerSession(nextAuthOptions);
+    const permissions = await getCurrentPermissions(session?.accessToken);
+
+    if (!permissions.includes(DashboardPermission.Access))
+      return <AccessDeniedPage />;
+
     const params = {
       ...searchParams,
       reportDate: searchParams.reportDate ?? DateFilterOptionValue.DAY_LAST_30,

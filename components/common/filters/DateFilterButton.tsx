@@ -80,7 +80,7 @@ const DateFilterButton = ({ buttonProps }: Props) => {
       currentParams.delete(FilterParam.CREATED_ON_MIN);
       const search = currentParams.toString();
       const query = search ? `?${search}` : "";
-      router.push(`${pathname}${query}`);
+      router.replace(`${pathname}${query}`);
       return;
     }
 
@@ -127,7 +127,7 @@ const DateFilterButton = ({ buttonProps }: Props) => {
     const query = search ? `?${search}` : "";
 
     // Đẩy param mới lên url
-    router.push(`${pathname}${query}`);
+    router.replace(`${pathname}${query}`);
 
     // setSelectedOption(undefined);
   };

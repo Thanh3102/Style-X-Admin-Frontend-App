@@ -18,12 +18,13 @@ export enum FilterParam {
   LIMIT = "limit",
   QUERY = "query",
   TAG_TYPE = "tagType",
-  ASSIGN_IDS = "assignIds",
   ACTIVE = "active",
   MODE = "mode",
   TYPE = "type",
+  ASSIGN_IDS = "assignIds",
   RECEIVE_IDS = "receiveIds",
   VARIANT_IDS = "variantIds",
+  WAREHOUSE_IDS = "warehouseIds",
   REPORT_DATE = "reportDate",
   REPORT_DATE_MIN = "reportDateMin",
   REPORT_DATE_MAX = "reportDateMax",
@@ -31,6 +32,10 @@ export enum FilterParam {
   ORDER_STATUS = "orderStatus",
   RECEIVE_STATUS = "receiveStatus",
   RECEIVE_TRANSACTION_STATUS = "receiveTransactionStatus",
+  IS_EMPLOYED = "isEmployed",
+  ROLE = "role",
+  DIRECTION = "direction",
+  ORDER_BY = "orderBy"
 }
 
 export type QueryParams = Partial<Record<FilterParam, string>>;
@@ -114,6 +119,13 @@ export enum PaymentMethod {
   BANKING = "Chuyển khoản",
 }
 
+export enum InventoryTransactionType {
+  PRODUCT = "Sản phẩm",
+  ORDER = "Đơn hàng",
+  RECEIVE_INVENTORY = "Nhập hàng",
+  PURCHASE_ORDER = "Đặt hàng nhập",
+}
+
 export enum DashboardPermission {
   Access = "dashboard_access",
 }
@@ -179,4 +191,11 @@ export enum RolePermission {
   Create = "role_create",
   Update = "role_update",
   Delete = "role_delete",
+}
+
+export enum WarehousePermission {
+  Access = "warehouse_access",
+  Create = "warehouse_create",
+  Update = "warehouse_update",
+  // Delete = 'role_delete',
 }

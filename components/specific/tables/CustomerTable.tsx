@@ -78,7 +78,7 @@ const CustomerTable = ({ customers, paginition }: Props) => {
       [{ name: "page", value: page.toString() }],
       pathname
     );
-    router.push(newUrl);
+    router.replace(newUrl);
   };
 
   const handleLimitChange = (limit: string) => {
@@ -94,7 +94,7 @@ const CustomerTable = ({ customers, paginition }: Props) => {
       ],
       pathname
     );
-    router.push(newUrl);
+    router.replace(newUrl);
   };
 
   const renderCell = useCallback(

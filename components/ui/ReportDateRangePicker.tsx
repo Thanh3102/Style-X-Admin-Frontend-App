@@ -113,7 +113,7 @@ const ReportDateRangePicker = () => {
       url = updateSearchParams(currentParams, params, pathname);
       setOpen(false);
 
-      router.push(url);
+      router.replace(url);
       return;
     }
 
@@ -164,7 +164,7 @@ const ReportDateRangePicker = () => {
       );
     }
     setOpen(false);
-    router.push(url);
+    router.replace(url);
   };
 
   const handleMinDateChange = (v: DateValue) => {

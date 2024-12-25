@@ -42,4 +42,5 @@ export const EditDiscountRoute = (id: string | number) =>
 
 export const ReportsRoute = "/reports";
 export const EmployeeRoute = "/employees";
+export const WarehouseRoute = "/warehouses"
 export const CustomizeRoute = "/customize";

@@ -1,6 +1,6 @@
 "use client";
 
-import { CREATE_ROLE_ROUTE, UPDATE_ROLE_ROUTE } from "@/constants/api-routes";
+import { UPDATE_ROLE_ROUTE } from "@/constants/api-routes";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -55,8 +55,6 @@ const FormUpdateRole = ({
       permissionIds: role.permissions.map((item) => item.id),
     },
   });
-
-  console.log("eror", errors);
 
   const onSubmit: SubmitHandler<UpdateRoleData> = async (data) => {
     if (data.permissionIds.length === 0) {

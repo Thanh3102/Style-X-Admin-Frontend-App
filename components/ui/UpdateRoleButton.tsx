@@ -31,7 +31,7 @@ const UpdateRoleButton = ({ role, permissionSections, fetchRoles }: Props) => {
 
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={true}>
         <ModalContent className="max-w-[50vw]">
-          <ModalHeader>Thêm vai trò mới</ModalHeader>
+          <ModalHeader>Cập nhật quyền hạn</ModalHeader>
           <ModalBody className="max-h-[60vh] overflow-y-auto">
             <FormUpdateRole
               fetchRoles={fetchRoles}

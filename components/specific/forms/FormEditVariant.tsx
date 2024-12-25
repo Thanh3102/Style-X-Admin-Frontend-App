@@ -16,7 +16,6 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-  Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
 import { ImagePlaceholderPath } from "@/constants/filepath";
@@ -119,16 +118,18 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
       });
 
       const responseData = await res.json();
-      setIsLoading(false);
 
       if (res.ok) {
         toast.success(responseData.message ?? "Cập nhật thành công");
         router.refresh();
         return;
       }
-      toast.error(responseData.error ?? "Đã xảy ra lỗi");
-    } catch (error) {
-      toast.error("Đã xảy ra lỗi. Vui lòng thử lại");
+
+      throw new Error(responseData.message);
+    } catch (error: any) {
+      toast.error(error.message ?? "Đã xảy ra lỗi. Vui lòng thử lại");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -440,14 +441,14 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
       </form>
       <Divider className="my-6" />
       <div className="flex justify-end gap-4">
-        <Button
+        {/* <Button
           radius="sm"
           variant="bordered"
           color="danger"
           isDisabled={isLoading}
         >
           Xóa
-        </Button>
+        </Button> */}
         <Button
           form="FormEditVariant"
           radius="sm"

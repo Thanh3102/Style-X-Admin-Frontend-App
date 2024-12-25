@@ -67,8 +67,6 @@ const ReceiveItemModal = ({ receiveInventory, ...props }: Props) => {
           newItems.push(i);
         }
       });
-      console.log("new items", newItems);
-
       return newItems;
     });
   };
@@ -125,10 +123,11 @@ const ReceiveItemModal = ({ receiveInventory, ...props }: Props) => {
         router.refresh();
         onClose();
         return;
-      } else {
-        toast.error(response.error ?? "Đã xảy ra lỗi");
       }
-    } catch (error) {}
+      throw new Error(response.message);
+    } catch (error: any) {
+      toast.error(error.message ?? "Đã xảy ra lỗi");
+    }
   };
 
   return (

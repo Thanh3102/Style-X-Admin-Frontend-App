@@ -38,7 +38,7 @@ const AssignedFilterButton = () => {
       [{ name: FilterParam.ASSIGN_IDS, value: assignedIdString }],
       pathname
     );
-    router.push(newURL);
+    router.replace(newURL);
   };
 
   return (
@@ -160,7 +160,7 @@ const AssignedFilterDropdown = ({
     if (inputTimeoutRef.current) clearInterval(inputTimeoutRef.current);
     inputTimeoutRef.current = setTimeout(() => {
       getUsers(e.target.value);
-    }, 300);
+    }, 1000);
     if (onInputChange) onInputChange(e.target.value);
     setInputValue(e.target.value);
     setPage(1);

@@ -17,9 +17,10 @@ import { getSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { Employee } from "@/app/api/employee/employee.type";
 import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { GET_ROLES_ROUTE } from "@/constants/api-routes";
 
 type Props = {
-  roles: Role[];
   onClose: () => void;
   employee: Employee;
 };
@@ -53,11 +54,32 @@ const UpdateEmployeeSchema = z.object({
 
 export type UpdateEmployeeData = z.infer<typeof UpdateEmployeeSchema>;
 
-const FormUpdateEmployee = ({
-  employee,
-  roles,
-  onClose,
-}: Props) => {
+const FormUpdateEmployee = ({ employee, onClose }: Props) => {
+  const [roles, setRoles] = useState<Role[]>([]);
+
+  const fetchRoles = useCallback(async () => {
+    try {
+      const session = await getSession();
+      const res = await fetch(GET_ROLES_ROUTE, {
+        headers: {
+          authorization: `Bearer ${session?.accessToken}`,
+        },
+        cache: "no-store",
+      });
+      const response = await res.json();
+
+      if (res.ok) {
+        setRoles(response as Role[]);
+      }
+    } catch (error: any) {
+      setRoles([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchRoles();
+  }, []);
+
   const {
     register,
     setValue,
@@ -78,14 +100,14 @@ const FormUpdateEmployee = ({
     },
   });
 
-  const router = useRouter()
+  const router = useRouter();
 
   const onSubmit: SubmitHandler<UpdateEmployeeData> = async (data) => {
     try {
       const session = await getSession();
       const { message } = await UpdateEmployee(data, session?.accessToken);
       toast.success(message);
-      router.refresh()
+      router.refresh();
       onClose();
     } catch (error: any) {
       toast.error(error.message);

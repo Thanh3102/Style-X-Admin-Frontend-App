@@ -1,5 +1,7 @@
+import { getCurrentPermissions } from "@/app/api/customer";
 import { GetDiscountDetail } from "@/app/api/discount";
 import FormEditDiscount from "@/components/specific/forms/FormEditDiscount";
+import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
 import ActiveDiscountButton from "@/components/ui/ActiveDiscountButton";
 import DeleteDiscountButton from "@/components/ui/DeleteDiscountButton";
 import ErrorPage from "@/components/ui/ErrorPage";
@@ -10,6 +12,7 @@ import { Status } from "@/components/ui/Status";
 import { DiscountsRoute } from "@/constants/route";
 import { isInteger } from "@/libs/helper";
 import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+import { DiscountPermission } from "@/libs/types/backend";
 import { getServerSession } from "next-auth";
 
 type Props = {
@@ -28,32 +31,43 @@ const getDiscountDetail = async (id: string) => {
 };
 
 const Page = async ({ params }: Props) => {
-  const { data, error } = await getDiscountDetail(params.id);
+  try {
+    const session = await getServerSession(nextAuthOptions);
+    const permissions = await getCurrentPermissions(session?.accessToken);
+    if (!permissions.includes(DiscountPermission.Access)) {
+      return <AccessDeniedPage />;
+    }
+    const { data, error } = await getDiscountDetail(params.id);
 
-  if (error) return <RedirectToast href={DiscountsRoute} content={error} />;
+    if (error) return <RedirectToast href={DiscountsRoute} content={error} type="error"/>;
 
-  if (!data) return <ErrorPage />;
+    if (!data) return <ErrorPage />;
 
-  return (
-    <div className="px-28 mb-5">
-      <div className="flex justify-between items-center">
-        <div className="flex gap-4 items-center">
-          <GoBackButton href={`${DiscountsRoute}`} />
-          <PageTitle className="text-base line-clamp-1">{data.title}</PageTitle>
-          {data.active ? (
-            <Status color="success" content="Đang áp dụng" />
-          ) : (
-            <Status content="Chưa kích hoạt" />
-          )}
+    return (
+      <div className="px-28 mb-5">
+        <div className="flex justify-between items-center">
+          <div className="flex gap-4 items-center">
+            <GoBackButton href={`${DiscountsRoute}`} />
+            <PageTitle className="text-base line-clamp-1">
+              {data.title}
+            </PageTitle>
+            {data.active ? (
+              <Status color="success" content="Đang áp dụng" />
+            ) : (
+              <Status content="Chưa kích hoạt" />
+            )}
+          </div>
+          <div className="flex gap-2">
+            <DeleteDiscountButton discountId={data.id} />
+            <ActiveDiscountButton discountId={data.id} active={data.active} />
+          </div>
         </div>
-        <div className="flex gap-2">
-          <DeleteDiscountButton discountId={data.id} />
-          <ActiveDiscountButton discountId={data.id} active={data.active} />
-        </div>
+
+        <FormEditDiscount discount={data} />
       </div>
-
-      <FormEditDiscount discount={data} />
-    </div>
-  );
+    );
+  } catch (error) {
+    return <ErrorPage />;
+  }
 };
 export default Page;

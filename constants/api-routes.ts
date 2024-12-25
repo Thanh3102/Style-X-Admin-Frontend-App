@@ -16,11 +16,10 @@ export const UPDATE_EMPLOYEE_ROUTE = `${SERVER_BASE_URL}/api/employee`;
 export const DELETE_EMPLOYEE_ROUTE = `${SERVER_BASE_URL}/api/employee`;
 export const GET_USER_INFO_ROUTE = `${SERVER_BASE_URL}/api/employee/me`;
 export const CHANGE_PASSWORD_ROUTE = `${SERVER_BASE_URL}/api/employee/change-password`;
-
-
+export const GET_USER_PERMISSIONS_ROUTE = `${SERVER_BASE_URL}/api/employee/current-permission`;
 
 // Customer Route
-export const CUSTOMER_GET_ROUTE = `${SERVER_BASE_URL}/api/customer`
+export const CUSTOMER_GET_ROUTE = `${SERVER_BASE_URL}/api/customer`;
 export const GET_CUSTOMER_DETAIL_ROUTE = `${SERVER_BASE_URL}/api/customer`;
 
 
@@ -107,3 +106,9 @@ export const REPORT_LOW_STOCK = `${SERVER_BASE_URL}/api/report/low-stock`;
 export const REPORT_REVENUE_DETAIL = `${SERVER_BASE_URL}/api/report/detail/revenue`;
 export const REPORT_PRODUCT_REVENUE_DETAIL = `${SERVER_BASE_URL}/api/report/detail/product`;
 
+// Warehouse
+export const WAREHOUSE_CREATE = `${SERVER_BASE_URL}/api/warehouses`;
+export const WAREHOUSE_UPDATE = `${SERVER_BASE_URL}/api/warehouses`;
+export const WAREHOUSE_DELETE = `${SERVER_BASE_URL}/api/warehouses`;
+export const WAREHOUSE_DETAIL = (warehouse_id: number | string) =>
+  `${SERVER_BASE_URL}/api/warehouses/${warehouse_id}`;

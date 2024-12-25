@@ -1,6 +1,8 @@
 import {
   CUSTOMER_GET_ROUTE,
   GET_CUSTOMER_DETAIL_ROUTE,
+  GET_USER_PERMISSIONS_ROUTE,
+  RESET_PASSWORD_ROUTE,
 } from "@/constants/api-routes";
 import { QueryParams } from "@/libs/types/backend";
 import { CustomerDetail, GetCustomerResponse } from "./customer.type";
@@ -51,3 +53,25 @@ export const GetCustomerDetail = async (
     throw error;
   }
 };
+
+export const getCurrentPermissions = async (
+  accessToken: string | null | undefined
+) => {
+  try {
+    const res = await fetch(GET_USER_PERMISSIONS_ROUTE, {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const response = await res.json();
+    if (res.ok) {
+      return response as string[];
+    }
+    throw new Error(response.error);
+  } catch (error) {
+    throw error;
+  }
+};
+
+

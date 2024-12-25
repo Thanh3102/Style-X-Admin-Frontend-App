@@ -138,9 +138,9 @@ const FormEditReceiveInventory = ({ receiveInventory }: Props) => {
         return;
       }
 
-      toast.error(response.error ?? "Đã xảy ra lỗi");
-    } catch (error) {
-      toast.error("Đã xảy ra lỗi");
+      throw new Error(response.message);
+    } catch (error: any) {
+      toast.error(error.message ?? "Đã xảy ra lỗi");
     }
   };
 
@@ -178,7 +178,7 @@ const FormEditReceiveInventory = ({ receiveInventory }: Props) => {
         router.push(ReceiveInventoryRoute);
         return;
       }
-      toast.error(response.message ?? "Đã xảy ra lỗi");
+      throw new Error(response.message);
     } catch (error: any) {
       toast.error(error.message ?? "Đã xảy ra lỗi");
     }
@@ -554,7 +554,9 @@ const FormEditReceiveInventory = ({ receiveInventory }: Props) => {
                   ReceiveInventoryStatus.NOT_RECEIVED
                 }
                 onChange={(dateValue) =>
-                  setValue("expectedOn", dateValue.toDate(getLocalTimeZone()))
+                  setValue("expectedOn", dateValue.toDate(getLocalTimeZone()), {
+                    shouldDirty: true,
+                  })
                 }
               />
             </div>

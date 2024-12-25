@@ -194,7 +194,7 @@ const FormEditProduct = ({ product }: Props) => {
         return;
       }
 
-      throw new Error(data.error);
+      throw new Error(data.message);
     } catch (error: any) {
       toast.error(error.message ?? "Đã xảy ra lỗi");
     }
@@ -292,6 +292,7 @@ const FormEditProduct = ({ product }: Props) => {
       if (res.ok) {
         toast.success(response.message);
         router.push(ProductRoute);
+        return;
       }
 
       throw new Error(response.message);
@@ -377,7 +378,7 @@ const FormEditProduct = ({ product }: Props) => {
             options[index].name = value;
             return options;
           }),
-        300
+        1000
       );
     },
     []

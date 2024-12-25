@@ -13,7 +13,7 @@ import { IoMdSearch } from "react-icons/io";
 import { MdOutlineFilterAltOff } from "react-icons/md";
 
 const ReceiveInventoryFilter = () => {
-  const searchTimeoutRef = useRef<NodeJS.Timeout>(null);
+  const searchTimeoutRef = useRef<NodeJS.Timeout>();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -28,7 +28,7 @@ const ReceiveInventoryFilter = () => {
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (searchTimeoutRef.current) clearInterval(searchTimeoutRef.current);
 
-    setTimeout(() => {
+    searchTimeoutRef.current = setTimeout(() => {
       const newUrl = updateSearchParams(
         new URLSearchParams(Array.from(searchParams.entries())),
         [
@@ -38,7 +38,7 @@ const ReceiveInventoryFilter = () => {
         pathname
       );
 
-      router.push(newUrl);
+      router.replace(newUrl);
     }, 400);
   };
 
@@ -82,7 +82,7 @@ const ReceiveInventoryFilter = () => {
   }, [searchParams]);
 
   return (
-    <div className="p-5 flex flex-col gap-4 rounded-t-md bg-white">
+    <div className="p-5 flex flex-col gap-4 rounded-md bg-white">
       <Input
         placeholder="Tìm kiếm theo mã đơn nhập hàng, kho nhập, nhà cung cấp, nhân viên tạo"
         className="w-full"

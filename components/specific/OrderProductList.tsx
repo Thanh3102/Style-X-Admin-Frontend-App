@@ -148,7 +148,12 @@ const OrderProductList = ({ order }: Props) => {
           <OrderPaymentReceiveButton orderId={order.id} />
         </RenderIf>
 
-        <RenderIf condition={order.status === OrderStatus.CANCEL}>
+        <RenderIf
+          condition={
+            order.status === OrderStatus.CANCEL ||
+            order.status === OrderStatus.COMPLETE
+          }
+        >
           <OrderDeleteButton orderId={order.id} />
         </RenderIf>
       </div>

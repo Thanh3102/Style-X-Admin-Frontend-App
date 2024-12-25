@@ -35,25 +35,7 @@ export const getInventoriesHistory = async (
   queryParams: QueryParams
 ) => {
   try {
-    const {
-      page: pg = "",
-      limit: lim = "",
-      query = "",
-      receiveIds = "",
-      variantIds = "",
-    } = queryParams;
-
-    const page = isInteger(pg) ? parseInt(pg) : 1;
-    const limit = isInteger(lim) ? parseInt(lim) : 20;
-    const params = {
-      [FilterParam.PAGE]: page.toString(),
-      [FilterParam.LIMIT]: limit.toString(),
-      [FilterParam.QUERY]: query ? query : "",
-      [FilterParam.VARIANT_IDS]: variantIds ? variantIds : "",
-      [FilterParam.RECEIVE_IDS]: receiveIds ? receiveIds : "",
-    };
-
-    const paramString = new URLSearchParams(params);
+    const paramString = new URLSearchParams(queryParams);
     const url = `${GET_INVENTORIES_HISTORY_ROUTE}?` + paramString.toString();
     const res = await fetch(url, {
       headers: {

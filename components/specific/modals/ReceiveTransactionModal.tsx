@@ -93,9 +93,9 @@ const ReceiveTransactionModal = ({ receiveInventory, ...props }: Props) => {
         return;
       }
 
-      toast.error(response.error ?? "Đã xảy ra lỗi");
-    } catch (error) {
-      toast.error("Đã xảy ra lỗi");
+      throw new Error(response.message);
+    } catch (error: any) {
+      toast.error(error.message ?? "Đã xảy ra lỗi");
     }
   };
 

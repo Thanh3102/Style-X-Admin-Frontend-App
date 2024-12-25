@@ -38,7 +38,7 @@ type Props = {
   searchParams: QueryParams;
 };
 
-const Page = async (props: Props) => {
+const Page = async ({ searchParams }: Props) => {
   // const { variant, error: getVariantDataError } = await getVariantData(
   //   props.searchParams.variantIds ?? ""
   // );
@@ -46,9 +46,7 @@ const Page = async (props: Props) => {
     inventoryHistory,
     paginition,
     error: getInventoriesHistoryDataError,
-  } = await getInventoriesHistoryData(props.searchParams);
-
-  console.log(">>> Error", getInventoriesHistoryDataError);
+  } = await getInventoriesHistoryData(searchParams);
 
   if (getInventoriesHistoryDataError || !inventoryHistory || !paginition)
     return <ErrorPage />;

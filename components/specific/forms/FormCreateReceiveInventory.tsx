@@ -37,7 +37,6 @@ import { CurrencyFormatter } from "@/libs/format-helper";
 import { FaDongSign, FaX } from "react-icons/fa6";
 import { getSession } from "next-auth/react";
 import { getWarehouse } from "@/app/api/warehouses";
-import { GetWarehousesResponse } from "@/libs/types/backend/response";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -54,6 +53,7 @@ import {
 } from "@/constants/route";
 import { useRouter } from "next/navigation";
 import { POST_CREATE_RECEIVE_INVENTORY } from "@/constants/api-routes";
+import { GetWarehousesResponse } from "@/app/api/warehouses/warehouses.type";
 
 const CreateReceiveInventorySchema = z.object({
   warehouseId: z.number({
@@ -140,12 +140,9 @@ const FormCreateReceiveInventory = () => {
 
   const {
     register,
-    getValues,
     setValue,
-    setError,
     watch,
     handleSubmit,
-    clearErrors,
     formState: { errors, submitCount, isValid, isSubmitted },
   } = useForm<CreateReceiveInventoryField>({
     resolver: zodResolver(CreateReceiveInventorySchema),
@@ -197,7 +194,8 @@ const FormCreateReceiveInventory = () => {
 
   const getWarehousesData = useCallback(async () => {
     try {
-      const data = await getWarehouse();
+      const session = await getSession();
+      const data = await getWarehouse(session?.accessToken, { active: "true" });
       setWarehouses(data);
     } catch (error) {}
   }, []);

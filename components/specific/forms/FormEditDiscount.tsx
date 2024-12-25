@@ -26,23 +26,17 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FaDongSign, FaPercent, FaX } from "react-icons/fa6";
 import { useImmer } from "use-immer";
-import { isDirty, z } from "zod";
+import { z } from "zod";
 import { IoIosWarning } from "react-icons/io";
 import { CalendarDate, now, today } from "@internationalized/date";
 import { convertDateToString } from "@/libs/helper";
 import { ProductResponse } from "@/app/api/products/products.type";
-import CategoriesSearch, {
-  Category,
-} from "@/components/common/CategoriesSearch";
+import CategoriesSearch from "@/components/common/CategoriesSearch";
 import ProductSelector from "../search_selector/ProductSelector";
 import NextImage from "next/image";
 import { ImagePlaceholderPath } from "@/constants/filepath";
 import Link from "next/link";
-import {
-  EditDiscountRoute,
-  ProductDetailRoute,
-  ProductRoute,
-} from "@/constants/route";
+import { EditDiscountRoute, ProductDetailRoute } from "@/constants/route";
 import { CreateDiscount, UpdateDiscount } from "@/app/api/discount";
 import { getSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
@@ -586,14 +580,14 @@ const FormEditDiscount = ({ discount }: Props) => {
       setIsLoading(true);
       const session = await getSession();
       const { message } = await UpdateDiscount(data, session?.accessToken);
-      setIsLoading(false);
-      toast.success(message ?? "Tạo khuyến mại thành công");
+      toast.success(message ?? "Cập nhật thành công");
       // router.refresh();
       // router.replace(pathname);
       location.reload();
     } catch (error: any) {
-      console.log("Error", error);
       toast.error(error.message ?? "Đã xảy ra lỗi");
+    } finally {
+      setIsLoading(false);
     }
   };
 

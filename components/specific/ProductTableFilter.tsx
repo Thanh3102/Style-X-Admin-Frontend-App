@@ -8,7 +8,7 @@ import DateFilterButton from "../common/filters/DateFilterButton";
 
 
 const ProductTableFilter = () => {
-  const searchTimeoutRef = useRef<NodeJS.Timeout>(null);
+  const searchTimeoutRef = useRef<NodeJS.Timeout>();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -16,7 +16,7 @@ const ProductTableFilter = () => {
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (searchTimeoutRef.current) clearInterval(searchTimeoutRef.current);
 
-    setTimeout(() => {
+    searchTimeoutRef.current = setTimeout(() => {
       const newUrl = updateSearchParams(
         new URLSearchParams(Array.from(searchParams.entries())),
         [
@@ -26,8 +26,8 @@ const ProductTableFilter = () => {
         pathname
       );
 
-      router.push(newUrl);
-    }, 300);
+      router.replace(newUrl);
+    }, 1000);
   };
 
   return (

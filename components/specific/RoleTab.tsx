@@ -28,11 +28,11 @@ export type Role = {
     id: number;
     name: string;
   }>;
-  employess: Array<{
+  employees: Array<{
     id: string;
     name: string;
   }>;
-  _count: { employees: number };
+  // _count: { employees: number };
 };
 
 export type PermissionSection = {
@@ -101,6 +101,8 @@ const RoleTab = () => {
     fetchPermission();
   }, []);
 
+  console.log(roles);
+
   return (
     <>
       <div className="flex justify-end mb-2">
@@ -121,9 +123,9 @@ const RoleTab = () => {
           </TableHeader>
           <TableBody isLoading={isLoading}>
             {roles.map((role) => (
-              <TableRow>
+              <TableRow key={role.id}>
                 <TableCell>{role.name}</TableCell>
-                <TableCell>{role._count.employees}</TableCell>
+                <TableCell>{role.employees.length}</TableCell>
                 <TableCell>{convertDateToString(role.createdAt)}</TableCell>
                 <TableCell>
                   <div className="flex gap-5 justify-center items-center">
@@ -135,10 +137,7 @@ const RoleTab = () => {
                       />
                     </RenderIf>
                     <RenderIf condition={role.isDeletable}>
-                      <DeleteRoleButton
-                        role={role}
-                        fetchRoles={fetchRoles}
-                      />
+                      <DeleteRoleButton role={role} fetchRoles={fetchRoles} />
                     </RenderIf>
                   </div>
                 </TableCell>

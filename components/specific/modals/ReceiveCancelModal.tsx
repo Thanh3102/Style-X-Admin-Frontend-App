@@ -14,7 +14,10 @@ import {
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { getSession } from "next-auth/react";
-import { PUT_CANCEL_RECEIVE_INVENTORY, PUT_IMPORT_ITEMS } from "@/constants/api-routes";
+import {
+  PUT_CANCEL_RECEIVE_INVENTORY,
+  PUT_IMPORT_ITEMS,
+} from "@/constants/api-routes";
 import { useRouter } from "next/navigation";
 
 type Props = {
@@ -38,7 +41,7 @@ const ReceiveCancalModal = ({ receiveInventory, ...props }: Props) => {
         },
         body: JSON.stringify({
           receiveId: receiveInventory.id,
-          returnItem: isReturnItem
+          returnItem: isReturnItem,
         }),
       });
 
@@ -50,10 +53,11 @@ const ReceiveCancalModal = ({ receiveInventory, ...props }: Props) => {
         router.refresh();
         onClose();
         return;
-      } else {
-        toast.error(response.error ?? "Đã xảy ra lỗi");
       }
-    } catch (error) {}
+      throw new Error(response.message);
+    } catch (error: any) {
+      toast.error(error.message ?? "Đã xảy ra lỗi");
+    }
   };
 
   return (

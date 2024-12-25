@@ -108,15 +108,12 @@ const SupplierInfo = ({ supplier }: SupplierInfoProps) => {
   });
 
   const {
-    register,
     setValue,
     handleSubmit,
-    reset,
     formState: { isDirty, errors },
   } = formMethods;
 
   const onSubmit: SubmitHandler<EditSupplierField> = async (data) => {
-    console.log("Data", data);
     if (openEditModal) setOpenEditModal(false);
     setIsLoading(true);
     try {
@@ -134,40 +131,43 @@ const SupplierInfo = ({ supplier }: SupplierInfoProps) => {
 
       if (res.ok) {
         toast.success(responseData.message ?? "Lưu nhà cung cấp thành công");
-        reset();
+        // reset();
         router.refresh();
       } else {
-        console.log("[Error]", responseData);
-
-        toast.error("Đã xảy ra lỗi");
+        throw new Error(responseData.message);
       }
-      setIsLoading(false);
     } catch (error: any) {
-      console.log(error);
-      toast.error("Đã xảy ra lỗi");
+      toast.error(error.message ?? "Đã xảy ra lỗi");
+    } finally {
       setIsLoading(false);
     }
   };
 
   const handleDelete = async () => {
-    setIsDeleteLoading(true);
-    const session = await getSession();
-    const request = await fetch(`${DELETE_SUPPLIER_ROUTE}/${supplier.id}`, {
-      method: "DELETE",
-      headers: {
-        authorization: `Bearer ${session?.accessToken}`,
-      },
-    });
+    try {
+      setIsDeleteLoading(true);
+      const session = await getSession();
+      const request = await fetch(`${DELETE_SUPPLIER_ROUTE}/${supplier.id}`, {
+        method: "DELETE",
+        headers: {
+          authorization: `Bearer ${session?.accessToken}`,
+        },
+      });
 
-    setIsDeleteLoading(false);
+      setIsDeleteLoading(false);
 
-    if (request.ok) {
-      toast.success("Đã xóa nhà cung cấp");
-      router.push(`${SuppliersRoute}`);
-      return;
+      const response = await request.json();
+
+      if (request.ok) {
+        toast.success("Đã xóa nhà cung cấp");
+        router.push(`${SuppliersRoute}`);
+        return;
+      }
+
+      throw new Error(response.message);
+    } catch (error: any) {
+      toast.error(error.message);
     }
-
-    toast.error("Đã xảy ra lỗi. Vui lòng thử lại");
   };
 
   return (

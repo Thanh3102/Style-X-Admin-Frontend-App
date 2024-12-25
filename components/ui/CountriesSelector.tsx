@@ -6,20 +6,27 @@ import { Key, ReactNode, useMemo, useState } from "react";
 import { FormAutoComplete } from "../common/Form";
 
 export type CountriesSelectorProps = {
-  onOptionChange: (value: string | undefined) => void;
+  onOptionChange?: (value: string | undefined) => void;
   defaultValue?: string;
+  errorMessage?: string;
+  isInvalid?: boolean;
   className?: string;
   children?: ReactNode;
 };
+
 export type ProvinceSelectorProps = {
-  onOptionChange: (value: string | undefined) => void;
+  onOptionChange?: (value: string | undefined) => void;
   defaultValue?: string;
+  errorMessage?: string;
+  isInvalid?: boolean;
   className?: string;
   children?: ReactNode;
 };
 export type DistrictSelectorProps = {
-  onOptionChange: (value: string | undefined) => void;
+  onOptionChange?: (value: string | undefined) => void;
   defaultValue?: string;
+  errorMessage?: string;
+  isInvalid?: boolean;
   className?: string;
   provinceName?: string;
   children?: ReactNode;
@@ -28,6 +35,8 @@ export type WardSelectorProps = {
   onOptionChange: (value: string | undefined) => void;
   defaultValue?: string;
   className?: string;
+  errorMessage?: string;
+  isInvalid?: boolean;
   provinceName?: string;
   districtName?: string;
   children?: ReactNode;
@@ -37,6 +46,8 @@ const CountriesSelector = ({
   defaultValue = "Viet Nam",
   onOptionChange,
   className,
+  errorMessage,
+  isInvalid,
 }: CountriesSelectorProps) => {
   const memoCountries = useMemo(() => {
     return Countries;
@@ -49,9 +60,11 @@ const CountriesSelector = ({
       aria-label="Chọn quốc gia"
       defaultInputValue={defaultValue}
       defaultSelectedKey={defaultValue}
+      isInvalid={isInvalid}
+      errorMessage={errorMessage}
       isClearable={false}
       onSelectionChange={(key) => {
-        onOptionChange(key as string as string);
+        onOptionChange && onOptionChange(key as string as string);
       }}
       className={className}
     >
@@ -66,6 +79,8 @@ const ProvinceSelector = ({
   defaultValue,
   onOptionChange,
   className,
+  errorMessage,
+  isInvalid,
 }: ProvinceSelectorProps) => {
   const memoProvinces = useMemo(() => {
     return VN_Provinces.map((province) => province.name);
@@ -78,9 +93,11 @@ const ProvinceSelector = ({
       defaultInputValue={defaultValue}
       defaultSelectedKey={defaultValue}
       isClearable={false}
+      errorMessage={errorMessage}
+      isInvalid={isInvalid}
       className={className}
       onSelectionChange={(key) => {
-        onOptionChange(key as string);
+        onOptionChange && onOptionChange(key as string);
       }}
     >
       {memoProvinces.map((province) => (
@@ -94,6 +111,8 @@ const DistrictSelector = ({
   defaultValue,
   provinceName,
   className,
+  errorMessage,
+  isInvalid,
   onOptionChange,
 }: DistrictSelectorProps) => {
   const memoDistricts = useMemo(() => {
@@ -112,10 +131,12 @@ const DistrictSelector = ({
       defaultInputValue={defaultValue}
       defaultSelectedKey={defaultValue}
       isClearable={false}
+      isInvalid={isInvalid}
+      errorMessage={errorMessage}
       className={className}
       isDisabled={memoDistricts.length === 0}
       onSelectionChange={(key) => {
-        onOptionChange(key as string);
+        onOptionChange && onOptionChange(key as string);
       }}
     >
       {memoDistricts.map((d) => (
@@ -130,6 +151,8 @@ const WardSelector = ({
   districtName,
   defaultValue,
   className,
+  errorMessage,
+  isInvalid,
   onOptionChange,
 }: WardSelectorProps) => {
   const memoWards = useMemo(() => {
@@ -153,6 +176,9 @@ const WardSelector = ({
       defaultInputValue={defaultValue}
       defaultSelectedKey={defaultValue}
       isClearable={false}
+      isInvalid={isInvalid}
+      errorMessage={errorMessage}
+      className={className}
       isDisabled={memoWards.length === 0}
       onSelectionChange={(key) => {
         onOptionChange(key as string);

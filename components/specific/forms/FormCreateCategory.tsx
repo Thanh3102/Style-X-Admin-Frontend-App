@@ -25,7 +25,7 @@ export type CreateCategoryData = z.infer<typeof CreateCategorySchema>;
 
 type Props = {
   onClose: () => void;
-  collectionId: number
+  collectionId: number;
 };
 
 const FormCreateCategory = ({ collectionId, onClose }: Props) => {
@@ -38,8 +38,8 @@ const FormCreateCategory = ({ collectionId, onClose }: Props) => {
   } = useForm<CreateCategoryData>({
     resolver: zodResolver(CreateCategorySchema),
     defaultValues: {
-      collectionId: collectionId
-    }
+      collectionId: collectionId,
+    },
   });
 
   const onSubmit: SubmitHandler<CreateCategoryData> = async (data) => {
@@ -47,12 +47,13 @@ const FormCreateCategory = ({ collectionId, onClose }: Props) => {
       setIsLoading(true);
       const session = await getSession();
       const response = await CreateCategory(data, session?.accessToken);
-      setIsLoading(false);
       toast.success(response?.message ?? "Thêm danh mục thành công");
       onClose();
       router.refresh();
     } catch (error: any) {
       toast.error(error.message ?? "Đã xảy ra lỗi");
+    } finally {
+      setIsLoading(false);
     }
   };
 

@@ -31,6 +31,7 @@ import {
   ReceiveInventoryRoute,
   ReportsRoute,
   SuppliersRoute,
+  WarehouseRoute,
 } from "@/constants/route";
 import { cn } from "@/libs/utils";
 import { LuClipboardList } from "react-icons/lu";
@@ -58,13 +59,13 @@ const items = [
     icon: <GoChecklist size={18} />,
     url: OrdersRoute,
   },
+  {
+    title: "Kho hàng",
+    icon: <FaWarehouse size={18} />,
+    url: WarehouseRoute,
+  },
   // {
   //   title: "Tồn kho",
-  //   icon: <FaWarehouse size={18} />,
-  //   url: InventoriesRoute,
-  // },
-  // {
-  //   title: "Đặt hàng nhập",
   //   icon: <LuClipboardList size={18} />,
   //   url: PurchaseOrderRoute,
   // },

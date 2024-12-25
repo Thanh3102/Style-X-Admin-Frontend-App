@@ -1,4 +1,4 @@
-import { GetCustomerDetail } from "@/app/api/customer";
+import { getCurrentPermissions, GetCustomerDetail } from "@/app/api/customer";
 import ErrorPage from "@/components/ui/ErrorPage";
 import GoBackButton from "@/components/ui/GoBackButton";
 import { GroupBox } from "@/components/ui/GroupBox";
@@ -10,8 +10,9 @@ import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { convertDateToString } from "@/libs/helper";
 import { CurrencyFormatter } from "@/libs/format-helper";
-import { QueryParams } from "@/libs/types/backend";
+import { CustomerPermission, QueryParams } from "@/libs/types/backend";
 import CustomerOrderSortSelect from "@/components/specific/filters/CustomerOrderSortSelect";
+import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
 
 type Props = {
   params: { id: string };
@@ -20,6 +21,10 @@ type Props = {
 const Page = async ({ params: { id }, searchParams }: Props) => {
   try {
     const session = await getServerSession(nextAuthOptions);
+    const permissions = await getCurrentPermissions(session?.accessToken);
+    if (!permissions.includes(CustomerPermission.Access)) {
+      return <AccessDeniedPage />;
+    }
     const customerDetail = await GetCustomerDetail(
       id,
       searchParams,
