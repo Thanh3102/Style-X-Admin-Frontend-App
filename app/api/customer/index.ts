@@ -2,7 +2,6 @@ import {
   CUSTOMER_GET_ROUTE,
   GET_CUSTOMER_DETAIL_ROUTE,
   GET_USER_PERMISSIONS_ROUTE,
-  RESET_PASSWORD_ROUTE,
 } from "@/constants/api-routes";
 import { QueryParams } from "@/libs/types/backend";
 import { CustomerDetail, GetCustomerResponse } from "./customer.type";
@@ -73,5 +72,3 @@ export const getCurrentPermissions = async (
     throw error;
   }
 };
-
-
