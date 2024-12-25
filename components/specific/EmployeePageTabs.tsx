@@ -14,7 +14,7 @@ type Props = {
 };
 
 const EmployeePageTabs = ({ employeeData, permissions }: Props) => {
-  let tabs = [
+  const tabs = [
     {
       id: "employees",
       label: "Nhân viên",
