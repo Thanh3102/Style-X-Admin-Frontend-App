@@ -29,20 +29,31 @@ const InventoryHistoryFilter = () => {
   const handleTypeChange = (type: string) => {
     setType(type);
     const search = new URLSearchParams(searchParams);
-    search.set(FilterParam.TYPE, type);
+    if (!type) {
+      search.delete(FilterParam.TYPE);
+    } else {
+      search.set(FilterParam.TYPE, type);
+    }
     router.replace(`${pathname}?${search.toString()}`);
   };
 
   const handleWarehouseChange = (ids: string[]) => {
-    const value = ids.join(",");
-    setWarehouseIds(value);
     const search = new URLSearchParams(searchParams);
-    search.set(FilterParam.WAREHOUSE_IDS, value);
+
+    if (ids.length === 0) {
+      search.delete(FilterParam.WAREHOUSE_IDS);
+    } else {
+      const value = ids.join(",");
+      setWarehouseIds(value);
+      search.set(FilterParam.WAREHOUSE_IDS, value);
+    }
     router.replace(`${pathname}?${search.toString()}`);
   };
 
   const handleDeleteFilter = () => {
-    router.replace(`${pathname}`);
+    // router.replace(`${pathname}`);
+    handleTypeChange("");
+    handleWarehouseChange([]);
   };
 
   useEffect(() => {
@@ -70,6 +81,7 @@ const InventoryHistoryFilter = () => {
               handleTypeChange(Array.from(key)[0] as string);
             }}
           >
+            <SelectItem key={""}>Tất cả</SelectItem>
             <SelectItem key={InventoryTransactionType.ORDER}>
               Đơn hàng
             </SelectItem>
@@ -91,10 +103,8 @@ const InventoryHistoryFilter = () => {
             variant="bordered"
             radius="sm"
             selectionMode="multiple"
-            disallowEmptySelection
-            selectedKeys={warehouseIds
-              .split(",")
-              .map((id) => (isInteger(id) ? id : ""))}
+            // disallowEmptySelection
+            selectedKeys={warehouseIds.split(",").filter((id) => isInteger(id))}
             onSelectionChange={(key) =>
               handleWarehouseChange(Array.from(key) as string[])
             }
@@ -104,7 +114,7 @@ const InventoryHistoryFilter = () => {
             ))}
           </Select>
         </div>
-        <Button
+        {/* <Button
           color="warning"
           variant="bordered"
           radius="sm"
@@ -113,7 +123,7 @@ const InventoryHistoryFilter = () => {
           onClick={handleDeleteFilter}
         >
           Xóa bộ lọc
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

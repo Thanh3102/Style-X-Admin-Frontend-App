@@ -27,7 +27,7 @@ const ReportOverviewInfo = ({ data }: Props) => {
 
       <div className="flex flex-col w-1/4">
         <div className="bg-white rounded-lg p-3 shadow-medium flex-col flex">
-          <span>Đơn hàng</span>
+          <span>Đơn hàng hoàn thành</span>
           <span className="font-bold text-xl">{data.numberOfOrders}</span>
         </div>
       </div>

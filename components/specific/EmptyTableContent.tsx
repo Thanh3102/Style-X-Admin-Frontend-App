@@ -3,14 +3,21 @@ import { Button } from "@nextui-org/react";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
+import RenderIf from "../ui/RenderIf";
 
 type Props = {
   addButton?: ReactNode;
   title?: string;
   subTitle?: string;
+  hideClearButton?: boolean;
 };
 
-const EmptyTableContent = ({ addButton, title, subTitle }: Props) => {
+const EmptyTableContent = ({
+  addButton,
+  title,
+  subTitle,
+  hideClearButton = false,
+}: Props) => {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -42,14 +49,16 @@ const EmptyTableContent = ({ addButton, title, subTitle }: Props) => {
           Thử thay đổi điều kiện lọc hoặc từ khóa tìm kiếm
         </span>
       </div>
-      <Button
-        variant="ghost"
-        color="primary"
-        radius="sm"
-        onClick={() => router.replace(pathname)}
-      >
-        Xem tất cả danh sách
-      </Button>
+      <RenderIf condition={!hideClearButton}>
+        <Button
+          variant="ghost"
+          color="primary"
+          radius="sm"
+          onClick={() => router.replace(pathname)}
+        >
+          Xem tất cả danh sách
+        </Button>
+      </RenderIf>
     </div>
   );
 };

@@ -9,7 +9,7 @@ type Props = {
   position: number;
   values: Array<string>;
   isInvalid?: boolean;
-  isReadonly?: boolean
+  isReadonly?: boolean;
   errorMessage?: string;
   onInputEnter?: (value: string, position: number) => void;
   onValueDelete?: (value: string, position: number) => void;
@@ -37,6 +37,7 @@ const ProductOptionValueInput = (props: Props) => {
   return (
     <div className="flex flex-col gap-2">
       <FormInput
+        maxLength={50}
         aria-label="OptionValue"
         placeholder="Nhập giá trị"
         isReadOnly={isReadonly}

@@ -39,6 +39,7 @@ import { useRouter } from "next/navigation";
 import { ProductRoute } from "@/constants/route";
 import { getWarehouse } from "@/app/api/warehouses";
 import Link from "next/link";
+import { Alert } from "@/components/ui/Alert";
 
 const TextEditor = dynamic(() => import("../../common/TextEditor"), {
   ssr: false,
@@ -789,11 +790,13 @@ const FormCreateProduct = () => {
           <GroupBox
             title="Thuộc tính"
             titleEndContent={
-              <RenderIf condition={options.length === 0}>
-                <span className="label-link" onClick={handleAddOption}>
-                  Thêm thuộc tính
-                </span>
-              </RenderIf>
+              <>
+                <RenderIf condition={options.length === 0}>
+                  <span className="label-link" onClick={handleAddOption}>
+                    Thêm thuộc tính
+                  </span>
+                </RenderIf>
+              </>
             }
           >
             <RenderIf condition={options.length === 0}>
@@ -802,63 +805,74 @@ const FormCreateProduct = () => {
             </RenderIf>
 
             <RenderIf condition={options.length > 0}>
-              <Table removeWrapper>
-                <TableHeader>
-                  <TableColumn key={"option_name"} className="w-1/2">
-                    Tên thuộc tính
-                  </TableColumn>
-                  <TableColumn key={"option_values"} className="w-1/2">
-                    Giá trị
-                  </TableColumn>
-                </TableHeader>
-                <TableBody items={options}>
-                  {options.map((option, index) => (
-                    <TableRow key={option.position}>
-                      <TableCell className="align-top">
-                        <FormInput
-                          aria-label="Tên thuộc tính"
-                          defaultValue={option.name}
-                          placeholder="Nhập tên thuộc tính"
-                          isInvalid={
-                            errors?.options?.[index]?.name ? true : false
-                          }
-                          errorMessage={errors?.options?.[index]?.name?.message}
-                          endContent={
-                            <div className="text-gray-400 hover:text-gray-700 hover:cursor-pointer">
-                              <FaTrash
-                                size={16}
-                                onClick={() =>
-                                  handleDeleteOption(option.position)
-                                }
-                              />
-                            </div>
-                          }
-                          onChange={(e) =>
-                            handleOptionNameInputChange(
-                              e.target.value,
-                              option.position
-                            )
-                          }
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <ProductOptionValueInput
-                          values={option.values}
-                          position={option.position}
-                          onInputEnter={handleAddOptionValue}
-                          onValueDelete={handleDeleteOptionValue}
-                          isInvalid={
-                            errors?.options?.[index]?.values ? true : false
-                          }
-                          errorMessage={
-                            errors?.options?.[index]?.values?.message
-                          }
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <Alert variant={"warning"}>
+                <span>
+                  Lưu ý: Thuộc tính sau khi tạo sản phẩm sẽ cố định (Có thể thay
+                  đổi giá trị thuộc tính)
+                </span>
+              </Alert>
+              <div className="mt-2">
+                <Table removeWrapper>
+                  <TableHeader>
+                    <TableColumn key={"option_name"} className="w-1/2">
+                      Tên thuộc tính
+                    </TableColumn>
+                    <TableColumn key={"option_values"} className="w-1/2">
+                      Giá trị
+                    </TableColumn>
+                  </TableHeader>
+                  <TableBody items={options}>
+                    {options.map((option, index) => (
+                      <TableRow key={option.position}>
+                        <TableCell className="align-top">
+                          <FormInput
+                            maxLength={50}
+                            aria-label="Tên thuộc tính"
+                            defaultValue={option.name}
+                            placeholder="Nhập tên thuộc tính"
+                            isInvalid={
+                              errors?.options?.[index]?.name ? true : false
+                            }
+                            errorMessage={
+                              errors?.options?.[index]?.name?.message
+                            }
+                            endContent={
+                              <div className="text-gray-400 hover:text-gray-700 hover:cursor-pointer">
+                                <FaTrash
+                                  size={16}
+                                  onClick={() =>
+                                    handleDeleteOption(option.position)
+                                  }
+                                />
+                              </div>
+                            }
+                            onChange={(e) =>
+                              handleOptionNameInputChange(
+                                e.target.value,
+                                option.position
+                              )
+                            }
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <ProductOptionValueInput
+                            values={option.values}
+                            position={option.position}
+                            onInputEnter={handleAddOptionValue}
+                            onValueDelete={handleDeleteOptionValue}
+                            isInvalid={
+                              errors?.options?.[index]?.values ? true : false
+                            }
+                            errorMessage={
+                              errors?.options?.[index]?.values?.message
+                            }
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </RenderIf>
 
             <RenderIf condition={options.length > 0 && options.length < 3}>

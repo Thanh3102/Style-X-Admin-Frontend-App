@@ -44,7 +44,8 @@ const columns: Column[] = [
     key: "changeOn",
     label: "Thời gian",
     isSortable: false,
-    className: "min-w-[200px] sticky left-0 bg-white !z-[9999]",
+    // className: "min-w-[200px] sticky left-0 bg-white !z-[9999]",
+    className: "min-w-[200px]",
   },
   {
     key: "transactionType",
@@ -144,7 +145,8 @@ const InventoryHistoryTable = (props: Props) => {
     switch (key) {
       case "changeOn":
         return (
-          <TableCell className="sticky left-0 z-20">
+          // <TableCell className="sticky left-0 z-20">
+          <TableCell className="">
             <span>{convertDateToString(item.changeOn)}</span>
           </TableCell>
         );
@@ -272,6 +274,7 @@ const InventoryHistoryTable = (props: Props) => {
         <EmptyTableContent
           title="Hiện tại chưa có giao dịch nào"
           subTitle="Khi thực hiện thay đổi về tồn kho, lịch sử sẽ được lưu lại"
+          hideClearButton
         />
       </>
     );

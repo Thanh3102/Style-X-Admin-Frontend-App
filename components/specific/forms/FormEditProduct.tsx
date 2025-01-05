@@ -269,7 +269,6 @@ const FormEditProduct = ({ product }: Props) => {
 
         return newVariants;
       }, []);
-      console.log("result", result);
 
       return result;
     });
@@ -553,87 +552,6 @@ const FormEditProduct = ({ product }: Props) => {
             </div>
           </GroupBox>
 
-          {/* <GroupBox title="Thông tin giá">
-            <div className="flex flex-wrap gap-y-2 -mx-2 [&>*]:px-2">
-              <Controller
-                control={control}
-                name="sellPrice"
-                render={({ field }) => (
-                  <FormInput
-                    aria-label="Giá bán"
-                    type="number"
-                    label="Giá bán"
-                    placeholder="Nhập giá bán"
-                    className="col-6"
-                    step={1000}
-                    isInvalid={errors.sellPrice ? true : false}
-                    errorMessage={errors.sellPrice?.message}
-                    value={field.value.toString()}
-                    endContent={<FaDongSign className="text-gray-500" />}
-                    description={`Giá bán: ${CurrencyFormatter({
-                      style: "currency",
-                    }).format(getValues("sellPrice"))}`}
-                    onValueChange={(value) =>
-                      handlePriceChange(value, "sellPrice")
-                    }
-                  />
-                )}
-              />
-
-              <Controller
-                control={control}
-                name="comparePrice"
-                render={({ field }) => (
-                  <FormInput
-                    aria-label="Giá so sanh"
-                    type="number"
-                    label="Giá so sánh"
-                    placeholder="Nhập giá so sánh"
-                    className="col-6"
-                    step={1000}
-                    isInvalid={errors.comparePrice ? true : false}
-                    errorMessage={errors.comparePrice?.message}
-                    value={field.value.toString()}
-                    startContent={<InfoTooltip content={COMPARE_PRICE_INFO} />}
-                    endContent={<FaDongSign className="text-gray-500" />}
-                    description={`Giá so sánh: ${CurrencyFormatter({
-                      style: "currency",
-                    }).format(getValues("comparePrice"))}`}
-                    onValueChange={(value) =>
-                      handlePriceChange(value, "comparePrice")
-                    }
-                  />
-                )}
-              />
-
-              <Controller
-                control={control}
-                name="costPrice"
-                render={({ field }) => (
-                  <FormInput
-                    aria-label="Giá vốn"
-                    type="number"
-                    label="Giá vốn"
-                    placeholder="Nhập giá vốn"
-                    className="col-6"
-                    step={1000}
-                    isInvalid={errors.costPrice ? true : false}
-                    errorMessage={errors.costPrice?.message}
-                    value={field.value.toString()}
-                    startContent={<InfoTooltip content={COST_PRICE_INFO} />}
-                    endContent={<FaDongSign className="text-gray-500" />}
-                    description={`Giá vốn: ${CurrencyFormatter({
-                      style: "currency",
-                    }).format(getValues("costPrice"))}`}
-                    onValueChange={(value) =>
-                      handlePriceChange(value, "costPrice")
-                    }
-                  />
-                )}
-              />
-            </div>
-          </GroupBox> */}
-
           <RenderIf condition={options.length > 0}>
             <GroupBox
               title="Thuộc tính"
@@ -672,6 +590,7 @@ const FormEditProduct = ({ product }: Props) => {
                       <TableRow key={option.position}>
                         <TableCell className="align-top">
                           <FormInput
+                            maxLength={50}
                             aria-label="Tên thuộc tính"
                             defaultValue={option.name}
                             placeholder="Nhập tên thuộc tính"
