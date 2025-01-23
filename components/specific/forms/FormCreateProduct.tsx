@@ -45,74 +45,99 @@ const TextEditor = dynamic(() => import("../../common/TextEditor"), {
   ssr: false,
 });
 
-const CreateProductSchema = z.object({
-  name: z
-    .string({ required_error: "Chưa nhập tên sản phẩm" })
-    .min(1, { message: "Chưa nhập tên sản phẩm" }),
-  skuCode: z.string().optional(),
-  barCode: z.string().optional(),
-  unit: z.string().optional(),
-  description: z.string().optional(),
-  shortDescription: z.string().optional(),
-  sellPrice: z
-    .number()
-    .min(0, "Giá bán nhỏ nhất là 0")
-    .max(1e12, "Giá bán quá lớn"),
-  costPrice: z
-    .number()
-    .min(0, "Giá vốn nhỏ nhất là 0")
-    .max(1e12, "Giá vốn quá lớn"),
-  comparePrice: z
-    .number()
-    .min(0, "Giá so sánh nhỏ nhất là 0")
-    .max(1e12, "Giá so sánh quá lớn"),
-  avaiable: z.boolean(),
-  warehouses: z
-    .array(
-      z.object({
-        id: z.number(),
-        name: z.string(),
-        onHand: z.number(),
-      }),
-      { required_error: "Chưa chọn kho lưu trữ" }
-    )
-    .refine(
-      (warehouses) => {
-        return warehouses.length > 0;
-      },
-      { message: "Chưa chọn kho lưu trữ" }
-    ),
-  vendor: z.string().optional(),
-  type: z.string().optional(),
-  options: z
-    .array(
-      z.object({
-        position: z.number(),
-        name: z.string().min(1, "Chưa nhập tên thuộc tính"),
-        values: z.array(z.string()).refine(
-          (values) => {
-            return !(values.length === 0);
-          },
-          { message: "Giá trị thuộc tính trống" }
-        ),
-      })
-    )
-    .refine(
-      (options) => {
-        const nameSet = new Set();
-        for (const option of options) {
-          if (nameSet.has(option.name)) return false;
-          nameSet.add(option.name);
+const CreateProductSchema = z
+  .object({
+    name: z
+      .string({ required_error: "Chưa nhập tên sản phẩm" })
+      .min(1, { message: "Chưa nhập tên sản phẩm" }),
+    skuCode: z.string().optional(),
+    barCode: z.string().optional(),
+    unit: z.string().optional(),
+    description: z.string().optional(),
+    shortDescription: z.string().optional(),
+    sellPrice: z
+      .number()
+      .min(0, "Giá bán nhỏ nhất là 0")
+      .max(1e12, "Giá bán quá lớn"),
+    costPrice: z
+      .number()
+      .min(0, "Giá vốn nhỏ nhất là 0")
+      .max(1e12, "Giá vốn quá lớn"),
+    comparePrice: z
+      .number()
+      .min(0, "Giá so sánh nhỏ nhất là 0")
+      .max(1e12, "Giá so sánh quá lớn"),
+    avaiable: z.boolean(),
+    warehouses: z
+      .array(
+        z.object({
+          id: z.number(),
+          name: z.string(),
+          onHand: z.number(),
+        }),
+        { required_error: "Chưa chọn kho lưu trữ" }
+      )
+      .refine(
+        (warehouses) => {
+          return warehouses.length > 0;
+        },
+        { message: "Chưa chọn kho lưu trữ" }
+      ),
+    vendor: z.string().optional(),
+    type: z.string().optional(),
+    options: z
+      .array(
+        z.object({
+          position: z.number(),
+          name: z.string().min(1, "Chưa nhập tên thuộc tính"),
+          values: z.array(z.string()).refine(
+            (values) => {
+              return !(values.length === 0);
+            },
+            { message: "Giá trị thuộc tính trống" }
+          ),
+        })
+      )
+      .refine(
+        (options) => {
+          const nameSet = new Set();
+          for (const option of options) {
+            if (nameSet.has(option.name)) return false;
+            nameSet.add(option.name);
+          }
+          return true;
+        },
+        { message: "Tên thuộc tính trùng nhau" }
+      ),
+    variants: z.any(),
+    images: z.array(z.instanceof(File)),
+    tags: z.array(z.string()),
+    categoryIds: z.array(z.number()),
+  })
+  .superRefine((data, ctx) => {
+    if (data.skuCode && data.skuCode.trim().toLowerCase().startsWith("sku")) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["skuCode"],
+        message: "Mã SKU không thể bắt đầu bằng SKU",
+      });
+    }
+
+    if (data.variants.length > 0) {
+      for (const variant of data.variants) {
+        if (
+          variant.skuCode &&
+          variant.skuCode.toLowerCase().startsWith("sku")
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Mã SKU không thể bắt đầu bằng SKU",
+          });
+          break;
         }
-        return true;
-      },
-      { message: "Tên thuộc tính trùng nhau" }
-    ),
-  variants: z.any(),
-  images: z.array(z.instanceof(File)),
-  tags: z.array(z.string()),
-  categoryIds: z.array(z.number()),
-});
+      }
+    }
+  });
 
 type CreateProductField = z.infer<typeof CreateProductSchema>;
 
@@ -220,7 +245,7 @@ const FormCreateProduct = () => {
   const getWarehouseData = useCallback(async () => {
     try {
       const session = await getSession();
-      const data = await getWarehouse(session?.accessToken);
+      const data = await getWarehouse(session?.accessToken, { active: "true" });
       setWarehouses(data);
     } catch (error: any) {
       toast.error(error.message ?? "Đã xảy ra lỗi khi tải dữ liệu");
@@ -476,18 +501,42 @@ const FormCreateProduct = () => {
     setVariantEditOpen(true);
   }, []);
 
-  const handleSaveVariant = useCallback((newVariant: ProductVariant) => {
-    setVariants((variants) => {
-      const index = variants.findIndex((variant) => {
-        return variant.title === newVariant.title;
+  const handleSaveVariant = useCallback(
+    (newVariant: ProductVariant) => {
+      if (!newVariant.skuCode) throw new Error("Mã SKU không để trống");
+
+      const skuCodeFind = variants.findIndex(
+        (item) =>
+          item.title !== newVariant.title && item.skuCode === newVariant.skuCode
+      );
+
+      const barcodeFind = variants.findIndex(
+        (item) =>
+          item.title !== newVariant.title &&
+          item.barCode &&
+          newVariant.barCode &&
+          item.barCode === newVariant.barCode
+      );
+
+      if (skuCodeFind !== -1)
+        throw new Error("Mã SKU đã sử dụng ở phiên bản khác");
+
+      if (barcodeFind !== -1)
+        throw new Error("Mã vạch đã sử dụng ở phiên bản khác");
+
+      setVariants((variants) => {
+        const index = variants.findIndex((variant) => {
+          return variant.title === newVariant.title;
+        });
+
+        if (index === -1) return variants;
+
+        variants[index] = newVariant;
+        return variants;
       });
-
-      if (index === -1) return variants;
-
-      variants[index] = newVariant;
-      return variants;
-    });
-  }, []);
+    },
+    [variants]
+  );
 
   useEffect(() => {
     getWarehouseData();

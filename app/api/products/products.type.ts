@@ -80,6 +80,7 @@ export type GetProductDetailResponse = {
   costPrice: number;
   sellPrice: number;
   type: string | null;
+  vendor: string | null;
   unit: string | null;
   description: string | null;
   shortDescription: string | null;

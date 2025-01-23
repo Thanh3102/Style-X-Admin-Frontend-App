@@ -22,6 +22,7 @@ import { FaDongSign } from "react-icons/fa6";
 import { useImmer } from "use-immer";
 import { useCallback, useEffect } from "react";
 import RenderIf from "../ui/RenderIf";
+import toast from "react-hot-toast";
 
 type Props = {
   variant: ProductVariant | undefined;
@@ -67,10 +68,21 @@ const ProductVariantEditModal = (props: Props) => {
     []
   );
 
+  const handleSave = (onClose: () => void) => {
+    if (thisVariant) {
+      try {
+        onSave && onSave(thisVariant);
+        onClose();
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+    }
+  };
+
   return (
     <Modal {...restProps}>
       <ModalContent className="min-w-[50vw]">
-        {(onclose) => (
+        {(onClose) => (
           <>
             <ModalHeader>Chỉnh sửa {variant?.title}</ModalHeader>
             <ModalBody>
@@ -211,7 +223,7 @@ const ProductVariantEditModal = (props: Props) => {
                 size="sm"
                 radius="sm"
                 variant="bordered"
-                onClick={() => onclose()}
+                onClick={() => onClose()}
               >
                 Hủy
               </Button>
@@ -219,10 +231,7 @@ const ProductVariantEditModal = (props: Props) => {
                 size="sm"
                 radius="sm"
                 color="primary"
-                onClick={() => {
-                  if (thisVariant) onSave && onSave(thisVariant);
-                  onclose();
-                }}
+                onClick={() => handleSave(onClose)}
               >
                 Lưu
               </Button>

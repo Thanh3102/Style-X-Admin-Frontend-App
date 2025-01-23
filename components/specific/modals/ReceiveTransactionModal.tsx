@@ -63,11 +63,12 @@ const ReceiveTransactionModal = ({ receiveInventory, ...props }: Props) => {
     },
     onClose: () => void
   ) => {
-    if (
-      data.transactionAmount > receiveInventory.transactionRemainAmount ||
-      data.transactionAmount <= 0
-    ) {
-      toast.error("Số tiền thanh toán hợp lệ");
+    if (data.transactionAmount < 0) {
+      toast.error("Số tiền thanh toán phải lớn hơn 0");
+      return;
+    }
+    if (data.transactionAmount > receiveInventory.transactionRemainAmount) {
+      toast.error("Số tiền thanh toán không thể lớn hơn số tiền cần trả");
       return;
     }
     try {

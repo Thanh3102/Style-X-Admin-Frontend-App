@@ -26,7 +26,7 @@ export const getProduct = async (
   } = params;
 
   const page = isInteger(pg) ? parseInt(pg) : 1;
-  const limit = isInteger(lim) ? parseInt(lim) : 10;
+  const limit = isInteger(lim) ? parseInt(lim) : 20;
 
   try {
     const params = {

@@ -37,11 +37,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { EditVariantRoute, ProductRoute } from "@/constants/route";
 import ProductImages from "../../ui/ProductImages";
 import UploadImageModal from "../UploadImageModal";
-import { isInteger } from "@/libs/helper";
-import { FaDongSign, FaTrash } from "react-icons/fa6";
 import { GetProductDetailResponse } from "@/app/api/products/products.type";
-import { InfoTooltip } from "@/components/ui/InfoTooltip";
-import { COMPARE_PRICE_INFO, COST_PRICE_INFO } from "@/constants/text";
 import { ProductVariant } from "./FormCreateProduct";
 import ProductVariantEditModal from "../ProductVariantEditModal";
 import ProductNewVariantEditModal from "../ProductNewVariantEditModal";
@@ -162,6 +158,8 @@ const FormEditProduct = ({ product }: Props) => {
       costPrice: product.costPrice,
       comparePrice: product.comparePrice,
       options: product.options,
+      type: product.type ?? undefined,
+      vendor: product.vendor ?? undefined,
     },
   });
 

@@ -102,6 +102,18 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
   );
 
   const onSubmit: SubmitHandler<EditVariantField> = async (data) => {
+    if (!data.skuCode) {
+      toast.error("Chưa nhập mã SKU");
+      return;
+    } else {
+      if (
+        data.skuCode !== propVariant.skuCode &&
+        data.skuCode.trim().toLowerCase().startsWith("sku")
+      ) {
+        toast.error("Mã SKU không thể bắt đầu bằng SKU");
+        return;
+      }
+    }
     try {
       setIsLoading(true);
       const session = await getSession();
@@ -121,7 +133,8 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
 
       if (res.ok) {
         toast.success(responseData.message ?? "Cập nhật thành công");
-        router.refresh();
+        // router.refresh();
+        location.reload();
         return;
       }
 

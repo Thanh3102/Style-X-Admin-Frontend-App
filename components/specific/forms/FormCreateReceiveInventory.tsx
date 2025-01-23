@@ -55,60 +55,91 @@ import { useRouter } from "next/navigation";
 import { POST_CREATE_RECEIVE_INVENTORY } from "@/constants/api-routes";
 import { GetWarehousesResponse } from "@/app/api/warehouses/warehouses.type";
 
-const CreateReceiveInventorySchema = z.object({
-  warehouseId: z.number({
-    required_error: "Chưa chọn kho nhập",
-  }),
-  supplierId: z.number({
-    required_error: "Chưa chọn nhà cung cấp",
-  }),
-  code: z.string().regex(/^(?!RE).*/, {
-    message: "Mã đơn nhập không bắt đầu với 'RE'",
-  }),
-  expectedOn: z.date().optional(),
-  note: z.string().optional(),
-  tags: z.array(z.string()).optional(),
-  importAfterCreate: z.boolean(),
-  totalReceipt: z.number(),
-  totalLandedCost: z.number(),
-  totalItems: z.number(),
-  totalItemsDiscount: z.number(),
-  totalItemsPrice: z.number(),
-  totalItemsPriceBeforeDiscount: z.number(),
-  landedCosts: z.array(
-    z.object({
-      name: z.string(),
-      price: z.number(),
-    })
-  ),
-  transactionStatus: z.string(),
-  transactionDate: z.date().optional(),
-  transactionMethod: z.string().optional(),
-  transactionAmount: z
-    .number()
-    .min(1000, "Giá trị nhỏ nhất là 1000")
-    .max(1e12, `Giá trị quá lớn`)
-    .optional(),
-  items: z
-    .array(
-      z.object({
-        variantId: z.number(),
-        quantity: z.number(),
-        price: z.number(),
-        total: z.number(),
-        totalDiscount: z.number(),
-        discountType: z.string(),
-        discountValue: z.number(),
-        discountAmount: z.number(),
-        finalPrice: z.number(),
-        finalTotal: z.number(),
-      }),
-      { required_error: "Chưa có sản phẩm" }
-    )
-    .refine((items) => items.length > 0, {
-      message: "Danh sách sản phẩm trống",
+const CreateReceiveInventorySchema = z
+  .object({
+    warehouseId: z.number({
+      required_error: "Chưa chọn kho nhập",
     }),
-});
+    supplierId: z.number({
+      required_error: "Chưa chọn nhà cung cấp",
+    }),
+    code: z.string().optional(),
+    expectedOn: z.date().optional(),
+    note: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    importAfterCreate: z.boolean(),
+    totalReceipt: z.number(),
+    totalLandedCost: z.number(),
+    totalItems: z.number(),
+    totalItemsDiscount: z.number(),
+    totalItemsPrice: z.number(),
+    totalItemsPriceBeforeDiscount: z.number(),
+    landedCosts: z.array(
+      z.object({
+        name: z.string(),
+        price: z.number(),
+      })
+    ),
+    transactionStatus: z.string(),
+    transactionDate: z.date().optional(),
+    transactionMethod: z.string().optional(),
+    transactionAmount: z
+      .number({
+        required_error: "Chưa nhập giá trị",
+        invalid_type_error: "Chưa nhập giá trị",
+      })
+      .optional(),
+    items: z
+      .array(
+        z.object({
+          variantId: z.number(),
+          quantity: z.number(),
+          price: z.number(),
+          total: z.number(),
+          totalDiscount: z.number(),
+          discountType: z.string(),
+          discountValue: z.number(),
+          discountAmount: z.number(),
+          finalPrice: z.number(),
+          finalTotal: z.number(),
+        }),
+        { required_error: "Chưa có sản phẩm" }
+      )
+      .refine((items) => items.length > 0, {
+        message: "Danh sách sản phẩm trống",
+      }),
+  })
+  .superRefine((data, ctx) => {
+    if (data.transactionStatus === "Đã thanh toán") {
+      if (data.transactionAmount && data.transactionAmount < 1000) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["transactionAmount"],
+          message: "Giá trị nhỏ nhất phải là 1000đ",
+        });
+      }
+
+      if (
+        data.transactionAmount &&
+        data.transactionAmount > data.totalReceipt
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["transactionAmount"],
+          message:
+            "Giá trị thanh toán không thể lớn hơn tổng giá trị nhập hàng",
+        });
+      }
+    }
+
+    if (data.code && data.code.trim().toLowerCase().startsWith("re")) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["code"],
+        message: "Mã đơn nhập không thể bắt đầu bằng 'RE'",
+      });
+    }
+  });
 
 type CreateReceiveInventoryField = z.infer<typeof CreateReceiveInventorySchema>;
 
@@ -255,7 +286,10 @@ const FormCreateReceiveInventory = () => {
     setValue("totalReceipt", newTotalReceipt);
     setValue("totalItemsPriceBeforeDiscount", cost.totalBeforeDiscount);
     setValue("items", items);
-    setValue("transactionAmount", newTotalReceipt);
+    setValue(
+      "transactionAmount",
+      newTotalReceipt < 1000 ? 1000 : newTotalReceipt
+    );
   }, [selectedVariants]);
 
   useEffect(() => {
@@ -275,7 +309,10 @@ const FormCreateReceiveInventory = () => {
     setValue("landedCosts", landedCosts);
     setValue("totalLandedCost", newTotalLandedCost);
     setValue("totalReceipt", newTotalReceipt);
-    setValue("transactionAmount", newTotalReceipt);
+    setValue(
+      "transactionAmount",
+      newTotalReceipt < 1000 ? 1000 : newTotalReceipt
+    );
   }, [landedCosts]);
 
   useEffect(() => {
@@ -381,9 +418,10 @@ const FormCreateReceiveInventory = () => {
             <div className="p-2rounded-md my-4 font-medium">
               <RadioGroup
                 label="Trạng thái thanh toán"
-                onValueChange={(value) =>
-                  setValue("transactionStatus", value, { shouldDirty: true })
-                }
+                onValueChange={(value) => {
+                  setValue("transactionStatus", value, { shouldDirty: true });
+                  setValue("transactionAmount", 1000, { shouldValidate: true });
+                }}
                 defaultValue={ReceiveInventoryTransaction.UN_PAID}
               >
                 <Radio
@@ -504,6 +542,8 @@ const FormCreateReceiveInventory = () => {
                 variant="bordered"
                 radius="sm"
                 labelPlacement="outside"
+                isInvalid={!!errors.code}
+                errorMessage={errors.code?.message}
                 {...register("code")}
               />
 

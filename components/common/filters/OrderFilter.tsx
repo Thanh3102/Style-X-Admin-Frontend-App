@@ -8,6 +8,7 @@ import DateFilterButton from "./DateFilterButton";
 import { OrderStatus } from "@/app/api/order/order.type";
 import { FilterParam } from "@/libs/types/backend";
 import { MdOutlineFilterAltOff } from "react-icons/md";
+import { TfiReload } from "react-icons/tfi";
 
 const OrderFilter = () => {
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
@@ -58,53 +59,61 @@ const OrderFilter = () => {
   }, [searchParams]);
 
   return (
-    <div className="p-5 flex gap-4 rounded-t-md bg-white">
+    <div className="p-5 flex gap-4 rounded-t-md bg-white flex-wrap">
       <Input
         placeholder="Tìm kiếm theo mã đơn hàng, tên khách hàng, số điện thoại"
-        className="flex-1"
+        className="w-full"
         startContent={<IoMdSearch />}
         radius="sm"
         variant="bordered"
         onChange={handleInputChange}
       />
 
-      <div className="flex gap-2 flex-1">
-        <DateFilterButton
-          buttonProps={{
-            variant: "bordered",
-            radius: "sm",
-          }}
-        />
-        <div className="w-1/3">
-          <Select
-            variant="bordered"
-            radius="sm"
-            selectionMode="single"
-            disallowEmptySelection
-            selectedKeys={[status]}
-            onSelectionChange={(key) =>
-              handleOrderStatusChange(Array.from(key)[0] as string)
-            }
-          >
-            <SelectItem key={""}>Trạng thái xử lý: Tất cả</SelectItem>
-            <SelectItem key={OrderStatus.COMPLETE}>Đã hoàn thành</SelectItem>
-            <SelectItem key={OrderStatus.IN_TRANSIT}>Đang giao hàng</SelectItem>
-            <SelectItem key={OrderStatus.PENDING_PROCESSING}>
-              Chờ xử lý
-            </SelectItem>
-          </Select>
-        </div>
-        <Button
-          color="warning"
+      <DateFilterButton
+        buttonProps={{
+          variant: "bordered",
+          radius: "sm",
+        }}
+      />
+      <div className="w-1/3 min-w-[200px] max-w-[400px]o">
+        <Select
           variant="bordered"
           radius="sm"
-          endContent={<MdOutlineFilterAltOff size={18} />}
-          className="text-yellow-500"
-          onClick={handleDeleteFilter}
+          selectionMode="single"
+          disallowEmptySelection
+          selectedKeys={[status]}
+          onSelectionChange={(key) =>
+            handleOrderStatusChange(Array.from(key)[0] as string)
+          }
         >
-          Xóa bộ lọc
-        </Button>
+          <SelectItem key={""}>Trạng thái xử lý: Tất cả</SelectItem>
+          <SelectItem key={OrderStatus.COMPLETE}>Đã hoàn thành</SelectItem>
+          <SelectItem key={OrderStatus.IN_TRANSIT}>Đang giao hàng</SelectItem>
+          <SelectItem key={OrderStatus.PENDING_PROCESSING}>
+            Chờ xử lý
+          </SelectItem>
+        </Select>
       </div>
+      <Button
+        color="warning"
+        variant="bordered"
+        radius="sm"
+        endContent={<MdOutlineFilterAltOff size={18} />}
+        className="text-yellow-500"
+        onClick={handleDeleteFilter}
+      >
+        Xóa bộ lọc
+      </Button>
+      <Button
+        color="primary"
+        variant="bordered"
+        radius="sm"
+        endContent={<TfiReload size={18} />}
+        className="text-blue-500"
+        onClick={() => router.refresh()}
+      >
+        Làm mới
+      </Button>
     </div>
   );
 };

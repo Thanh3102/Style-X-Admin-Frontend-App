@@ -136,13 +136,13 @@ const ReportDateRangePicker = () => {
 
       url = updateSearchParams(currentParams, params, pathname);
 
-      if (minDateString) {
-        setMinDateString("");
-      }
+      // if (minDateString) {
+      //   setMinDateString("");
+      // }
 
-      if (maxDateString) {
-        setMaxDateString("");
-      }
+      // if (maxDateString) {
+      //   setMaxDateString("");
+      // }
     } else {
       url = updateSearchParams(
         currentParams,

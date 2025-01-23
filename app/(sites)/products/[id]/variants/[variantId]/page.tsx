@@ -62,7 +62,9 @@ const Page = async ({ params: { id, variantId } }: Props) => {
         <div className="px-16 mb-5">
           <div className="flex gap-4 items-center">
             <GoBackButton href={`${ProductRoute}/${id}`} />
-            <PageTitle>{variant.title}</PageTitle>
+            <PageTitle>
+              {variant.title === "Default Title" ? "Mặc định" : variant.title}
+            </PageTitle>
           </div>
           <Suspense fallback={<LoadingCard />}>
             <FormEditVariant product={product} variant={variant} />

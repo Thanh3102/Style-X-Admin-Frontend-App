@@ -3,11 +3,13 @@ import FormCreateReceiveInventory from "@/components/specific/forms/FormCreateRe
 import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
 import ErrorPage from "@/components/ui/ErrorPage";
 import GoBackButton from "@/components/ui/GoBackButton";
+import LoadingCard from "@/components/ui/LoadingCard";
 import PageTitle from "@/components/ui/PageTitle";
 import { ReceiveInventoryRoute } from "@/constants/route";
 import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
 import { ReceiveInventoryPermission } from "@/libs/types/backend";
 import { getServerSession } from "next-auth";
+import { Suspense } from "react";
 
 const Page = async () => {
   try {
@@ -23,7 +25,9 @@ const Page = async () => {
           <PageTitle>Tạo đơn nhập hàng </PageTitle>
         </div>
 
-        <FormCreateReceiveInventory />
+        <Suspense fallback={<LoadingCard />}>
+          <FormCreateReceiveInventory />
+        </Suspense>
       </div>
     );
   } catch (error) {

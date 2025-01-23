@@ -310,7 +310,7 @@ const ReceiveProductSelector = (props: Props) => {
               {(variant) => (
                 <ListboxItem
                   key={variant.id}
-                  isDisabled={variant.avaiable === 0}
+                  // isDisabled={variant.avaiable === 0}
                 >
                   <div className="flex justify-between text-xs px-2">
                     <div className="flex gap-3 items-center">
@@ -561,7 +561,7 @@ const ChangePriceModal = (props: ChangePriceModalProps) => {
       <ModalContent className="min-w-[40vw]">
         {(onClose) => (
           <>
-            <ModalHeader>Điều chỉnh giá sản phẩm</ModalHeader>
+            <ModalHeader>Điều chỉnh giá nhập sản phẩm</ModalHeader>
             <ModalBody>
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">

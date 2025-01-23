@@ -97,6 +97,8 @@ const FormEditReceiveInventory = ({ receiveInventory }: Props) => {
   const schema = EditReceiveInventorySchema(receiveInventory);
   type EditReceiveInventoryField = z.infer<typeof schema>;
 
+  console.log("Receive", receiveInventory);
+
   const {
     register,
     setValue,
@@ -134,7 +136,8 @@ const FormEditReceiveInventory = ({ receiveInventory }: Props) => {
 
       if (res.ok) {
         toast.success(response.message ?? "Cập nhật đơn nhập thành công");
-        router.refresh();
+        // router.refresh();
+        location.reload();
         return;
       }
 
@@ -576,6 +579,7 @@ const FormEditReceiveInventory = ({ receiveInventory }: Props) => {
           <TagSeletor
             type={TagType.RECEIVE_INVENTORY}
             onValueChange={(tags) => handleTagChange(tags)}
+            defaultValue={receiveInventory.tags}
           />
         </div>
       </form>

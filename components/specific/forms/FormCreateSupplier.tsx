@@ -23,30 +23,40 @@ import { getSession } from "next-auth/react";
 import { CREATE_SUPPLIER_ROUTE } from "@/constants/api-routes";
 import toast from "react-hot-toast";
 
-const CreateSupplierSchema = z.object({
-  name: z
-    .string({
-      required_error: "Chưa nhập tên nhà cung cấp",
+const CreateSupplierSchema = z
+  .object({
+    name: z
+      .string({
+        required_error: "Chưa nhập tên nhà cung cấp",
+        invalid_type_error: "Giá trị không hợp lệ",
+      })
+      .min(1, { message: "Chưa nhập tên nhà cung cấp" }),
+    code: z.string().optional(),
+    phoneNumber: z.string().optional(),
+    email: z.string().email("Email không đúng định dạng").optional(),
+    taxCode: z.string().optional(),
+    website: z.string().optional(),
+    fax: z.string().optional(),
+    country: z.string().optional(),
+    province: z.string().optional(),
+    district: z.string().optional(),
+    ward: z.string().optional(),
+    detailAddress: z.string().optional(),
+    assignedId: z.string({
+      required_error: "Chưa chọn nhân viên phụ trách",
       invalid_type_error: "Giá trị không hợp lệ",
-    })
-    .min(1, { message: "Chưa nhập tên nhà cung cấp" }),
-  code: z.string().optional(),
-  phoneNumber: z.string().optional(),
-  email: z.string().email("Email không đúng định dạng").optional(),
-  taxCode: z.string().optional(),
-  website: z.string().optional(),
-  fax: z.string().optional(),
-  country: z.string().optional(),
-  province: z.string().optional(),
-  district: z.string().optional(),
-  ward: z.string().optional(),
-  detailAddress: z.string().optional(),
-  assignedId: z.string({
-    required_error: "Chưa chọn nhân viên phụ trách",
-    invalid_type_error: "Giá trị không hợp lệ",
-  }),
-  tags: z.array(z.string()).optional(),
-});
+    }),
+    tags: z.array(z.string()).optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.code && data.code.trim().toLowerCase().startsWith("sup")) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Mã nhà cung cấp không bắt đầu bằng 'SUP'",
+        path: ["code"],
+      });
+    }
+  });
 
 type CreateSupplierField = z.infer<typeof CreateSupplierSchema>;
 
@@ -70,31 +80,35 @@ const FormCreateSupplier = () => {
   });
 
   const onSubmit: SubmitHandler<CreateSupplierField> = async (data) => {
-    setIsLoading(true);
-    const session = await getSession();
-    const response = await fetch(`${CREATE_SUPPLIER_ROUTE}`, {
-      method: "POST",
-      headers: {
-        authorization: `Bearer ${session?.accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    try {
+      setIsLoading(true);
+      const session = await getSession();
+      const response = await fetch(`${CREATE_SUPPLIER_ROUTE}`, {
+        method: "POST",
+        headers: {
+          authorization: `Bearer ${session?.accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-    const res = (await response.json()) as { id: string; status: string };
+      const res = await response.json();
 
-    if (response.ok) {
-      toast.success("Thêm nhà cung cấp mới thành công");
-      router.push(`${SuppliersRoute}/${res.id}`);
-    } else {
-      toast.error("Đã xảy ra lỗi");
+      if (response.ok) {
+        toast.success("Thêm nhà cung cấp mới thành công");
+        router.push(`${SuppliersRoute}/${res.id}`);
+        return;
+      }
+      throw new Error(res?.message ?? "Đã xảy ra lỗi");
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
-  useEffect(() => {
-    console.log("Form error", console.table(errors));
-  }, [errors]);
+  console.log("error", errors);
+  
 
   return (
     <>
@@ -106,7 +120,6 @@ const FormCreateSupplier = () => {
         <div className="flex-[2] basis-[400px] flex flex-col gap-5">
           <GroupBox title="Thông tin chung">
             <div className="flex flex-wrap gap-y-4 -mx-2 [&>*]:px-2">
-              {/* Sử dụng render của Controller do lỗi truyền props giữa NextUI và ReactHookForm */}
               <div className="col-12">
                 <Controller
                   control={control}
@@ -132,6 +145,8 @@ const FormCreateSupplier = () => {
                     <FormInput
                       label={"Mã nhà cung cấp"}
                       placeholder="Nhập mã nhà cung cấp"
+                      isInvalid={!!errors.code}
+                      errorMessage={errors.code?.message}
                       {...props}
                     />
                   )}
