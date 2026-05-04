@@ -24,6 +24,7 @@ export const nextAuthOptions: NextAuthOptions = {
         },
       },
       async authorize(credentials) {
+        console.log("[NextAuth] Authorize sign in route: ", SIGN_IN_ROUTE);
         const response = await fetch(SIGN_IN_ROUTE, {
           method: "POST",
           headers: {
