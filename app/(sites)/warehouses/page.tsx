@@ -6,9 +6,9 @@ import CreateWarehouseButton from "@/components/ui/CreateWarehouseButton";
 import ErrorPage from "@/components/ui/ErrorPage";
 import LoadingCard from "@/components/ui/LoadingCard";
 import PageTitle from "@/components/ui/PageTitle";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+
 import { QueryParams, WarehousePermission } from "@/libs/types/backend";
-import { getServerSession } from "next-auth";
+
 import { Suspense } from "react";
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
 };
 const Page = async ({ searchParams }: Props) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
     if (!permissions.includes(WarehousePermission.Access)) {
       return <AccessDeniedPage />;
@@ -27,7 +27,7 @@ const Page = async ({ searchParams }: Props) => {
       <div className="px-14 mb-5">
         <div className="flex justify-between items-center">
           <PageTitle>Danh sách kho hàng </PageTitle>
-          <CreateWarehouseButton/>
+          <CreateWarehouseButton />
         </div>
         <Suspense fallback={<LoadingCard />}>
           <WarehouseTable warehouses={warehouses} />

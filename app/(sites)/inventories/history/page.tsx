@@ -1,19 +1,19 @@
 import { getInventoriesHistory } from "@/app/api/inventories";
 import { getVariantDetail } from "@/app/api/products";
+import { auth } from "@/auth";
 import { InventoryHistoryTable } from "@/components/specific/InventoryHistoryTable";
 import ErrorPage from "@/components/ui/ErrorPage";
 import GoBackButton from "@/components/ui/GoBackButton";
 import LoadingCard from "@/components/ui/LoadingCard";
 import PageTitle from "@/components/ui/PageTitle";
 import { ProductRoute } from "@/constants/route";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+
 import { QueryParams } from "@/libs/types/backend";
-import { getServerSession } from "next-auth";
 import { Suspense } from "react";
 
 // const getVariantData = async (variantId: string | number) => {
 //   try {
-//     const session = await getServerSession(nextAuthOptions);
+//     const session = await auth();
 //     const data = await getVariantDetail(variantId, session?.accessToken);
 //     return { variant: data };
 //   } catch (error) {
@@ -23,7 +23,7 @@ import { Suspense } from "react";
 
 const getInventoriesHistoryData = async (params: QueryParams) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const data = await getInventoriesHistory(session?.accessToken, params);
     return {
       inventoryHistory: data.inventoryHistory,

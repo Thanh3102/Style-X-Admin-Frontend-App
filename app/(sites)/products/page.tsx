@@ -1,5 +1,6 @@
 import { getCurrentPermissions } from "@/app/api/customer";
 import { getProduct } from "@/app/api/products";
+import { auth } from "@/auth";
 import { ProductTable } from "@/components/specific/ProductTable";
 import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
 import ErrorPage from "@/components/ui/ErrorPage";
@@ -7,9 +8,8 @@ import LinkButton from "@/components/ui/LinkButton";
 import LoadingCard from "@/components/ui/LoadingCard";
 import PageTitle from "@/components/ui/PageTitle";
 import { CreateProductRoute } from "@/constants/route";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+
 import { ProductPermission, QueryParams } from "@/libs/types/backend";
-import { getServerSession } from "next-auth";
 import { Suspense } from "react";
 import { FaPlus } from "react-icons/fa6";
 
@@ -20,7 +20,7 @@ type Props = {
 
 const getProductData = async (searchParams: QueryParams) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const data = await getProduct(session?.accessToken, searchParams);
     return { data };
   } catch (error) {
@@ -34,7 +34,7 @@ const Page = async (props: Props) => {
   try {
     const { searchParams } = props;
 
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
 
     if (!permissions.includes(ProductPermission.Access))

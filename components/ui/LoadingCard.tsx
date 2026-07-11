@@ -1,3 +1,4 @@
+"use client"
 import { Card, Spinner } from "@nextui-org/react";
 const LoadingCard = () => {
   return (

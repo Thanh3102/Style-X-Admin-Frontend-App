@@ -7,9 +7,9 @@ import GoBackButton from "@/components/ui/GoBackButton";
 import LoadingCard from "@/components/ui/LoadingCard";
 import PageTitle from "@/components/ui/PageTitle";
 import { WarehouseRoute } from "@/constants/route";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+
 import { QueryParams, WarehousePermission } from "@/libs/types/backend";
-import { getServerSession } from "next-auth";
+
 import { Suspense } from "react";
 
 type Props = {
@@ -18,7 +18,7 @@ type Props = {
 };
 const Page = async ({ searchParams, params }: Props) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
     if (!permissions.includes(WarehousePermission.Access)) {
       return <AccessDeniedPage />;
@@ -26,7 +26,7 @@ const Page = async ({ searchParams, params }: Props) => {
     const warehouseDetail = await GetWarehouseDetail(
       parseInt(params.id),
       session?.accessToken,
-      searchParams
+      searchParams,
     );
 
     return (

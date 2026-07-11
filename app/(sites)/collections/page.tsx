@@ -1,13 +1,13 @@
 import { GetCollections } from "@/app/api/categories";
 import { getCurrentPermissions } from "@/app/api/customer";
+import { auth } from "@/auth";
 import { CollectionTable } from "@/components/specific/tables/CollectionTable";
 import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
 import CreateCollectionButton from "@/components/ui/CreateCollectionButton";
 import ErrorPage from "@/components/ui/ErrorPage";
 import PageTitle from "@/components/ui/PageTitle";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+
 import { CategoryPermission, QueryParams } from "@/libs/types/backend";
-import { getServerSession } from "next-auth";
 
 const getCollectionData = async () => {
   try {
@@ -22,7 +22,7 @@ const getCollectionData = async () => {
 
 const Page = async () => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
     if (!permissions.includes(CategoryPermission.Access))
       return <AccessDeniedPage />;

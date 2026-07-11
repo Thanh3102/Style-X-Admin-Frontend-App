@@ -1,13 +1,13 @@
 import { getCurrentPermissions } from "@/app/api/customer";
+import { auth } from "@/auth";
 import FormCreateDiscount from "@/components/specific/forms/FormCreateDiscount";
 import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
 import ErrorPage from "@/components/ui/ErrorPage";
 import GoBackButton from "@/components/ui/GoBackButton";
 import PageTitle from "@/components/ui/PageTitle";
 import { DiscountsRoute } from "@/constants/route";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+
 import { DiscountPermission } from "@/libs/types/backend";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
 type Props = {
@@ -21,7 +21,7 @@ const Page = async ({ searchParams }: Props) => {
       redirect(DiscountsRoute);
     }
 
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
     if (!permissions.includes(DiscountPermission.Create)) {
       return <AccessDeniedPage />;

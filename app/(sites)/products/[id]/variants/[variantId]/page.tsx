@@ -1,5 +1,6 @@
 import { getCurrentPermissions } from "@/app/api/customer";
 import { getProductDetail } from "@/app/api/products";
+import { auth } from "@/auth";
 import FormEditVariant from "@/components/specific/forms/FormEditVariant";
 import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
 import ErrorPage from "@/components/ui/ErrorPage";
@@ -9,16 +10,15 @@ import PageTitle from "@/components/ui/PageTitle";
 import { GET_PRODUCT_DETAIL_ROUTE } from "@/constants/api-routes";
 import { ProductRoute } from "@/constants/route";
 import { isInteger } from "@/libs/helper";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+
 import { ProductPermission } from "@/libs/types/backend";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import toast from "react-hot-toast";
 
 const getProductDetailData = async (id: number) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
 
     const data = await getProductDetail(id, session?.accessToken);
     return {
@@ -35,7 +35,7 @@ type Props = { params: { id: string; variantId: string } };
 
 const Page = async ({ params: { id, variantId } }: Props) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
 
     if (!permissions.includes(ProductPermission.Access))
@@ -50,7 +50,7 @@ const Page = async ({ params: { id, variantId } }: Props) => {
     if (error || !product) return <ErrorPage />;
 
     const variant = product.variants.find(
-      (vari) => vari.id === parseInt(variantId)
+      (vari) => vari.id === parseInt(variantId),
     );
 
     if (!variant) {

@@ -5,7 +5,7 @@ import { SupplierOrdersPanel } from "@/components/specific/SupplierOrdersPanel";
 import { Status } from "@/components/ui/Status";
 import { GET_SUPPLIER_DETAIL_ROUTE } from "@/constants/api-routes";
 import { SuppliersRoute } from "@/constants/route";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+
 import { DetailSuppler, SupplierPermission } from "@/libs/types/backend";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
@@ -23,7 +23,7 @@ type Props = {
 
 const getSupplier = async (id: string) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const res = await fetch(`${GET_SUPPLIER_DETAIL_ROUTE}/${id}`, {
       headers: {
         authorization: `Bearer ${session?.accessToken}`,
@@ -52,7 +52,7 @@ const getSupplier = async (id: string) => {
 
 const Page = async ({ params: { id } }: Props) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
     if (!permissions.includes(SupplierPermission.Access)) {
       return <AccessDeniedPage />;

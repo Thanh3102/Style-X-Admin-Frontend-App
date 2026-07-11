@@ -7,9 +7,9 @@ import LinkButton from "@/components/ui/LinkButton";
 import LoadingCard from "@/components/ui/LoadingCard";
 import PageTitle from "@/components/ui/PageTitle";
 import { CreateReceiveInventoryRoute } from "@/constants/route";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+
 import { QueryParams, ReceiveInventoryPermission } from "@/libs/types/backend";
-import { getServerSession } from "next-auth";
+
 import { Suspense } from "react";
 import { FaPlus } from "react-icons/fa6";
 
@@ -20,7 +20,7 @@ type Props = {
 
 const getReceiveInventoryData = async (queryParams: QueryParams) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const data = await getReceiveInventory(queryParams, session?.accessToken);
 
     return { data };
@@ -35,7 +35,7 @@ const Page = async (props: Props) => {
 
     if (error || !data) return <ErrorPage />;
 
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
     if (!permissions.includes(ReceiveInventoryPermission.Access)) {
       return <AccessDeniedPage />;

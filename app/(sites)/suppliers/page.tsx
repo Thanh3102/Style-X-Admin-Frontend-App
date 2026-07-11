@@ -6,16 +6,16 @@ import ErrorPage from "@/components/ui/ErrorPage";
 import LinkButton from "@/components/ui/LinkButton";
 import PageTitle from "@/components/ui/PageTitle";
 import { CreateSupplierRoute } from "@/constants/route";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+
 import { FilterParam, SupplierPermission } from "@/libs/types/backend";
-import { getServerSession } from "next-auth";
+
 import { FaPlus } from "react-icons/fa6";
 
 type GetSupplierParams = Partial<Record<FilterParam, any>>;
 
 const getSupplierData = async (params: GetSupplierParams) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const data = await getSupplier(session?.accessToken, params);
     return { data };
   } catch (error) {
@@ -30,7 +30,7 @@ const Page = async ({
   searchParams: Partial<Record<FilterParam, string | undefined>>;
 }) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
     if (!permissions.includes(SupplierPermission.Access)) {
       return <AccessDeniedPage />;

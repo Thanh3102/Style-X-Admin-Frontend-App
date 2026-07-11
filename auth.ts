@@ -1,13 +1,9 @@
-/**
- * Delete this file 
-**/
-
+import NextAuth from "next-auth";
 import { REFRESH_TOKEN_ROUTE, SIGN_IN_ROUTE } from "@/constants/api-routes";
-import { NextAuthConfig } from "next-auth";
-import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { JWT } from "next-auth/jwt";
 
-export const nextAuthOptions : NextAuthConfig = {
+export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -86,7 +82,7 @@ export const nextAuthOptions : NextAuthConfig = {
       return session;
     },
   },
-};
+});
 
 async function refreshToken(token: JWT) {
   const response = await fetch(REFRESH_TOKEN_ROUTE, {

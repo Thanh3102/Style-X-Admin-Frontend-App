@@ -7,14 +7,14 @@ import GoBackButton from "@/components/ui/GoBackButton";
 import LoadingCard from "@/components/ui/LoadingCard";
 import PageTitle from "@/components/ui/PageTitle";
 import { ProductRoute } from "@/constants/route";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+
 import { ProductPermission } from "@/libs/types/backend";
-import { getServerSession } from "next-auth";
+
 import { Suspense } from "react";
 
 const Page = async () => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
 
     if (

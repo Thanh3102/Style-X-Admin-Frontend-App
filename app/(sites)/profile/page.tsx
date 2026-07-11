@@ -2,11 +2,9 @@ import { Employee } from "@/app/api/employee/employee.type";
 import FormUpdateUserInfo from "@/components/specific/forms/FormUpdateUserInfo";
 import ErrorPage from "@/components/ui/ErrorPage";
 import { GET_USER_INFO_ROUTE } from "@/constants/api-routes";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
-import { getServerSession } from "next-auth";
 
 const GetUserInformation = async () => {
-  const session = await getServerSession(nextAuthOptions);
+  const session = await auth();
   if (!session) {
     throw new Error("Session not found");
   }

@@ -1,5 +1,6 @@
 import { getCurrentPermissions } from "@/app/api/customer";
 import { GetDiscountDetail } from "@/app/api/discount";
+import { auth } from "@/auth";
 import FormEditDiscount from "@/components/specific/forms/FormEditDiscount";
 import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
 import ActiveDiscountButton from "@/components/ui/ActiveDiscountButton";
@@ -11,9 +12,8 @@ import RedirectToast from "@/components/ui/RedirectToast";
 import { Status } from "@/components/ui/Status";
 import { DiscountsRoute } from "@/constants/route";
 import { isInteger } from "@/libs/helper";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+
 import { DiscountPermission } from "@/libs/types/backend";
-import { getServerSession } from "next-auth";
 
 type Props = {
   params: { id: string };
@@ -22,7 +22,7 @@ type Props = {
 const getDiscountDetail = async (id: string) => {
   if (!isInteger(id)) return { error: "Khuyến mại không tồn tại" };
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const data = await GetDiscountDetail(parseInt(id), session?.accessToken);
     return { data };
   } catch (error: any) {
@@ -32,14 +32,17 @@ const getDiscountDetail = async (id: string) => {
 
 const Page = async ({ params }: Props) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
     if (!permissions.includes(DiscountPermission.Access)) {
       return <AccessDeniedPage />;
     }
     const { data, error } = await getDiscountDetail(params.id);
 
-    if (error) return <RedirectToast href={DiscountsRoute} content={error} type="error"/>;
+    if (error)
+      return (
+        <RedirectToast href={DiscountsRoute} content={error} type="error" />
+      );
 
     if (!data) return <ErrorPage />;
 

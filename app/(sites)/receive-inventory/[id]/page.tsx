@@ -11,12 +11,12 @@ import RedirectToast from "@/components/ui/RedirectToast";
 import RenderIf from "@/components/ui/RenderIf";
 import { ReceiveInventoryRoute } from "@/constants/route";
 import { convertDateToString } from "@/libs/helper";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+
 import {
   ReceiveInventoryPermission,
   ReceiveInventoryStatus,
 } from "@/libs/types/backend";
-import { getServerSession } from "next-auth";
+
 import { redirect } from "next/navigation";
 
 type Props = {
@@ -27,7 +27,7 @@ type Props = {
 
 const getDetailData = async (id: string | number) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const data = await getReceiveInventoryDetail(id, session?.accessToken);
     return { data };
   } catch (error) {
@@ -37,7 +37,7 @@ const getDetailData = async (id: string | number) => {
 
 const Page = async (props: Props) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
     if (!permissions.includes(ReceiveInventoryPermission.Access)) {
       return <AccessDeniedPage />;

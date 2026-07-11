@@ -1,12 +1,14 @@
-import { GetReportProductRevenueDetail, GetReportRevenueDetail } from "@/app/api/report";
+import {
+  GetReportProductRevenueDetail,
+  GetReportRevenueDetail,
+} from "@/app/api/report";
 import { ProductRevenueTable } from "@/components/specific/tables/ProductRevenueTable";
 import ErrorPage from "@/components/ui/ErrorPage";
 import GoBackButton from "@/components/ui/GoBackButton";
 import PageTitle from "@/components/ui/PageTitle";
 import ReportDateRangePicker from "@/components/ui/ReportDateRangePicker";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+
 import { DateFilterOptionValue, QueryParams } from "@/libs/types/backend";
-import { getServerSession } from "next-auth";
 
 type Props = {
   searchParams: QueryParams;
@@ -14,7 +16,7 @@ type Props = {
 
 const Page = async ({ searchParams }: Props) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const params = {
       ...searchParams,
       reportDate: searchParams.reportDate ?? DateFilterOptionValue.DAY_LAST_30,
@@ -22,7 +24,7 @@ const Page = async ({ searchParams }: Props) => {
 
     const RevenueDetail = await GetReportProductRevenueDetail(
       params,
-      session?.accessToken
+      session?.accessToken,
     );
 
     return (

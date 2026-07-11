@@ -1,5 +1,6 @@
 import { getCurrentPermissions } from "@/app/api/customer";
 import { getProductDetail } from "@/app/api/products";
+import { auth } from "@/auth";
 import FormEditProduct from "@/components/specific/forms/FormEditProduct";
 import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
 import ErrorPage from "@/components/ui/ErrorPage";
@@ -9,9 +10,8 @@ import PageTitle from "@/components/ui/PageTitle";
 import RedirectToast from "@/components/ui/RedirectToast";
 import { ProductRoute } from "@/constants/route";
 import { isInteger } from "@/libs/helper";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+
 import { ProductPermission } from "@/libs/types/backend";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
@@ -19,7 +19,7 @@ type Props = { params: { id: string } };
 
 const getProductDetailData = async (id: number) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const data = await getProductDetail(id, session?.accessToken);
     return {
       product: data,
@@ -35,7 +35,7 @@ async function Page({ params: { id } }: Props) {
       redirect(ProductRoute);
     }
 
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
 
     if (!permissions.includes(ProductPermission.Access))

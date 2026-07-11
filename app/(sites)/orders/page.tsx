@@ -1,13 +1,14 @@
 import { getCurrentPermissions } from "@/app/api/customer";
 import { GetOrderList } from "@/app/api/order";
+import { auth } from "@/auth";
 import { OrderTable } from "@/components/specific/tables/OrderTable";
 import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
 import ErrorPage from "@/components/ui/ErrorPage";
 import LoadingCard from "@/components/ui/LoadingCard";
 import PageTitle from "@/components/ui/PageTitle";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+
 import { OrderPermission, QueryParams } from "@/libs/types/backend";
-import { getServerSession } from "next-auth";
+
 import { Suspense } from "react";
 
 type Props = {
@@ -16,7 +17,7 @@ type Props = {
 
 const Page = async ({ searchParams }: Props) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
     if (!permissions.includes(OrderPermission.Access))
       return <AccessDeniedPage />;

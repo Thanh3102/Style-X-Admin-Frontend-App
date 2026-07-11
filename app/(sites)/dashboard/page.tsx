@@ -5,6 +5,7 @@ import {
   GetReportOverview,
   GetReportRevenue,
 } from "@/app/api/report";
+import { auth } from "@/auth";
 import AverageOrderTotalLineChart from "@/components/specific/charts/AverageOrderTotalLineChart";
 import OrderByTimeLineChart from "@/components/specific/charts/OrderByTimeLineChart";
 import RevenueLineChart from "@/components/specific/charts/RevenueLineChart";
@@ -14,13 +15,12 @@ import ErrorPage from "@/components/ui/ErrorPage";
 import ReportDateRangePicker from "@/components/ui/ReportDateRangePicker";
 import ReportOverviewInfo from "@/components/ui/ReportOverviewInfo";
 import { CurrencyFormatter } from "@/libs/format-helper";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+
 import {
   DashboardPermission,
   DateFilterOptionValue,
   QueryParams,
 } from "@/libs/types/backend";
-import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { Suspense } from "react";
 import { BsArrowRightCircle } from "react-icons/bs";
@@ -31,7 +31,7 @@ type Props = {
 
 const Page = async ({ searchParams }: Props) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
 
     if (!permissions.includes(DashboardPermission.Access))
@@ -44,7 +44,7 @@ const Page = async ({ searchParams }: Props) => {
 
     const ReportOverview = await GetReportOverview(
       params,
-      session?.accessToken
+      session?.accessToken,
     );
 
     const ReportRevenue = await GetReportRevenue(params, session?.accessToken);

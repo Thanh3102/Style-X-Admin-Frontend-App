@@ -1,3 +1,4 @@
+"use client"
 import LoadingCard from "./LoadingCard";
 
 const LoadingPage = () => {

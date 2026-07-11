@@ -1,10 +1,10 @@
-import { getServerSession } from "next-auth";
 import FormLogin from "../components/specific/forms/FormLogin";
 import { redirect } from "next/navigation";
 import { nextAuthOptions } from "../libs/nextauth/nextAuthOptions";
+import { auth } from "@/auth";
 
 export default async function Home() {
-  const session = await getServerSession(nextAuthOptions);
+  const session = await auth()
   if (session && !session.terminate) redirect("/dashboard");
 
   return (

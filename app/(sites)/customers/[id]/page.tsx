@@ -5,14 +5,14 @@ import { GroupBox } from "@/components/ui/GroupBox";
 import OrderStatusCard from "@/components/ui/OrderStatusCard";
 import OrderTransactionStatusCard from "@/components/ui/OrderTransactionStatusCard";
 import PageTitle from "@/components/ui/PageTitle";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+
 import Link from "next/link";
-import { getServerSession } from "next-auth";
 import { convertDateToString } from "@/libs/helper";
 import { CurrencyFormatter } from "@/libs/format-helper";
 import { CustomerPermission, QueryParams } from "@/libs/types/backend";
 import CustomerOrderSortSelect from "@/components/specific/filters/CustomerOrderSortSelect";
 import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
+import { auth } from "@/auth";
 
 type Props = {
   params: { id: string };
@@ -20,7 +20,7 @@ type Props = {
 };
 const Page = async ({ params: { id }, searchParams }: Props) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
     if (!permissions.includes(CustomerPermission.Access)) {
       return <AccessDeniedPage />;
@@ -28,7 +28,7 @@ const Page = async ({ params: { id }, searchParams }: Props) => {
     const customerDetail = await GetCustomerDetail(
       id,
       searchParams,
-      session?.accessToken
+      session?.accessToken,
     );
 
     return (
@@ -95,7 +95,7 @@ const Page = async ({ params: { id }, searchParams }: Props) => {
                       <span>Giá trị đơn hàng</span>
                       <span>
                         {CurrencyFormatter().format(
-                          order.totalItemAfterDiscount
+                          order.totalItemAfterDiscount,
                         )}
                       </span>
                     </div>

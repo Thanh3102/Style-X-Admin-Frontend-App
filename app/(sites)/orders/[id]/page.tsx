@@ -1,6 +1,7 @@
 import { getCurrentPermissions } from "@/app/api/customer";
 import { GetOrderDetail } from "@/app/api/order";
 import { OrderStatus } from "@/app/api/order/order.type";
+import { auth } from "@/auth";
 import OrderHistory from "@/components/specific/OrderHistory";
 import OrderInfo from "@/components/specific/OrderInfo";
 import OrderProductList from "@/components/specific/OrderProductList";
@@ -15,21 +16,20 @@ import RedirectToast from "@/components/ui/RedirectToast";
 import RenderIf from "@/components/ui/RenderIf";
 import { OrdersRoute } from "@/constants/route";
 import { convertDateToString } from "@/libs/helper";
-import { nextAuthOptions } from "@/libs/nextauth/nextAuthOptions";
+
 import { OrderPermission } from "@/libs/types/backend";
-import { getServerSession } from "next-auth";
 
 type Props = {
   params: { id: string };
 };
 const Page = async ({ params: { id } }: Props) => {
   try {
-    const session = await getServerSession(nextAuthOptions);
+    const session = await auth();
     const orderDetail = await GetOrderDetail(id, session?.accessToken);
     const permissions = await getCurrentPermissions(session?.accessToken);
     if (!permissions.includes(OrderPermission.Access))
       return <AccessDeniedPage />;
-    
+
     if (orderDetail.void) {
       return (
         <RedirectToast
