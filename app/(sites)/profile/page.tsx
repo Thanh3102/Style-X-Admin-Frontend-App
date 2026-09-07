@@ -1,4 +1,5 @@
 import { Employee } from "@/app/api/employee/employee.type";
+import { auth } from "@/auth";
 import FormUpdateUserInfo from "@/components/specific/forms/FormUpdateUserInfo";
 import ErrorPage from "@/components/ui/ErrorPage";
 import { GET_USER_INFO_ROUTE } from "@/constants/api-routes";

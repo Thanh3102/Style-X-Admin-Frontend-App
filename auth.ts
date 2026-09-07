@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { CredentialsSignin } from "next-auth";
 import { REFRESH_TOKEN_ROUTE, SIGN_IN_ROUTE } from "@/constants/api-routes";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
@@ -24,7 +24,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         },
       },
       async authorize(credentials) {
-        console.log("[NextAuth] Authorize sign in route: ", SIGN_IN_ROUTE);
         const response = await fetch(SIGN_IN_ROUTE, {
           method: "POST",
           headers: {
@@ -37,15 +36,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           }),
         });
 
+        const data = await response.json();
         if (response.ok) {
-          const data = await response.json();
           return {
             terminate: false,
             ...data,
           };
         } else {
-          const res = await response.json();
-          throw new Error(res.message);
+          const error = new CredentialsSignin();
+          error.code = data.message || "Đã xảy ra lỗi khi đăng nhập";
+          throw error;
         }
       },
     }),
@@ -74,7 +74,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       // console.log("[NextAuth-Session] Session", session);
       // console.log("[NextAuth-Session] Token", token);
-      // session.user = token.user;
+      session.user = {
+        ...token.user,
+        emailVerified: null,
+      };
       session.accessToken = token.accessToken;
       session.refreshToken = token.refreshToken;
       session.expiredIn = token.expiredIn;

@@ -1,4 +1,5 @@
 import { getCurrentPermissions } from "@/app/api/customer";
+import { auth } from "@/auth";
 import FormCreateReceiveInventory from "@/components/specific/forms/FormCreateReceiveInventory";
 import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
 import ErrorPage from "@/components/ui/ErrorPage";

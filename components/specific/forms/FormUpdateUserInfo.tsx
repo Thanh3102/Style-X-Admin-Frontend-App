@@ -159,7 +159,11 @@ const FormUpdateUserInfo = ({ employee }: Props) => {
             wrapper: "gap-5 h-full",
           }}
           value={getValues("gender").toString()}
-          onValueChange={(value) => setValue("gender", parseInt(value))}
+          onClick={() => {console.log("Click")}}
+          onValueChange={(value) => {
+            console.log("Running.....")
+            setValue("gender", parseInt(value));
+          }}
         >
           <Radio value="0">Nam</Radio>
           <Radio value="1">Nữ</Radio>

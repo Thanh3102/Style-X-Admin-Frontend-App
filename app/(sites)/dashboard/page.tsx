@@ -26,11 +26,12 @@ import { Suspense } from "react";
 import { BsArrowRightCircle } from "react-icons/bs";
 
 type Props = {
-  searchParams: QueryParams;
+  searchParams: Promise<QueryParams>;
 };
 
-const Page = async ({ searchParams }: Props) => {
+const Page = async ({ searchParams: searchParamsPromise }: Props) => {
   try {
+    const searchParams = await searchParamsPromise; ;
     const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
 

@@ -1,5 +1,6 @@
 import { getCurrentPermissions } from "@/app/api/customer";
 import { getSupplier } from "@/app/api/suppliers";
+import { auth } from "@/auth";
 import { SupplierTable } from "@/components/specific/SupplierTable";
 import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
 import ErrorPage from "@/components/ui/ErrorPage";
@@ -7,28 +8,29 @@ import LinkButton from "@/components/ui/LinkButton";
 import PageTitle from "@/components/ui/PageTitle";
 import { CreateSupplierRoute } from "@/constants/route";
 
-import { FilterParam, SupplierPermission } from "@/libs/types/backend";
+import {
+  FilterParam,
+  QueryParams,
+  SupplierPermission,
+} from "@/libs/types/backend";
 
 import { FaPlus } from "react-icons/fa6";
 
-type GetSupplierParams = Partial<Record<FilterParam, any>>;
+type Props = { searchParams: Promise<QueryParams> };
 
-const getSupplierData = async (params: GetSupplierParams) => {
+const getSupplierData = async (
+  params: QueryParams,
+  accessToken: string | undefined | null,
+) => {
   try {
-    const session = await auth();
-    const data = await getSupplier(session?.accessToken, params);
+    const data = await getSupplier(accessToken, params);
     return { data };
   } catch (error) {
     return { error };
   }
 };
 
-const Page = async ({
-  searchParams,
-}: {
-  params: { slug: string };
-  searchParams: Partial<Record<FilterParam, string | undefined>>;
-}) => {
+const Page = async ({ searchParams: searchParamsPromise }: Props) => {
   try {
     const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
@@ -36,19 +38,13 @@ const Page = async ({
       return <AccessDeniedPage />;
     }
 
-    const { page, limit, ...otherParams } = searchParams;
-    let pageNumber = 1;
-    let limitNumber = 20;
+    const searchParams = await searchParamsPromise;
+    const { data, error } = await getSupplierData(
+      searchParams,
+      session?.accessToken,
+    );
 
-    if (!isNaN(Number(page)) && Number(page) > 0) pageNumber = Number(page);
-
-    if (!isNaN(Number(limit)) && Number(limit) > 0) limitNumber = Number(limit);
-
-    const { data, error } = await getSupplierData({
-      page: pageNumber,
-      limit: limitNumber,
-      ...otherParams,
-    });
+    console.log(data);
 
     if (error || !data) return <ErrorPage />;
 
@@ -68,8 +64,8 @@ const Page = async ({
           suppliers={data.suppliers}
           total={data.paginition.total}
           count={data.paginition.count}
-          page={pageNumber}
-          limit={limitNumber}
+          page={Number(data.paginition.page) ?? 1}
+          limit={Number(data.paginition.limit) ?? 20}
         />
       </div>
     );

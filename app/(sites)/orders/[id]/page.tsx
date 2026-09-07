@@ -20,11 +20,12 @@ import { convertDateToString } from "@/libs/helper";
 import { OrderPermission } from "@/libs/types/backend";
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
-const Page = async ({ params: { id } }: Props) => {
+const Page = async ({ params: paramsPromise }: Props) => {
   try {
     const session = await auth();
+    const { id } = await paramsPromise;
     const orderDetail = await GetOrderDetail(id, session?.accessToken);
     const permissions = await getCurrentPermissions(session?.accessToken);
     if (!permissions.includes(OrderPermission.Access))

@@ -15,7 +15,7 @@ import { FaPlus } from "react-icons/fa6";
 
 type Props = {
   params: { slug: string };
-  searchParams: QueryParams;
+  searchParams: Promise<QueryParams>;
 };
 
 const getProductData = async (searchParams: QueryParams) => {
@@ -30,13 +30,12 @@ const getProductData = async (searchParams: QueryParams) => {
   }
 };
 
-const Page = async (props: Props) => {
+const Page = async ({ searchParams: searchParamsPromise }: Props) => {
   try {
-    const { searchParams } = props;
-
     const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
-
+    const searchParams = await searchParamsPromise;
+    
     if (!permissions.includes(ProductPermission.Access))
       return <AccessDeniedPage />;
 

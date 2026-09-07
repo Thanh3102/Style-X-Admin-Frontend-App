@@ -98,7 +98,7 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
           shouldValidate: true,
         });
     },
-    []
+    [],
   );
 
   const onSubmit: SubmitHandler<EditVariantField> = async (data) => {
@@ -163,6 +163,7 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
                 width={100}
                 radius="sm"
                 className="border-1 border-gray-500"
+                alt={product.name}
               />
               <div className="flex flex-col gap-1 text-sm">
                 <span className="font-medium text-base line-clamp-1">
@@ -194,7 +195,7 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
                       "hover:cursor-pointer hover:bg-blue-100",
                       {
                         "bg-blue-100": variant.id === propVariant.id,
-                      }
+                      },
                     )}
                   >
                     <Image
@@ -204,6 +205,7 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
                       width={40}
                       radius="sm"
                       className="border-1 border-gray-500"
+                      alt={`${product.name}-${variant.title}`}
                     />
                     <div className="flex flex-col gap-1 text-xs flex-1">
                       <span className="label-link">
@@ -216,14 +218,14 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
                           Tồn kho:{" "}
                           {variant.inventories.reduce(
                             (total, i) => total + i.onHand,
-                            0
+                            0,
                           )}
                         </span>
                         <span className="line-clamp-1">
                           Có thể bán:{" "}
                           {variant.inventories.reduce(
                             (total, i) => total + i.avaiable,
-                            0
+                            0,
                           )}
                         </span>
                       </div>

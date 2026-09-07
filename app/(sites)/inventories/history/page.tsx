@@ -1,25 +1,11 @@
 import { getInventoriesHistory } from "@/app/api/inventories";
-import { getVariantDetail } from "@/app/api/products";
 import { auth } from "@/auth";
 import { InventoryHistoryTable } from "@/components/specific/InventoryHistoryTable";
 import ErrorPage from "@/components/ui/ErrorPage";
-import GoBackButton from "@/components/ui/GoBackButton";
 import LoadingCard from "@/components/ui/LoadingCard";
 import PageTitle from "@/components/ui/PageTitle";
-import { ProductRoute } from "@/constants/route";
-
 import { QueryParams } from "@/libs/types/backend";
 import { Suspense } from "react";
-
-// const getVariantData = async (variantId: string | number) => {
-//   try {
-//     const session = await auth();
-//     const data = await getVariantDetail(variantId, session?.accessToken);
-//     return { variant: data };
-//   } catch (error) {
-//     return { variant: null, error };
-//   }
-// };
 
 const getInventoriesHistoryData = async (params: QueryParams) => {
   try {
@@ -35,21 +21,15 @@ const getInventoriesHistoryData = async (params: QueryParams) => {
 };
 
 type Props = {
-  searchParams: QueryParams;
+  searchParams: Promise<QueryParams>;
 };
 
-const Page = async ({ searchParams }: Props) => {
-  // const { variant, error: getVariantDataError } = await getVariantData(
-  //   props.searchParams.variantIds ?? ""
-  // );
-  const {
-    inventoryHistory,
-    paginition,
-    error: getInventoriesHistoryDataError,
-  } = await getInventoriesHistoryData(searchParams);
+const Page = async ({ searchParams: searchParamsPromise }: Props) => {
+  const searchParams = await searchParamsPromise;
+  const { inventoryHistory, paginition, error } =
+    await getInventoriesHistoryData(searchParams);
 
-  if (getInventoriesHistoryDataError || !inventoryHistory || !paginition)
-    return <ErrorPage />;
+  if (error || !inventoryHistory || !paginition) return <ErrorPage />;
 
   return (
     <>

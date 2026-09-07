@@ -15,16 +15,23 @@ import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
 import { auth } from "@/auth";
 
 type Props = {
-  params: { id: string };
-  searchParams: QueryParams;
+  params: Promise<{ id: string }>;
+  searchParams: Promise<QueryParams>;
 };
-const Page = async ({ params: { id }, searchParams }: Props) => {
+const Page = async ({
+  params: paramsPromise,
+  searchParams: searchParamsPromise,
+}: Props) => {
   try {
     const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
     if (!permissions.includes(CustomerPermission.Access)) {
       return <AccessDeniedPage />;
     }
+
+    const { id } = await paramsPromise;
+    const searchParams = await searchParamsPromise;
+
     const customerDetail = await GetCustomerDetail(
       id,
       searchParams,

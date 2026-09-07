@@ -9,13 +9,14 @@ import { QueryParams } from "@/libs/types/backend";
 import { Suspense } from "react";
 
 type Props = {
-  searchParams: QueryParams;
+  searchParams: Promise<QueryParams>;
 };
 
-const Page = async ({ searchParams }: Props) => {
+const Page = async ({ searchParams: searchParamsPromise }: Props) => {
   try {
     const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
+    const searchParams = await searchParamsPromise;
     const employeeData = await GetEmployees(searchParams, session?.accessToken);
     return (
       <div className="px-10 py-5">

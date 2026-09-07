@@ -32,3 +32,6 @@
 **/dist
 LICENSE
 README.md
+**/.agents
+AGENTS.md
+skills-lock.json

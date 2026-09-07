@@ -1,7 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Checkbox, Input } from "@nextui-org/react";
-import { signIn } from "next-auth/react";
+import { authenticate } from "@/actions/auth-actions";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -36,19 +36,16 @@ const FormLogin = () => {
 
   const onSubmit: SubmitHandler<LoginField> = async (data) => {
     setLoading(true);
-    const result = await signIn("credentials", {
-      username: data.username,
-      password: data.password,
-      isRemember: data.isRemember,
-      redirect: false,
-    });
+    const result = await authenticate(
+      data.username,
+      data.password,
+      data.isRemember,
+    );
 
-    if (result?.ok) {
-      router.push(search.get("callbackUrl") || "/dashboard");
+    if (result.ok) {
+      router.push(result.url || "/dashboard");
     } else {
-      console.log(result);
-
-      toast.error(result ? result.error : "Đã xảy ra lỗi", {
+      toast.error(result.error ?? "Đã xảy ra lỗi", {
         position: "top-center",
         duration: 1000,
       });
