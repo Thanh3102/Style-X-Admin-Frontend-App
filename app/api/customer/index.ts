@@ -8,7 +8,7 @@ import { CustomerDetail, GetCustomerResponse } from "./customer.type";
 
 export const GetCustomer = async (
   query: QueryParams,
-  accessToken: string | null | undefined
+  accessToken: string | null | undefined,
 ) => {
   try {
     const search = new URLSearchParams(query).toString();
@@ -32,7 +32,7 @@ export const GetCustomer = async (
 export const GetCustomerDetail = async (
   customerId: string,
   searchParams: QueryParams,
-  accessToken: string | null | undefined
+  accessToken: string | null | undefined,
 ) => {
   try {
     const search = new URLSearchParams(searchParams).toString();
@@ -54,12 +54,16 @@ export const GetCustomerDetail = async (
 };
 
 export const getCurrentPermissions = async (
-  accessToken: string | null | undefined
+  accessToken: string | null | undefined,
 ) => {
   try {
     const res = await fetch(GET_USER_PERMISSIONS_ROUTE, {
       headers: {
         authorization: `Bearer ${accessToken}`,
+      },
+      next: {
+        revalidate: 300,
+        tags: [`permissions-${accessToken}`],
       },
     });
 
@@ -67,8 +71,11 @@ export const getCurrentPermissions = async (
     if (res.ok) {
       return response as string[];
     }
-    throw new Error(response.error);
+    throw new Error(
+      response.message || response.error || "Failed to fetch permissions",
+    );
   } catch (error) {
-    throw error;
+    console.error("Error fetching permissions:", error);
+    return [];
   }
 };

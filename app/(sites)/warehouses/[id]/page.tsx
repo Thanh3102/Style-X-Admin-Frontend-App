@@ -1,5 +1,6 @@
 import { getCurrentPermissions } from "@/app/api/customer";
 import { GetWarehouseDetail } from "@/app/api/warehouses";
+import { auth } from "@/auth";
 import { WarehouseInventoryTable } from "@/components/specific/tables/WarehouseInventoryTable";
 import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
 import ErrorPage from "@/components/ui/ErrorPage";
@@ -13,18 +14,24 @@ import { QueryParams, WarehousePermission } from "@/libs/types/backend";
 import { Suspense } from "react";
 
 type Props = {
-  params: { id: string };
-  searchParams: QueryParams;
+  params: Promise<{ id: string }>;
+  searchParams: Promise<QueryParams>;
 };
-const Page = async ({ searchParams, params }: Props) => {
+const Page = async ({
+  searchParams: searchParamsPromise,
+  params: paramsPromise,
+}: Props) => {
   try {
     const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
     if (!permissions.includes(WarehousePermission.Access)) {
       return <AccessDeniedPage />;
     }
+
+    const { id } = await paramsPromise;
+    const searchParams = await searchParamsPromise;
     const warehouseDetail = await GetWarehouseDetail(
-      parseInt(params.id),
+      parseInt(id),
       session?.accessToken,
       searchParams,
     );

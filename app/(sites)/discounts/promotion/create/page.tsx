@@ -7,11 +7,11 @@ import GoBackButton from "@/components/ui/GoBackButton";
 import PageTitle from "@/components/ui/PageTitle";
 import { DiscountsRoute } from "@/constants/route";
 
-import { DiscountPermission } from "@/libs/types/backend";
+import { DiscountPermission, QueryParams } from "@/libs/types/backend";
 import { redirect } from "next/navigation";
 
 type Props = {
-  searchParams: { type: string | undefined };
+  searchParams: Promise<QueryParams>;
 };
 
 const textMap: any = {
@@ -19,9 +19,10 @@ const textMap: any = {
   product: "sản phẩm",
 };
 
-const Page = async ({ searchParams }: Props) => {
+const Page = async ({ searchParams: searchParamsPromise }: Props) => {
   try {
     const acceptTypes = ["order", "product"];
+    const searchParams = await searchParamsPromise;
 
     if (!searchParams.type || !acceptTypes.includes(searchParams.type)) {
       redirect(DiscountsRoute);

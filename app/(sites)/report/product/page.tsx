@@ -2,6 +2,7 @@ import {
   GetReportProductRevenueDetail,
   GetReportRevenueDetail,
 } from "@/app/api/report";
+import { auth } from "@/auth";
 import { ProductRevenueTable } from "@/components/specific/tables/ProductRevenueTable";
 import ErrorPage from "@/components/ui/ErrorPage";
 import GoBackButton from "@/components/ui/GoBackButton";
@@ -11,12 +12,13 @@ import ReportDateRangePicker from "@/components/ui/ReportDateRangePicker";
 import { DateFilterOptionValue, QueryParams } from "@/libs/types/backend";
 
 type Props = {
-  searchParams: QueryParams;
+  searchParams: Promise<QueryParams>;
 };
 
-const Page = async ({ searchParams }: Props) => {
+const Page = async ({ searchParams: searchParamsPromise }: Props) => {
   try {
     const session = await auth();
+    const searchParams = await searchParamsPromise;
     const params = {
       ...searchParams,
       reportDate: searchParams.reportDate ?? DateFilterOptionValue.DAY_LAST_30,

@@ -16,7 +16,7 @@ import { isInteger } from "@/libs/helper";
 import { DiscountPermission } from "@/libs/types/backend";
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 const getDiscountDetail = async (id: string) => {
@@ -30,14 +30,15 @@ const getDiscountDetail = async (id: string) => {
   }
 };
 
-const Page = async ({ params }: Props) => {
+const Page = async ({ params: paramsPromise }: Props) => {
   try {
     const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
     if (!permissions.includes(DiscountPermission.Access)) {
       return <AccessDeniedPage />;
     }
-    const { data, error } = await getDiscountDetail(params.id);
+    const { id } = await paramsPromise;
+    const { data, error } = await getDiscountDetail(id);
 
     if (error)
       return (

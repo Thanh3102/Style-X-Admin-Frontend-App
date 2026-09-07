@@ -7,7 +7,7 @@ import CreateCollectionButton from "@/components/ui/CreateCollectionButton";
 import ErrorPage from "@/components/ui/ErrorPage";
 import PageTitle from "@/components/ui/PageTitle";
 
-import { CategoryPermission, QueryParams } from "@/libs/types/backend";
+import { CategoryPermission} from "@/libs/types/backend";
 
 const getCollectionData = async () => {
   try {
@@ -47,7 +47,7 @@ const Page = async () => {
       </div>
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return <ErrorPage />;
   }
 };

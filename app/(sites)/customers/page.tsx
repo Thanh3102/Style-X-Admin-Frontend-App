@@ -10,15 +10,16 @@ import { CustomerPermission, QueryParams } from "@/libs/types/backend";
 import { Suspense } from "react";
 
 type Props = {
-  searchParams: QueryParams;
+  searchParams: Promise<QueryParams>;
 };
-const Page = async ({ searchParams }: Props) => {
+const Page = async ({ searchParams: searchParamsPromise }: Props) => {
   try {
     const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
     if (!permissions.includes(CustomerPermission.Access)) {
       return <AccessDeniedPage />;
     }
+    const searchParams = await searchParamsPromise;
     const data = await GetCustomer(searchParams, session?.accessToken);
     return (
       <div className="px-5">

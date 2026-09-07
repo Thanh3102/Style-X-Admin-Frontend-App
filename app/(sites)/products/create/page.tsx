@@ -1,13 +1,12 @@
 import { getCurrentPermissions } from "@/app/api/customer";
+import { auth } from "@/auth";
 import FormCreateProduct from "@/components/specific/forms/FormCreateProduct";
 import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
-import Breadcrumbs, { BreadcrumbItem } from "@/components/ui/Breadcrumbs";
 import ErrorPage from "@/components/ui/ErrorPage";
 import GoBackButton from "@/components/ui/GoBackButton";
 import LoadingCard from "@/components/ui/LoadingCard";
 import PageTitle from "@/components/ui/PageTitle";
 import { ProductRoute } from "@/constants/route";
-
 import { ProductPermission } from "@/libs/types/backend";
 
 import { Suspense } from "react";

@@ -31,10 +31,11 @@ const getProductDetailData = async (id: number) => {
   }
 };
 
-type Props = { params: { id: string; variantId: string } };
+type Props = { params: Promise<{ id: string; variantId: string }> };
 
-const Page = async ({ params: { id, variantId } }: Props) => {
+const Page = async ({ params: paramsPromise }: Props) => {
   try {
+    const { id, variantId } = await paramsPromise;
     const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
 

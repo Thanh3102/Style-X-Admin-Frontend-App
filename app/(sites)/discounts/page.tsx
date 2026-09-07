@@ -10,7 +10,7 @@ import PageTitle from "@/components/ui/PageTitle";
 import { DiscountPermission, QueryParams } from "@/libs/types/backend";
 
 type Props = {
-  searchParams: QueryParams;
+  searchParams: Promise<QueryParams>;
 };
 
 const getDiscountData = async (params: QueryParams) => {
@@ -24,8 +24,9 @@ const getDiscountData = async (params: QueryParams) => {
   }
 };
 
-const Page = async ({ searchParams }: Props) => {
+const Page = async ({ searchParams: searchParamsPromise }: Props) => {
   try {
+    const searchParams = await searchParamsPromise;
     const { data, error } = await getDiscountData(searchParams);
     const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);

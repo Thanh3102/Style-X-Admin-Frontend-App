@@ -1,5 +1,6 @@
 import { getCurrentPermissions } from "@/app/api/customer";
 import { getReceiveInventory } from "@/app/api/receive-inventory";
+import { auth } from "@/auth";
 import { ReceiveInventoryTable } from "@/components/specific/tables/ReceiveInventoryTable";
 import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
 import ErrorPage from "@/components/ui/ErrorPage";
@@ -14,7 +15,6 @@ import { Suspense } from "react";
 import { FaPlus } from "react-icons/fa6";
 
 type Props = {
-  params: { slug: string };
   searchParams: QueryParams;
 };
 
@@ -29,9 +29,10 @@ const getReceiveInventoryData = async (queryParams: QueryParams) => {
   }
 };
 
-const Page = async (props: Props) => {
+const Page = async ({ searchParams: searchParamsPromise }: Props) => {
   try {
-    const { data, error } = await getReceiveInventoryData(props.searchParams);
+    const searchParams = await searchParamsPromise;
+    const { data, error } = await getReceiveInventoryData(searchParams);
 
     if (error || !data) return <ErrorPage />;
 

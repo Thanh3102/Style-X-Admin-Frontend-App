@@ -12,11 +12,12 @@ import { OrderPermission, QueryParams } from "@/libs/types/backend";
 import { Suspense } from "react";
 
 type Props = {
-  searchParams: QueryParams;
+  searchParams: Promise<QueryParams>;
 };
 
-const Page = async ({ searchParams }: Props) => {
+const Page = async ({ searchParams: searchParamsPromise }: Props) => {
   try {
+    const searchParams = await searchParamsPromise;
     const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
     if (!permissions.includes(OrderPermission.Access))
@@ -24,9 +25,9 @@ const Page = async ({ searchParams }: Props) => {
 
     const { data, paginition } = await GetOrderList(
       searchParams,
-      session?.accessToken
+      session?.accessToken,
     );
-    
+
     return (
       <div className="px-14 mb-5">
         <div className="flex justify-between items-center">

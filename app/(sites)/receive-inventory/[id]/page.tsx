@@ -1,5 +1,6 @@
 import { getCurrentPermissions } from "@/app/api/customer";
 import { getReceiveInventoryDetail } from "@/app/api/receive-inventory";
+import { auth } from "@/auth";
 import FormEditReceiveInventory from "@/components/specific/forms/FormEditReceiveInventory";
 import AccessDeniedPage from "@/components/ui/AccessDeniedPage";
 import ErrorPage from "@/components/ui/ErrorPage";
@@ -17,12 +18,10 @@ import {
   ReceiveInventoryStatus,
 } from "@/libs/types/backend";
 
-import { redirect } from "next/navigation";
-
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 const getDetailData = async (id: string | number) => {
@@ -35,14 +34,14 @@ const getDetailData = async (id: string | number) => {
   }
 };
 
-const Page = async (props: Props) => {
+const Page = async ({ params: paramsPromise }: Props) => {
   try {
     const session = await auth();
     const permissions = await getCurrentPermissions(session?.accessToken);
     if (!permissions.includes(ReceiveInventoryPermission.Access)) {
       return <AccessDeniedPage />;
     }
-    const { id } = props.params;
+    const { id } = await paramsPromise;
     const { data, error } = await getDetailData(id);
 
     if (error || !data) return <ErrorPage />;

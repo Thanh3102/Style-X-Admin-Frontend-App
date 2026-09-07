@@ -8,16 +8,16 @@ import { IoMdSearch } from "react-icons/io";
 import { MdOutlineFilterAltOff } from "react-icons/md";
 
 const WarehouseFilter = () => {
-  const searchTimeoutRef = useRef<NodeJS.Timeout>();
+  const searchTimeoutRef = useRef<NodeJS.Timeout>(null);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const [sortBy, setSortBy] = useState(
-    searchParams.get(FilterParam.SORTBY) ?? ""
+    searchParams.get(FilterParam.SORTBY) ?? "",
   );
   const [direction, setDirection] = useState(
-    searchParams.get(FilterParam.DIRECTION) ?? ""
+    searchParams.get(FilterParam.DIRECTION) ?? "",
   );
 
   const handleSortByChange = (key: string) => {
@@ -44,7 +44,7 @@ const WarehouseFilter = () => {
           { name: "query", value: e.target.value },
           { name: "page", value: undefined },
         ],
-        pathname
+        pathname,
       );
 
       router.replace(newUrl);
@@ -102,6 +102,7 @@ const WarehouseFilter = () => {
             onSelectionChange={(key) =>
               handleDirectionChange(Array.from(key)[0] as string)
             }
+            disabledKeys={!sortBy ? ["asc", "desc"] : []}
           >
             <SelectItem key={"asc"}>Tăng dần</SelectItem>
             <SelectItem key={"desc"}>Giảm dần</SelectItem>

@@ -15,7 +15,7 @@ import { ProductPermission } from "@/libs/types/backend";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
-type Props = { params: { id: string } };
+type Props = { params: Promise<{ id: string }> };
 
 const getProductDetailData = async (id: number) => {
   try {
@@ -29,8 +29,9 @@ const getProductDetailData = async (id: number) => {
   }
 };
 
-async function Page({ params: { id } }: Props) {
+async function Page({ params : paramsPromise }: Props) {
   try {
+    const { id } = await paramsPromise;
     if (!isInteger(id)) {
       redirect(ProductRoute);
     }
