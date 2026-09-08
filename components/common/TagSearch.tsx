@@ -1,5 +1,5 @@
 "use client";
-import { Checkbox, CheckboxGroup, Spinner } from "@nextui-org/react";
+import { Checkbox, CheckboxGroup, Spinner } from "@heroui/react";
 import { FormInput } from "./Form";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getSession } from "next-auth/react";
@@ -131,7 +131,7 @@ const TagSearch = ({
         ref={checkboxGroupRef}
         value={selectedTags.map((tag) => tag)}
         className={cn(
-          "hidden absolute w-full p-2 shadow-small [&>*]:py-1 z-50 max-h-[200px] overflow-y-auto",
+          "hidden absolute w-full p-2 shadow-small *:py-1 z-50 max-h-[200px] overflow-y-auto",
           {
             block: isOpen,
             "top-[calc(100% + 10px)]": dropdownPosition === "bottom",

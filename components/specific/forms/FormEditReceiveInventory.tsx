@@ -24,7 +24,7 @@ import {
   Tooltip,
   Accordion,
   AccordionItem,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import toast from "react-hot-toast";
 import { CurrencyFormatter } from "@/libs/format-helper";
 import { getSession } from "next-auth/react";
@@ -211,7 +211,7 @@ const FormEditReceiveInventory = ({ receiveInventory }: Props) => {
         id="EditReceiveInventoryForm"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="flex flex-col flex-[4] gap-4 basis-[600px]">
+        <div className="flex flex-col flex-4 gap-4 basis-[600px]">
           <GroupBox title="Sản phẩm">
             <div className="max-w-full overflow-y-auto max-h-[300px]">
               <Table removeWrapper isHeaderSticky>
@@ -338,7 +338,7 @@ const FormEditReceiveInventory = ({ receiveInventory }: Props) => {
             <div className="flex flex-col gap-2">
               <div className="flex gap-2">
                 <span className="flex-1">Tổng tiền</span>
-                <div className="flex-[3] flex justify-between">
+                <div className="flex-3 flex justify-between">
                   <span>{receiveInventory.totalItems} sản phẩm</span>
                   <div className="flex gap-1">
                     <RenderIf
@@ -360,7 +360,7 @@ const FormEditReceiveInventory = ({ receiveInventory }: Props) => {
               </div>
               <div className="flex gap-2">
                 <span className="flex-1">Giảm giá</span>
-                <div className="flex-[3] flex justify-between">
+                <div className="flex-3 flex justify-between">
                   <span>-----</span>
                   <span>
                     {CurrencyFormatter().format(
@@ -371,7 +371,7 @@ const FormEditReceiveInventory = ({ receiveInventory }: Props) => {
               </div>
               <div className="flex gap-2">
                 <span className="flex-1">Chi phí nhập hàng</span>
-                <div className="flex-[3] flex justify-between">
+                <div className="flex-3 flex justify-between">
                   <div className="flex flex-col gap-2">
                     {receiveInventory.receiveLandedCosts.map((item) => (
                       <span key={item.id}>
@@ -452,7 +452,7 @@ const FormEditReceiveInventory = ({ receiveInventory }: Props) => {
                   {(item) => (
                     <TableRow
                       key={item.id}
-                      className="border-b-1 border-gray-300"
+                      className="border-b border-gray-300"
                     >
                       <TableCell>
                         {convertDateToString(item.createdAt)}
@@ -509,7 +509,7 @@ const FormEditReceiveInventory = ({ receiveInventory }: Props) => {
           </GroupBox>
         </div>
 
-        <div className="flex flex-col flex-[2] gap-4 basis-[300px]">
+        <div className="flex flex-col flex-2 gap-4 basis-[300px]">
           <GroupBox title="Nhà cung cấp">
             <SupplierCard supplier={receiveInventory.supplier} />
           </GroupBox>

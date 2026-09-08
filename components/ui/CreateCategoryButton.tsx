@@ -6,7 +6,7 @@ import {
   ModalContent,
   ModalHeader,
   useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import FormCreateCategory from "../specific/forms/FormCreateCategory";
 

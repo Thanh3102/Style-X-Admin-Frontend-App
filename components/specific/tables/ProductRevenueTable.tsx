@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
   useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { HiOutlineViewColumns } from "react-icons/hi2";
 import {
@@ -265,14 +265,14 @@ const ProductRevenueTable = ({ data }: Props) => {
           classNames={{
             tr: ["hover:bg-gray-100 hover:cursor-pointer"],
             th: [
-              "bg-transparent text-base text-black font-medium rounded-none bg-gray-200 border-b-1 z-80",
+              "bg-transparent text-base text-black font-medium rounded-none bg-gray-200 border-b z-80",
             ],
             td: [
-              "group-data-[first=true]:first:before:rounded-none border-b-1 border-gray-200",
-              "group-data-[first=true]:last:before:rounded-none border-b-1 border-gray-200",
-              "group-data-[middle=true]:before:rounded-none bg-white border-b-1 border-gray-200",
-              "group-data-[last=true]:first:before:rounded-none",
-              "group-data-[last=true]:last:before:rounded-none",
+              "first:group-data-[first=true]:before:rounded-none border-b border-gray-200",
+              "last:group-data-[first=true]:before:rounded-none border-b border-gray-200",
+              "group-data-[middle=true]:before:rounded-none bg-white border-b border-gray-200",
+              "first:group-data-[last=true]:before:rounded-none",
+              "last:group-data-[last=true]:before:rounded-none",
             ],
           }}
         >

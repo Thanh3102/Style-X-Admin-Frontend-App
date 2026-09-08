@@ -10,7 +10,7 @@ import {
   PUT_UPDATE_MAIN_IMAGE_ROUTE,
 } from "@/constants/api-routes";
 import toast from "react-hot-toast";
-import { Tooltip } from "@nextui-org/react";
+import { Tooltip } from "@heroui/react";
 import ConfirmModal from "../specific/ConfirmModal";
 import { usePathname, useRouter } from "next/navigation";
 import { GetProductDetailResponse } from "@/app/api/products/products.type";

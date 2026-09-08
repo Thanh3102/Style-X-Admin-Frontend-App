@@ -5,7 +5,7 @@ import {
   WardSelector,
 } from "@/components/ui/LocationSelector";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@nextui-org/react";
+import { Input } from "@heroui/react";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -56,7 +56,7 @@ const FormCreateWarehouse = ({ onClose }: Props) => {
 
   return (
     <form
-      className="flex flex-wrap mx-2 [&>*]:px-2 gap-y-4"
+      className="flex flex-wrap mx-2 *:px-2 gap-y-4"
       id="FormCreateWarehouse"
       onSubmit={handleSubmit(onSubmit)}
     >

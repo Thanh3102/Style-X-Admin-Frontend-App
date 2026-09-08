@@ -1,6 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Checkbox, Input } from "@nextui-org/react";
+import { Button, Checkbox, Input } from "@heroui/react";
 import { authenticate } from "@/actions/auth-actions";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";

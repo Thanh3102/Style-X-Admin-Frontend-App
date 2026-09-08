@@ -5,7 +5,7 @@ import {
   RadioGroup,
   Select,
   SelectItem,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { Role } from "../RoleTab";
 import { z } from "zod";
 import { nameRegex } from "@/constants/regex";
@@ -116,7 +116,7 @@ const FormUpdateEmployee = ({ employee, onClose }: Props) => {
 
   return (
     <form
-      className="flex -mx-2 [&>*]:px-2 gap-y-4 flex-wrap"
+      className="flex -mx-2 *:px-2 gap-y-4 flex-wrap"
       id="FormUpdateEmployee"
       onSubmit={handleSubmit(onSubmit)}
     >

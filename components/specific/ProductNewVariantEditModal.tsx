@@ -14,7 +14,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { ProductVariant } from "./forms/FormCreateProduct";
 import { FormInput } from "../common/Form";
 import { CurrencyFormatter } from "@/libs/format-helper";
@@ -55,7 +55,7 @@ const ProductNewVariantEditModal = (props: Props) => {
           <>
             <ModalHeader>Chỉnh sửa {variant?.title}</ModalHeader>
             <ModalBody>
-              <form className="flex flex-wrap gap-y-2 -mx-2 [&>*]:px-2 max-h-[50vh] overflow-y-auto">
+              <form className="flex flex-wrap gap-y-2 -mx-2 *:px-2 max-h-[50vh] overflow-y-auto">
                 <div className="col-6">
                   <FormInput
                     aria-label="Mã SKU"

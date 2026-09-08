@@ -62,7 +62,7 @@ const Page = async ({ searchParams: searchParamsPromise }: Props) => {
         <Suspense>
           <ReportOverviewInfo data={ReportOverview} />
         </Suspense>
-        <div className="flex -mx-2 [&>*]:px-2 flex-wrap gap-y-4">
+        <div className="flex -mx-2 *:px-2 flex-wrap gap-y-4">
           <div className="w-1/2">
             <Suspense>
               <RevenueLineChart data={ReportRevenue} />

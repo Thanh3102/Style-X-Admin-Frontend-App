@@ -32,7 +32,7 @@ const Page = async () => {
 
     return (
       <div className="px-10 mb-5">
-        <div className="flex flex-wrap -mx-4 [&>*]:px-4 gap-y-8">
+        <div className="flex flex-wrap -mx-4 *:px-4 gap-y-8">
           <div className="flex-1 flex-col">
             <div className="flex justify-between items-center">
               <PageTitle>Danh sách bộ sưu tập</PageTitle>

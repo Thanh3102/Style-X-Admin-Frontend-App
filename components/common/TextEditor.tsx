@@ -177,7 +177,7 @@ const TextEditor = (props: Props) => {
   } = props;
   // const [characterCount, setCharacterCount] = useState(0);
 
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout>(undefined);
 
   const handleValueChange = (event: EventInfo, editor: ClassicEditor) => {
     clearTimeout(timeoutRef.current);
@@ -204,6 +204,7 @@ const TextEditor = (props: Props) => {
       <CKEditor
         editor={ClassicEditor}
         config={{
+          licenseKey: "GPL",
           toolbar: {
             items: EditorToolbar,
             shouldNotGroupWhenFull: false,

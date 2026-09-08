@@ -10,7 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalProps,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
@@ -83,7 +83,7 @@ const EditCategoryModal = ({ category, collectionId, ...props }: Props) => {
             <ModalHeader>Chỉnh sửa danh mục</ModalHeader>
             <ModalBody>
               <form
-                className="flex flex-wrap gap-y-4 -mx-2 [&>*]:px-2"
+                className="flex flex-wrap gap-y-4 -mx-2 *:px-2"
                 id="FormCreateCategory"
                 onSubmit={handleSubmit((data) => onSubmit(data, onClose))}
               >

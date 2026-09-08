@@ -1,7 +1,7 @@
 import { SupplierResponse } from "@/app/api/suppliers/suppliers.type";
 import { SupplierDetailRoute, SuppliersRoute } from "@/constants/route";
 import { cn } from "@/libs/utils";
-import { Avatar } from "@nextui-org/react";
+import { Avatar } from "@heroui/react";
 import Link from "next/link";
 import { FaX } from "react-icons/fa6";
 

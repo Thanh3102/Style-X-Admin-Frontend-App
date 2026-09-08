@@ -67,7 +67,7 @@ const Page = async ({
           </GroupBox>
           <GroupBox
             title="Đơn hàng"
-            className="flex-[2]"
+            className="flex-2"
             titleEndContent={<CustomerOrderSortSelect />}
           >
             <div className="flex flex-col max-h-[60vh] overflow-y-auto">

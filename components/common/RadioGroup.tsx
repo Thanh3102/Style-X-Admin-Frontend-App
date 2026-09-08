@@ -1,7 +1,7 @@
 import {
   RadioGroup as NextUIRadioGroup,
   RadioGroupProps,
-} from "@nextui-org/react";
+} from "@heroui/react";
 
 const RadioGroup = ({ children, ...props }: RadioGroupProps) => {
   return (

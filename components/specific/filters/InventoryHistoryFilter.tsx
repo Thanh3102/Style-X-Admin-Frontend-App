@@ -3,7 +3,7 @@ import { getWarehouse } from "@/app/api/warehouses";
 import { WarehousesResponse } from "@/app/api/warehouses/warehouses.type";
 import { isInteger } from "@/libs/helper";
 import { FilterParam, InventoryTransactionType } from "@/libs/types/backend";
-import { Button, Select, SelectItem } from "@nextui-org/react";
+import { Button, Select, SelectItem } from "@heroui/react";
 import { getSession, useSession } from "next-auth/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -67,7 +67,7 @@ const InventoryHistoryFilter = () => {
 
   return (
     <div className="p-5 rounded-md bg-white">
-      <div className="flex flex-wrap gap-y-4 -mx-2 [&>*]:px-2 items-center ">
+      <div className="flex flex-wrap gap-y-4 -mx-2 *:px-2 items-center ">
         <div className="min-w-[300px] w-1/4">
           <Select
             label="Loại giao dịch"

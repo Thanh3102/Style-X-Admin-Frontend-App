@@ -17,7 +17,7 @@ import {
   Image,
   Tooltip,
   Input,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import NextImage from "next/image";
 import { ImagePlaceholderPath } from "@/constants/filepath";
 import Link from "next/link";

@@ -31,7 +31,7 @@ import {
   Select,
   SelectItem,
   Textarea,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import toast from "react-hot-toast";
 import { CurrencyFormatter } from "@/libs/format-helper";
 import { FaDongSign, FaX } from "react-icons/fa6";
@@ -345,7 +345,7 @@ const FormCreateReceiveInventory = () => {
         id="CreateReceiveInventoryForm"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="flex flex-col flex-[4] gap-4 basis-[600px]">
+        <div className="flex flex-col flex-4 gap-4 basis-[600px]">
           <GroupBox title="Sản phẩm">
             <ReceiveProductSelector
               onSelectionChange={(variants) => setSelectedVariants(variants)}
@@ -359,7 +359,7 @@ const FormCreateReceiveInventory = () => {
             <div className="flex flex-col gap-2">
               <div className="flex gap-2">
                 <span className="flex-1">Tổng tiền</span>
-                <div className="flex-[3] flex justify-between">
+                <div className="flex-3 flex justify-between">
                   <span>{cost.totalItems} sản phẩm</span>
                   <div className="flex gap-1">
                     <RenderIf condition={cost.totalItemsDiscount > 0}>
@@ -375,7 +375,7 @@ const FormCreateReceiveInventory = () => {
               </div>
               <div className="flex gap-2">
                 <span className="flex-1">Giảm giá</span>
-                <div className="flex-[3] flex justify-between">
+                <div className="flex-3 flex justify-between">
                   <span>-----</span>
                   <span>
                     {CurrencyFormatter().format(cost.totalItemsDiscount * -1)}
@@ -389,7 +389,7 @@ const FormCreateReceiveInventory = () => {
                 >
                   Chi phí nhập hàng
                 </span>
-                <div className="flex-[3] flex justify-between">
+                <div className="flex-3 flex justify-between">
                   <ul className="flex flex-col text-sm list-disc">
                     {landedCosts.map((item, index) => (
                       <li className="flex gap-2 items-center" key={item.name}>
@@ -439,7 +439,7 @@ const FormCreateReceiveInventory = () => {
                 </Radio>
 
                 <div
-                  className={cn("gap-y-4 -mx-2 [&>*]:px-2 flex-wrap hidden", {
+                  className={cn("gap-y-4 -mx-2 *:px-2 flex-wrap hidden", {
                     flex:
                       watch("transactionStatus") ===
                       ReceiveInventoryTransaction.PAID,
@@ -500,7 +500,7 @@ const FormCreateReceiveInventory = () => {
           </GroupBox>
         </div>
 
-        <div className="flex flex-col flex-[2] gap-4 basis-[300px]">
+        <div className="flex flex-col flex-2 gap-4 basis-[300px]">
           <GroupBox title="Nhà cung cấp">
             <SupplierSelector
               onSelectionChange={(supplier) => {

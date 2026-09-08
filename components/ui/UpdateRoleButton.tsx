@@ -10,7 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import FormUpdateRole from "../specific/forms/FormUpdateRole";
 
 type Props = {

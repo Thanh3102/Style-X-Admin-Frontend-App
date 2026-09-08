@@ -1,6 +1,6 @@
 import { cn } from "@/libs/utils";
-import { InputProps, Input, SelectProps, Select } from "@nextui-org/react";
-import { Autocomplete, AutocompleteProps } from "@nextui-org/react";
+import { InputProps, Input, SelectProps, Select } from "@heroui/react";
+import { Autocomplete, AutocompleteProps } from "@heroui/react";
 
 export type FormInputProps = {} & InputProps;
 export type FormAutoCompleteProps = {} & AutocompleteProps;

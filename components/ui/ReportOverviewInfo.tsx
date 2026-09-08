@@ -6,7 +6,7 @@ type Props = {
 };
 const ReportOverviewInfo = ({ data }: Props) => {
   return (
-    <div className="flex -mx-2 [&>*]:px-2 flex-wrap">
+    <div className="flex -mx-2 *:px-2 flex-wrap">
       <div className="flex flex-col w-1/4">
         <div className="bg-white rounded-lg p-3 shadow-medium  flex-col flex">
           <span>Doanh thu thuần</span>

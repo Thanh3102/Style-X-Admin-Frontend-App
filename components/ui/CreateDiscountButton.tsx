@@ -8,7 +8,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 
 import { FiPlusCircle } from "react-icons/fi";
 
@@ -77,14 +77,14 @@ const CreateDiscountButton = () => {
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        classNames={{ closeButton: "top-[0.75rem]" }}
+        classNames={{ closeButton: "top-3" }}
       >
         <ModalContent className="min-w-[50vw]">
           {(onClose) => (
             <>
               <ModalHeader>Tạo khuyến mại</ModalHeader>
               <ModalBody>
-                <div className="py-5 border-y-1 border-gray-300">
+                <div className="py-5 border-y border-gray-300">
                   <ButtonGroup variant="bordered" radius="sm">
                     <Button
                       onClick={() => setDiscountMode("coupon")}
@@ -101,13 +101,13 @@ const CreateDiscountButton = () => {
                       Chương trình khuyến mại
                     </Button>
                   </ButtonGroup>
-                  <div className="flex gap-y-4 flex-wrap -mx-2 [&>*]:px-2 mt-4">
+                  <div className="flex gap-y-4 flex-wrap -mx-2 *:px-2 mt-4">
                     {discountTypes.map((item) => (
                       <div className="col-6" key={item.title}>
                         <div
                           className={cn(
                             "flex gap-2 items-center justify-center",
-                            "p-2 border-1 border-gray-500 rounded-lg shadow-sm",
+                            "p-2 border border-gray-500 rounded-lg shadow-xs",
                             "hover:bg-blue-100 hover:cursor-pointer hover:border-blue-500",
                             "h-[100px]"
                           )}

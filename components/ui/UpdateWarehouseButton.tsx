@@ -8,7 +8,7 @@ import {
   ModalHeader,
   Tooltip,
   useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { GoPlusCircle } from "react-icons/go";
 import FormEditWarehouse from "../specific/forms/FormEditWarehouse";
 import { WarehousesResponse } from "@/app/api/warehouses/warehouses.type";

@@ -1,6 +1,6 @@
 import { CreateCategory } from "@/app/api/categories";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input } from "@nextui-org/react";
+import { Button, Input } from "@heroui/react";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -59,7 +59,7 @@ const FormCreateCategory = ({ collectionId, onClose }: Props) => {
 
   return (
     <form
-      className="flex flex-wrap gap-y-4 -mx-2 [&>*]:px-2"
+      className="flex flex-wrap gap-y-4 -mx-2 *:px-2"
       id="FormCreateCategory"
       onSubmit={handleSubmit(onSubmit)}
     >

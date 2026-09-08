@@ -10,7 +10,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { EmptyTableContent } from "./EmptyTableContent";
 import { CreateProductRoute, ProductRoute } from "@/constants/route";
@@ -193,14 +193,14 @@ const ProductTable = (props: Props) => {
         classNames={{
           tr: ["group-data-[hover=true]:bg-gray-100 hover:cursor-pointer"],
           th: [
-            "bg-transparent text-base text-black font-medium rounded-none bg-gray-200 border-b-1",
+            "bg-transparent text-base text-black font-medium rounded-none bg-gray-200 border-b",
           ],
           td: [
-            "group-data-[first=true]:first:before:rounded-none border-b-1 border-gray-200",
-            "group-data-[first=true]:last:before:rounded-none border-b-1 border-gray-200",
-            "group-data-[middle=true]:before:rounded-none bg-white border-b-1 border-gray-200",
-            "group-data-[last=true]:first:before:rounded-none",
-            "group-data-[last=true]:last:before:rounded-none",
+            "first:group-data-[first=true]:before:rounded-none border-b border-gray-200",
+            "last:group-data-[first=true]:before:rounded-none border-b border-gray-200",
+            "group-data-[middle=true]:before:rounded-none bg-white border-b border-gray-200",
+            "first:group-data-[last=true]:before:rounded-none",
+            "last:group-data-[last=true]:before:rounded-none",
           ],
         }}
       >

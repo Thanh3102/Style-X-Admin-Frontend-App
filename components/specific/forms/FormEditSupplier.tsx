@@ -10,7 +10,7 @@ import {
   ProvinceSelector,
   WardSelector,
 } from "../../ui/CountriesSelector";
-import { SelectItem } from "@nextui-org/react";
+import { SelectItem } from "@heroui/react";
 import { z } from "zod";
 import { DetailSuppler } from "@/libs/types/backend";
 import { createEditSupplierSchema } from "../SupplierInfo";
@@ -32,7 +32,7 @@ const FormEditSupplier = ({ supplier }: FormEditSupplierProps) => {
   } = useFormContext<EditSupplierField>();
 
   return (
-    <div className="py-2 -mx-2 [&>*]:px-2 gap-y-2 flex flex-wrap">
+    <div className="py-2 -mx-2 *:px-2 gap-y-2 flex flex-wrap">
       <div className="col-6">
         <Controller
           control={control}

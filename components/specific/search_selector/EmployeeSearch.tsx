@@ -1,7 +1,7 @@
 import { GET_ROLES_ROUTE } from "@/constants/api-routes";
 import { updateSearchParams } from "@/libs/helper";
 import { FilterParam } from "@/libs/types/backend";
-import { Button, Input, Select, SelectItem } from "@nextui-org/react";
+import { Button, Input, Select, SelectItem } from "@heroui/react";
 import { getSession } from "next-auth/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";

@@ -1,4 +1,4 @@
-import { useDisclosure } from "@nextui-org/react";
+import { useDisclosure } from "@heroui/react";
 import { FaTrash } from "react-icons/fa6";
 import ConfirmModal from "../specific/ConfirmModal";
 import toast from "react-hot-toast";

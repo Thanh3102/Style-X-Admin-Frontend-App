@@ -8,7 +8,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { convertDateToString } from "@/libs/helper";
 
 type Props = {
@@ -35,7 +35,7 @@ const OrderHistory = ({ histories }: Props) => {
           </TableHeader>
           <TableBody items={histories}>
             {(item) => (
-              <TableRow key={item.id} className="border-b-1 border-gray-300">
+              <TableRow key={item.id} className="border-b border-gray-300">
                 <TableCell>{convertDateToString(item.createdAt)}</TableCell>
                 <TableCell>
                   {item.changedEmployee ? item.changedEmployee.name : "---"}

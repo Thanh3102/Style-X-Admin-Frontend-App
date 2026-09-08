@@ -1,6 +1,6 @@
 "use client";
-import { AutocompleteItem } from "@nextui-org/react";
-import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
+import { AutocompleteItem } from "@heroui/react";
+import { useInfiniteScroll } from "@heroui/use-infinite-scroll";
 import { FormAutoComplete } from "./Form";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FilterParam } from "@/libs/types/backend";

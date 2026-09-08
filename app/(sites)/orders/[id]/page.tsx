@@ -57,12 +57,12 @@ const Page = async ({ params: paramsPromise }: Props) => {
           </RenderIf>
         </div>
         <div className="flex gap-4">
-          <div className="flex-[2] flex flex-col gap-4">
+          <div className="flex-2 flex flex-col gap-4">
             <OrderProductList order={orderDetail} />
             <OrderTransaction order={orderDetail} />
             <OrderHistory histories={orderDetail.histories} />
           </div>
-          <div className="flex-[1] flex flex-col gap-4">
+          <div className="flex-1 flex flex-col gap-4">
             <OrderInfo order={orderDetail} />
           </div>
         </div>

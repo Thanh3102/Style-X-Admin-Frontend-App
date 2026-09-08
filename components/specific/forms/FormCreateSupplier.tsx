@@ -9,7 +9,7 @@ import {
   ProvinceSelector,
   WardSelector,
 } from "../../ui/CountriesSelector";
-import { Button, Divider } from "@nextui-org/react";
+import { Button, Divider } from "@heroui/react";
 import ConfirmModal from "../ConfirmModal";
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -117,9 +117,9 @@ const FormCreateSupplier = () => {
         id="createSupplierForm"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="flex-[2] basis-[400px] flex flex-col gap-5">
+        <div className="flex-2 basis-[400px] flex flex-col gap-5">
           <GroupBox title="Thông tin chung">
-            <div className="flex flex-wrap gap-y-4 -mx-2 [&>*]:px-2">
+            <div className="flex flex-wrap gap-y-4 -mx-2 *:px-2">
               <div className="col-12">
                 <Controller
                   control={control}
@@ -236,7 +236,7 @@ const FormCreateSupplier = () => {
           </GroupBox>
 
           <GroupBox title="Địa chỉ">
-            <div className="flex flex-wrap gap-y-4 -mx-2 [&>*]:px-2">
+            <div className="flex flex-wrap gap-y-4 -mx-2 *:px-2">
               <div
                 className={cn("col-6", {
                   "col-12": watch("country") !== "Viet Nam",

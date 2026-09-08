@@ -1,7 +1,7 @@
 "use client";
 
 import { FilterParam } from "@/libs/types/backend";
-import { Select, SelectItem } from "@nextui-org/react";
+import { Select, SelectItem } from "@heroui/react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 

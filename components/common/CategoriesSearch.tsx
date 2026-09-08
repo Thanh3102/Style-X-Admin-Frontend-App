@@ -1,5 +1,5 @@
 "use client";
-import { Checkbox, CheckboxGroup, Spinner } from "@nextui-org/react";
+import { Checkbox, CheckboxGroup, Spinner } from "@heroui/react";
 import { FormInput } from "./Form";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FilterParam, QueryParams } from "@/libs/types/backend";
@@ -185,7 +185,7 @@ const CategoriesSearch = (props: Props) => {
         onValueChange={handleCheckboxGroupChange}
         ref={checkboxGroupRef}
         className={cn(
-          "hidden absolute w-full p-2 shadow-small [&>*]:py-1 z-50 max-h-[200px] overflow-y-auto",
+          "hidden absolute w-full p-2 shadow-small *:py-1 z-50 max-h-[200px] overflow-y-auto",
           {
             block: isOpen,
           }

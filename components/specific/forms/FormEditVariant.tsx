@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
   useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { ImagePlaceholderPath } from "@/constants/filepath";
 import { useRouter } from "next/navigation";
 import { InventoriesHistoryRoute, ProductRoute } from "@/constants/route";
@@ -162,7 +162,7 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
                 height={120}
                 width={100}
                 radius="sm"
-                className="border-1 border-gray-500"
+                className="border border-gray-500"
                 alt={product.name}
               />
               <div className="flex flex-col gap-1 text-sm">
@@ -191,7 +191,7 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
                 >
                   <div
                     className={cn(
-                      "p-3 flex items-center gap-4 border-b-1 border-gray-200",
+                      "p-3 flex items-center gap-4 border-b border-gray-200",
                       "hover:cursor-pointer hover:bg-blue-100",
                       {
                         "bg-blue-100": variant.id === propVariant.id,
@@ -204,7 +204,7 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
                       height={40}
                       width={40}
                       radius="sm"
-                      className="border-1 border-gray-500"
+                      className="border border-gray-500"
                       alt={`${product.name}-${variant.title}`}
                     />
                     <div className="flex flex-col gap-1 text-xs flex-1">
@@ -236,7 +236,7 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
             </div>
           </GroupBox>
         </div>
-        <div className="flex-[2] basis-[600px] min-w-0 flex flex-wrap gap-4 h-fit">
+        <div className="flex-2 basis-[600px] min-w-0 flex flex-wrap gap-4 h-fit">
           <GroupBox title="Thuộc tính">
             <div className="flex gap-4 flex-wrap">
               <div className="flex flex-col gap-2 flex-1">
@@ -263,7 +263,7 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
                 <div
                   className={cn(
                     "flex-1 flex items-center justify-center",
-                    "border-1 border-dashed border-gray-500 rounded-md",
+                    "border border-dashed border-gray-500 rounded-md",
                     "min-h-40 label-link",
                     "hover:cursor-not-allowed"
                   )}
@@ -274,7 +274,7 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
             </div>
           </GroupBox>
           <GroupBox title="Thông tin phiên bản">
-            <div className="flex flex-wrap gap-y-2 -mx-2 [&>*]:px-2">
+            <div className="flex flex-wrap gap-y-2 -mx-2 *:px-2">
               <Controller
                 control={control}
                 name="skuCode"
@@ -322,7 +322,7 @@ const FormEditVariant = ({ product, variant: propVariant }: Props) => {
             </div>
           </GroupBox>
           <GroupBox title="Thông tin giá">
-            <div className="flex flex-wrap gap-y-2 -mx-2 [&>*]:px-2">
+            <div className="flex flex-wrap gap-y-2 -mx-2 *:px-2">
               <Controller
                 control={control}
                 name="sellPrice"

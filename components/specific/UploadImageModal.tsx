@@ -6,7 +6,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalProps,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import ImageFileDrop from "../common/ImageFileDrop";
 import { useState } from "react";
 import toast from "react-hot-toast";

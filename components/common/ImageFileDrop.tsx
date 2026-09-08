@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { FaPlus, FaStar, FaTrash } from "react-icons/fa6";
 import Image from "next/image";
 import { useImmer } from "use-immer";
-import { Tooltip } from "@nextui-org/react";
+import { Tooltip } from "@heroui/react";
 
 type Props = {
   maxSize?: number;
@@ -77,7 +77,7 @@ const ImageDrop = (props: Props) => {
       <div
         className={cn(
           "rounded-lg p-4 flex flex-col gap-y-1 items-center justify-center text-sm",
-          "border-1 border-gray-400 border-dashed hover:border-blue-500",
+          "border border-gray-400 border-dashed hover:border-blue-500",
           "hover:cursor-pointer",
           {
             hidden: images.length !== 0,
@@ -102,7 +102,7 @@ const ImageDrop = (props: Props) => {
         <div
           className={cn(
             "h-24 w-24 flex items-center justify-center",
-            "border-1 border-dashed border-gray-400 hover:border-blue-500",
+            "border border-dashed border-gray-400 hover:border-blue-500",
             "rounded-lg hover:cursor-pointer"
           )}
           {...getRootProps()}

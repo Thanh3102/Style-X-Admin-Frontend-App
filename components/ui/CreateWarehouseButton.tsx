@@ -7,7 +7,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { GoPlusCircle } from "react-icons/go";
 import FormCreateWarehouse from "../specific/forms/FormCreateWarehouse";
 

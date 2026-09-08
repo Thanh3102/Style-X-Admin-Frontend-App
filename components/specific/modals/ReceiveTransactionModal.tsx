@@ -21,7 +21,7 @@ import {
   DatePicker,
   Select,
   SelectItem,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { submitHandler } from "ckeditor5";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -121,7 +121,7 @@ const ReceiveTransactionModal = ({ receiveInventory, ...props }: Props) => {
                   )}
                 </span>
               </form>
-              <div className={cn("gap-y-4 -mx-2 [&>*]:px-2 flex-wrap flex")}>
+              <div className={cn("gap-y-4 -mx-2 *:px-2 flex-wrap flex")}>
                 <DatePicker
                   label="Ngày thanh toán"
                   variant="bordered"

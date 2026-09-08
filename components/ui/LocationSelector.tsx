@@ -5,7 +5,7 @@ import {
   AutocompleteItem,
   AutocompleteProps,
   cn,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { Key, ReactNode, useMemo, useState } from "react";
 
 // export type CountriesSelectorProps = {

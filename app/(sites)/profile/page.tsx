@@ -36,7 +36,7 @@ const Page = async () => {
               Các thông tin của tài khoản đang đăng nhập hệ thống
             </span>
           </div>
-          <div className="flex-[2]">
+          <div className="flex-2">
             <FormUpdateUserInfo employee={info} />
           </div>
         </div>

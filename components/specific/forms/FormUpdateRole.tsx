@@ -9,7 +9,7 @@ import {
   Checkbox,
   CheckboxGroup,
   Input,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { getSession } from "next-auth/react";
 import { useCallback, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -164,7 +164,7 @@ const FormUpdateRole = ({
               key={section.id}
               subtitle={renderSubTitle(section)}
             >
-              <div className="flex flex-wrap -mx-1 [&>*]:py-1 gap-y-2">
+              <div className="flex flex-wrap -mx-1 *:py-1 gap-y-2">
                 {section.permissions.map((perm) => (
                   <div className="w-1/2" key={perm.id}>
                     <Checkbox value={perm.id.toString()} className="text-sm">

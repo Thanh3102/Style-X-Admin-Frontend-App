@@ -20,7 +20,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import NextImage from "next/image";
@@ -178,7 +178,7 @@ const ProductSelector = (props: Props) => {
           })}
         >
           <div
-            className="border-1 border-gray-500 rounded-md h-fit max-h-[400px] overflow-y-auto"
+            className="border border-gray-500 rounded-md h-fit max-h-[400px] overflow-y-auto"
             ref={listBoxRef}
           >
             <Listbox
@@ -195,7 +195,7 @@ const ProductSelector = (props: Props) => {
                       height={40}
                       width={40}
                       src={product.image ?? ImagePlaceholderPath}
-                      className={cn("rounded-md border-1 border-gray-500")}
+                      className={cn("rounded-md border border-gray-500")}
                       alt=""
                     />
                     <div className="flex flex-col gap-1">

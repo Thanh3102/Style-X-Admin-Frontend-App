@@ -10,7 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

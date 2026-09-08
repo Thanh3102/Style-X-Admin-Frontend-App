@@ -5,11 +5,11 @@ const Header = async () => {
   const session = await auth();
   // console.log(">>> Session value", session);
   return (
-    <div className="w-full py-2 px-5 border-b-1 h-[var(--header-height)]">
+    <header className="sticky top-0 z-30 h-(--header-height) w-full shrink-0 border-b bg-white px-5 py-2">
       <div className="flex justify-end">
         <UserAction name={session?.user.name ?? ""} />
       </div>
-    </div>
+    </header>
   );
 };
 

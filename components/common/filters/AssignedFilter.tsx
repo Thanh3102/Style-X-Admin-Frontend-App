@@ -2,10 +2,8 @@
 import { GetEmployees } from "@/app/api/employee";
 import { Employee } from "@/app/api/employee/employee.type";
 import RenderIf from "@/components/ui/RenderIf";
-import { EMPLOYEE_GET_ROUTE } from "@/constants/api-routes";
 import { updateSearchParams } from "@/libs/helper";
 import { FilterParam } from "@/libs/types/backend";
-import { GetUsersResponse, ResponseUser } from "@/libs/types/backend/response";
 import { cn } from "@/libs/utils";
 import {
   Button,
@@ -16,7 +14,7 @@ import {
   PopoverContent,
   PopoverTrigger,
   Spinner,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { getSession } from "next-auth/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
@@ -89,7 +87,7 @@ const AssignedFilterDropdown = ({
   const searchParams = useSearchParams();
   const defaultSelect = searchParams.get(FilterParam.ASSIGN_IDS)?.split(",");
   const checkboxScrollRef = useRef<HTMLDivElement>(null);
-  const inputTimeoutRef = useRef<NodeJS.Timeout>();
+  const inputTimeoutRef = useRef<NodeJS.Timeout>(undefined);
 
   const getUsers = useCallback(
     async (input: string) => {

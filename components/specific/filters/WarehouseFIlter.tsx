@@ -1,7 +1,7 @@
 "use client";
 import { updateSearchParams } from "@/libs/helper";
 import { FilterParam } from "@/libs/types/backend";
-import { Button, Input, Select, SelectItem } from "@nextui-org/react";
+import { Button, Input, Select, SelectItem } from "@heroui/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { IoMdSearch } from "react-icons/io";
@@ -62,7 +62,7 @@ const WarehouseFilter = () => {
 
   return (
     <div className="p-5 rounded-md bg-white">
-      <div className="flex flex-wrap gap-y-4 -mx-2 [&>*]:px-2 items-center">
+      <div className="flex flex-wrap gap-y-4 -mx-2 *:px-2 items-center">
         <Input
           placeholder="Tìm kiếm theo tên sản phẩm"
           className="w-full"

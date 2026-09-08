@@ -5,7 +5,7 @@ import { cn } from "@/libs/utils";
 import { TagSearch } from "./TagSearch";
 import { SelectedTag } from "../ui/SelectedTag";
 import { GroupBox } from "../ui/GroupBox";
-import { Modal, ModalContent } from "@nextui-org/react";
+import { Modal, ModalContent } from "@heroui/react";
 
 export type TagSelectorProps = {
   type: TagType;

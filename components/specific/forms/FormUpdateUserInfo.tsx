@@ -1,5 +1,5 @@
 "use client";
-import { Button, DateInput, Input, Radio, RadioGroup } from "@nextui-org/react";
+import { Button, DateInput, Input, Radio, RadioGroup } from "@heroui/react";
 import { z } from "zod";
 import { nameRegex } from "@/constants/regex";
 import { CalendarDate, getLocalTimeZone } from "@internationalized/date";
@@ -82,9 +82,9 @@ const FormUpdateUserInfo = ({ employee }: Props) => {
   };
 
   return (
-    <div className="p-5 border-1 border-black rounded-md shadow-md">
+    <div className="p-5 border border-black rounded-md shadow-md">
       <form
-        className="flex -mx-2 [&>*]:px-2 gap-y-4 flex-wrap"
+        className="flex -mx-2 *:px-2 gap-y-4 flex-wrap"
         id="FormUpdateUserInfo"
         onSubmit={handleSubmit(onSubmit)}
       >

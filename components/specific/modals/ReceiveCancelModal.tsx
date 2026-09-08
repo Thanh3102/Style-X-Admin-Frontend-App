@@ -9,7 +9,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalProps,
-} from "@nextui-org/react";
+} from "@heroui/react";
 
 import { useState } from "react";
 import toast from "react-hot-toast";

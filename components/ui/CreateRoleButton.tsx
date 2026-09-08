@@ -6,7 +6,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { GoPlusCircle } from "react-icons/go";
 import { PermissionSection } from "../specific/RoleTab";
 import FormCreateRole from "../specific/forms/FormCreateRole";

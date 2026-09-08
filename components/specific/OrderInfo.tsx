@@ -1,5 +1,5 @@
 import { FormatOrderDetail } from "@/app/api/order/order.type";
-import { Avatar, cn, Link, Textarea } from "@nextui-org/react";
+import { Avatar, cn, Link, Textarea } from "@heroui/react";
 import { GroupBox } from "../ui/GroupBox";
 import RenderIf from "../ui/RenderIf";
 

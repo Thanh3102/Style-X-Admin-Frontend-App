@@ -18,7 +18,7 @@ const OrderTransaction = ({ order }: Props) => {
       <div className="flex flex-col gap-2">
         <div className="flex gap-2">
           <span className="flex-1">Sản phẩm</span>
-          <div className="flex-[3] flex justify-between">
+          <div className="flex-3 flex justify-between">
             <span>
               {order.items.reduce((total, item) => total + item.quantity, 0)}{" "}
               sản phẩm
@@ -37,7 +37,7 @@ const OrderTransaction = ({ order }: Props) => {
         </div>
         <div className="flex gap-2">
           <span className="flex-1">Giảm giá</span>
-          <div className="flex-[3] flex justify-between">
+          <div className="flex-3 flex justify-between">
             <span>Khuyến mại sản phẩm</span>
             <span>
               {CurrencyFormatter().format(order.totalItemDiscountAmount * -1)}
@@ -46,7 +46,7 @@ const OrderTransaction = ({ order }: Props) => {
         </div>
         <div className="flex gap-2">
           <span className="flex-1"></span>
-          <div className="flex-[3] flex justify-between">
+          <div className="flex-3 flex justify-between">
             <span>Khuyến mại đơn hàng</span>
             <span>
               {CurrencyFormatter().format(order.totalOrderDiscountAmount * -1)}

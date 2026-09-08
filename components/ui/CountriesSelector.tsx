@@ -1,7 +1,7 @@
 "use client";
 import { Countries } from "@/libs/data/countries";
 import { VN_Provinces } from "@/libs/data/vietnam-provinces";
-import { AutocompleteItem, AutocompleteProps } from "@nextui-org/react";
+import { AutocompleteItem, AutocompleteProps } from "@heroui/react";
 import { Key, ReactNode, useMemo, useState } from "react";
 import { FormAutoComplete } from "../common/Form";
 

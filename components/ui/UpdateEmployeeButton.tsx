@@ -6,7 +6,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { FaEdit } from "react-icons/fa";
 import FormUpdateEmployee from "../specific/forms/FormUpdateEmployee";
 import { Employee } from "@/app/api/employee/employee.type";

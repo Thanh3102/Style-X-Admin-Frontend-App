@@ -9,7 +9,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import RadioGroup from "../../common/RadioGroup";
 import { FormInput, FormSelect } from "../../common/Form";
 import { GroupBox } from "../../ui/GroupBox";
@@ -181,7 +181,7 @@ const FormCreateProduct = () => {
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant>();
   const [variantEditOpen, setVariantEditOpen] = useState(false);
 
-  const inputTimeoutRef = useRef<NodeJS.Timeout>();
+  const inputTimeoutRef = useRef<NodeJS.Timeout>(undefined);
   const router = useRouter();
 
   const {
@@ -589,9 +589,9 @@ const FormCreateProduct = () => {
         id="CreateProductForm"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="flex-[2] basis-[600px] flex flex-col gap-5 w-[600px]">
+        <div className="flex-2 basis-[600px] flex flex-col gap-5 w-[600px]">
           <GroupBox title="Thông tin sản phẩm">
-            <div className="flex flex-wrap gap-y-2 -mx-2 [&>*]:px-2">
+            <div className="flex flex-wrap gap-y-2 -mx-2 *:px-2">
               <Controller
                 control={control}
                 name="name"
@@ -707,7 +707,7 @@ const FormCreateProduct = () => {
           </GroupBox>
 
           <GroupBox title="Thông tin giá">
-            <div className="flex flex-wrap gap-y-2 -mx-2 [&>*]:px-2">
+            <div className="flex flex-wrap gap-y-2 -mx-2 *:px-2">
               <Controller
                 control={control}
                 name="sellPrice"
@@ -936,7 +936,7 @@ const FormCreateProduct = () => {
 
           <RenderIf condition={variants.length > 0}>
             <GroupBox title="Phiên bản">
-              <div className="text-base py-4 px-2 flex items-center border-y-1 border-gray-200">
+              <div className="text-base py-4 px-2 flex items-center border-y border-gray-200">
                 <span className="font-semibold">
                   {variants.length} phiên bản
                 </span>
@@ -944,7 +944,7 @@ const FormCreateProduct = () => {
               {variants.map((variant) => (
                 <div
                   key={variant.title}
-                  className="py-4 px-2 flex justify-between border-b-1 border-gray-200 hover:bg-gray-100 hover:cursor-pointer items-center text-sm"
+                  className="py-4 px-2 flex justify-between border-b border-gray-200 hover:bg-gray-100 hover:cursor-pointer items-center text-sm"
                   onClick={() => handleVariantClick(variant)}
                 >
                   <div className="flex flex-col gap-2">
@@ -1062,7 +1062,7 @@ const FormCreateProduct = () => {
         </div>
       </form>
 
-      <div className="flex justify-end gap-4 mt-4 py-4 border-t-1 border-gray-400">
+      <div className="flex justify-end gap-4 mt-4 py-4 border-t border-gray-400">
         <Button
           as={Link}
           radius="sm"

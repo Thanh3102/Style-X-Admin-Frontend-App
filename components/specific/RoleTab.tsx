@@ -7,7 +7,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { getSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";

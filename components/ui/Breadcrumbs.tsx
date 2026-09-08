@@ -3,7 +3,7 @@
 import {
   BreadcrumbItem,
   Breadcrumbs as NextUIBreadcrumbs,
-} from "@nextui-org/react";
+} from "@heroui/react";
 
 type Props = {
   items: BreadcrumbItem[];

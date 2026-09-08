@@ -1,7 +1,7 @@
 "use client";
 import { FormInput } from "@/components/common/Form";
 import { SelectedTag } from "@/components/ui/SelectedTag";
-import { Button, InputProps } from "@nextui-org/react";
+import { Button, InputProps } from "@heroui/react";
 import { ChangeEvent, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 

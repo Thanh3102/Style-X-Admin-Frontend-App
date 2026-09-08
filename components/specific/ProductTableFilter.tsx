@@ -1,6 +1,6 @@
 "use client";
 import { updateSearchParams } from "@/libs/helper";
-import { ButtonGroup, Input } from "@nextui-org/react";
+import { ButtonGroup, Input } from "@heroui/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, useRef } from "react";
 import { IoMdSearch } from "react-icons/io";

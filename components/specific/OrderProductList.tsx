@@ -10,7 +10,7 @@ import {
   Link,
   Tooltip,
   cn,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { GroupBox } from "../ui/GroupBox";
 import { FormatOrderDetail, OrderStatus } from "@/app/api/order/order.type";
 import NextImage from "next/image";

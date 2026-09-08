@@ -36,7 +36,7 @@ import {
 import { cn } from "@/libs/utils";
 import { LuClipboardList } from "react-icons/lu";
 import { DateFilterOptionValue, FilterParam } from "@/libs/types/backend";
-import { Image } from "@nextui-org/react";
+import { Image } from "@heroui/react";
 
 const items = [
   {
@@ -121,7 +121,7 @@ const Sidebar = () => {
 
   return (
     <motion.div
-      className={`h-full min-h-screen sticky top-0 bg-[#182537] text-white`}
+      className="sticky top-0 h-screen shrink-0 self-start overflow-hidden bg-[#182537] text-white"
       initial={{
         width: sidebarWidth,
       }}
@@ -134,7 +134,7 @@ const Sidebar = () => {
     >
       <div
         className={cn(
-          "h-[var(--header-height)] flex items-center gap-2 border-b-1 border-white px-2",
+          "h-(--header-height) flex items-center gap-2 border-b border-white px-2",
           {
             "justify-center": !isExtend,
           }
@@ -159,7 +159,7 @@ const Sidebar = () => {
           {isExtend ? <FaAngleLeft /> : <FaAngleRight />}
         </div>
       </div>
-      <div className="h-screen relative px-2 overflow-y-auto">
+      <div className="relative h-[calc(100vh-var(--header-height))] overflow-y-auto px-2">
         <ul className="text-sm">
           {items.map((item, index) => (
             <SidebarItem

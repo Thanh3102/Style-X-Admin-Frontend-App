@@ -6,7 +6,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalProps,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { ReactNode } from "react";
 
 type Props = {

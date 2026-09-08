@@ -1,6 +1,6 @@
 "use client";
 import { ReactNode } from "react";
-import { Tooltip } from "@nextui-org/react";
+import { Tooltip } from "@heroui/react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { cn } from "@/libs/utils";

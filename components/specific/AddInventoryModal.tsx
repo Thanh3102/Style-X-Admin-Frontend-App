@@ -18,7 +18,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { getSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import { FormInput, FormSelect } from "../common/Form";

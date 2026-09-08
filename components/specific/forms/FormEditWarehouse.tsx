@@ -7,7 +7,7 @@ import {
   WardSelector,
 } from "@/components/ui/LocationSelector";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, Switch } from "@nextui-org/react";
+import { Button, Input, Switch } from "@heroui/react";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -73,7 +73,7 @@ const FormEditWarehouse = ({ warehouse, onClose }: Props) => {
   return (
     <>
       <form
-        className="flex flex-wrap mx-2 [&>*]:px-2 gap-y-4"
+        className="flex flex-wrap mx-2 *:px-2 gap-y-4"
         id="FormEditWarehouse"
         onSubmit={handleSubmit(onSubmit)}
       >

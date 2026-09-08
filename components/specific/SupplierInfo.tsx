@@ -15,7 +15,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalFooter,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { cn } from "@/libs/utils";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -198,7 +198,7 @@ const SupplierInfo = ({ supplier }: SupplierInfoProps) => {
                 placement="top-start"
                 content={
                   <div className={"w-fit max-w-[200px]"}>
-                    <span className="break-words">{supplier.phoneNumber}</span>
+                    <span className="wrap-break-word">{supplier.phoneNumber}</span>
                   </div>
                 }
                 classNames={{
@@ -226,7 +226,7 @@ const SupplierInfo = ({ supplier }: SupplierInfoProps) => {
                 placement="top-start"
                 content={
                   <div className={"w-fit max-w-[200px]"}>
-                    <span className="break-words">{supplier.email}</span>
+                    <span className="wrap-break-word">{supplier.email}</span>
                   </div>
                 }
                 classNames={{
@@ -254,7 +254,7 @@ const SupplierInfo = ({ supplier }: SupplierInfoProps) => {
                 placement="top-start"
                 content={
                   <div className={"w-fit max-w-[200px]"}>
-                    <span className="break-words">
+                    <span className="wrap-break-word">
                       {supplier.detailAddress}
                     </span>
                   </div>
@@ -284,7 +284,7 @@ const SupplierInfo = ({ supplier }: SupplierInfoProps) => {
                 placement="top-start"
                 content={
                   <div className={"w-fit max-w-[200px]"}>
-                    <span className="break-words">{supplier.fax}</span>
+                    <span className="wrap-break-word">{supplier.fax}</span>
                   </div>
                 }
                 classNames={{
@@ -312,7 +312,7 @@ const SupplierInfo = ({ supplier }: SupplierInfoProps) => {
                 placement="top-start"
                 content={
                   <div className={"w-fit max-w-[200px]"}>
-                    <span className="break-words">{supplier.website}</span>
+                    <span className="wrap-break-word">{supplier.website}</span>
                   </div>
                 }
                 classNames={{
@@ -406,7 +406,7 @@ const SupplierInfo = ({ supplier }: SupplierInfoProps) => {
         classNames={{
           header: "text-xl",
           base: "w-[80vw] max-h-[80vh] h-fit max-w-[800px]",
-          body: "border-y-1 border-gray-400 gap-0 h-fit max-h-[500px] overflow-y-auto",
+          body: "border-y border-gray-400 gap-0 h-fit max-h-[500px] overflow-y-auto",
         }}
       >
         <ModalContent>

@@ -95,7 +95,7 @@ const Page = async ({ params: paramsPromise }: Props) => {
       </div>
       <Suspense fallback={<LoadingCard />}>
         <div className="flex gap-5">
-          <div className="flex-[2] min-w-[500px]">
+          <div className="flex-2 min-w-[500px]">
             <SupplierOrdersPanel supplier={supplier} />
           </div>
           <div className="flex-1 min-w-[250px]">

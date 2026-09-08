@@ -64,7 +64,7 @@ const SupplierOrdersPanel = ({ supplier }: SupplierOrdersPanelProps) => {
           {supplier.receives.map((receive) => (
             <div
               key={receive.id}
-              className="justify-between flex py-3 border-t-1 border-zinc-400"
+              className="justify-between flex py-3 border-t border-zinc-400"
             >
               <div className="flex flex-col">
                 <span className="font-medium">

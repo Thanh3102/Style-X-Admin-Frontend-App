@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { BiArrowToTop } from "react-icons/bi";

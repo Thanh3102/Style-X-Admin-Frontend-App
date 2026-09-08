@@ -16,11 +16,11 @@ type Props = {
 
 export default async function Layout({ children }: Props) {
   return (
-    <div className="flex">
+    <div className="flex items-start">
       <Sidebar />
-      <div className="flex flex-col flex-1 min-w-0">
+      <div className="flex min-h-screen min-w-0 flex-1 flex-col">
         <Header />
-        <div className="bg-stone-100 flex-1 min-w-0">{children}</div>
+        <main className="min-w-0 flex-1 bg-stone-100">{children}</main>
       </div>
     </div>
   );

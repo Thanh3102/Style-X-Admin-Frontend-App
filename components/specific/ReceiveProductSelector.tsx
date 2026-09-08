@@ -20,7 +20,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import NextImage from "next/image";
@@ -298,7 +298,7 @@ const ReceiveProductSelector = (props: Props) => {
           })}
         >
           <div
-            className="border-1 border-gray-500 rounded-md h-fit max-h-[400px] overflow-y-auto"
+            className="border border-gray-500 rounded-md h-fit max-h-[400px] overflow-y-auto"
             ref={listBoxRef}
           >
             <Listbox
@@ -319,7 +319,7 @@ const ReceiveProductSelector = (props: Props) => {
                         height={40}
                         width={40}
                         src={variant.product.image ?? ImagePlaceholderPath}
-                        className={cn("rounded-md border-1 border-gray-500")}
+                        className={cn("rounded-md border border-gray-500")}
                         alt=""
                       />
                       <div className="flex flex-col gap-1">
@@ -570,7 +570,7 @@ const ChangePriceModal = (props: ChangePriceModalProps) => {
                     type="number"
                     min={0}
                     max={1e12}
-                    className="flex-[2]"
+                    className="flex-2"
                     radius="sm"
                     variant="bordered"
                     value={selectedVariant.price.toString()}
@@ -579,7 +579,7 @@ const ChangePriceModal = (props: ChangePriceModalProps) => {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="flex-1">Loại giảm giá</span>
-                  <div className="flex-[2] flex gap-4">
+                  <div className="flex-2 flex gap-4">
                     <ButtonGroup variant="bordered" radius="sm">
                       <Button
                         color={

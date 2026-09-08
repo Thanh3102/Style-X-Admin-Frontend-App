@@ -1,7 +1,7 @@
 "use client";
 import { DateFilterOption, DateFilterOptionValue } from "@/libs/types/backend";
 import { cn } from "@/libs/utils";
-import { Button, DateValue, DatePicker } from "@nextui-org/react";
+import { Button, DateValue, DatePicker } from "@heroui/react";
 import { ReactNode, useState } from "react";
 
 const dateOptions: DateFilterOption[] = [
@@ -82,7 +82,7 @@ const DateOption = ({
               variant="bordered"
               fullWidth
               className={cn("hover:bg-gray-200", {
-                "text-blue-500 border-1 border-blue-500":
+                "text-blue-500 border border-blue-500":
                   selectedOption?.value === option.value,
               })}
               onClick={() => handleOptionClick(option)}
@@ -108,7 +108,7 @@ const DateOption = ({
           onChange={handleMaxDateChange}
         />
       </div>
-      <div className="pt-2 mt-2 border-t-1 w-full">
+      <div className="pt-2 mt-2 border-t w-full">
         <Button
           fullWidth
           size="sm"

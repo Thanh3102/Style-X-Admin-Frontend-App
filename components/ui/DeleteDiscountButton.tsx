@@ -1,7 +1,7 @@
 "use client";
 import { DeleteDiscount, UpdateDiscountActice } from "@/app/api/discount";
 import { DiscountsRoute } from "@/constants/route";
-import { Button, useDisclosure } from "@nextui-org/react";
+import { Button, useDisclosure } from "@heroui/react";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

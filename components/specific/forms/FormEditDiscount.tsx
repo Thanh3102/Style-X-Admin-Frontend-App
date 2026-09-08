@@ -20,7 +20,7 @@ import {
   Accordion,
   AccordionItem,
   Textarea,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useCallback, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -598,7 +598,7 @@ const FormEditDiscount = ({ discount }: Props) => {
         id="CreateDiscount"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="flex-[3] basis-[600px] max-w-full flex flex-col gap-4">
+        <div className="flex-3 basis-[600px] max-w-full flex flex-col gap-4">
           <RenderIf condition={discount.mode === "coupon"}>
             <GroupBox title="Mã khuyến mại">
               <Input
@@ -676,7 +676,7 @@ const FormEditDiscount = ({ discount }: Props) => {
               </RenderIf>
 
               <RenderIf condition={valueClass === "discount"}>
-                <div className="flex flex-wrap gap-y-4 -mx-2 [&>*]:px-2">
+                <div className="flex flex-wrap gap-y-4 -mx-2 *:px-2">
                   <div className="col-12">
                     <ButtonGroup radius="sm" variant="bordered">
                       <Button
@@ -748,7 +748,7 @@ const FormEditDiscount = ({ discount }: Props) => {
               </RenderIf>
 
               <RenderIf condition={valueClass === "flat"}>
-                <div className="flex flex-wrap gap-y-4 -mx-2 [&>*]:px-2">
+                <div className="flex flex-wrap gap-y-4 -mx-2 *:px-2">
                   <div className="col-4">
                     <Input
                       label="Giá trị đồng giá"
@@ -819,7 +819,7 @@ const FormEditDiscount = ({ discount }: Props) => {
                                 width={40}
                                 src={product.image ?? ImagePlaceholderPath}
                                 className={cn(
-                                  "rounded-md border-1 border-gray-500"
+                                  "rounded-md border border-gray-500"
                                 )}
                                 alt=""
                               />
@@ -849,7 +849,7 @@ const FormEditDiscount = ({ discount }: Props) => {
                               .filter((item) => item.productId === product.id)
                               .map((variant) => (
                                 <div
-                                  className="py-1 border-b-1 border-gray-100 flex justify-between"
+                                  className="py-1 border-b border-gray-100 flex justify-between"
                                   key={variant.id}
                                 >
                                   <span>{variant.title}</span>
@@ -1042,7 +1042,7 @@ const FormEditDiscount = ({ discount }: Props) => {
           </GroupBox>
 
           <GroupBox title="Thời gian">
-            <div className="flex gap-y-4 -mx-2 [&>*]:px-2 flex-wrap">
+            <div className="flex gap-y-4 -mx-2 *:px-2 flex-wrap">
               <DatePicker
                 className="col-6"
                 variant="bordered"
@@ -1101,7 +1101,7 @@ const FormEditDiscount = ({ discount }: Props) => {
             </div>
           </GroupBox>
         </div>
-        <div className="flex-[1] basis-[400px] max-w-full flex flex-col gap-4 relative">
+        <div className="flex-1 basis-[400px] max-w-full flex flex-col gap-4 relative">
           <div className="sticky top-5">
             <GroupBox title="Tổng quan khuyến mại">
               <div className="mx-4">
@@ -1132,7 +1132,7 @@ const FormEditDiscount = ({ discount }: Props) => {
                   </ul>
                 </div>
                 <RenderIf condition={discount.mode === "coupon"}>
-                  <div className="py-2 px-3 mt-3 bg-green-100 text-green-500 rounded-lg border-1 border-green-500">
+                  <div className="py-2 px-3 mt-3 bg-green-100 text-green-500 rounded-lg border border-green-500">
                     <span>{`Mã đã được sử dụng ${discount.usage} lần`}</span>
                   </div>
                 </RenderIf>

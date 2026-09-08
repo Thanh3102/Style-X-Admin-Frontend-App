@@ -1,5 +1,5 @@
 "use client";
-import { cn, Input, Listbox, ListboxItem, Spinner } from "@nextui-org/react";
+import { cn, Input, Listbox, ListboxItem, Spinner } from "@heroui/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { getSession } from "next-auth/react";
@@ -155,7 +155,7 @@ const SupplierSelector = (props: Props) => {
           })}
         >
           <div
-            className="border-1 border-gray-500 rounded-md h-fit max-h-[400px] overflow-y-auto"
+            className="border border-gray-500 rounded-md h-fit max-h-[400px] overflow-y-auto"
             ref={listBoxRef}
           >
             <Listbox
